@@ -5,7 +5,7 @@ Scene = require("Scene")
 
 love.window.setTitle("TEST")
 
-local text = "test"
+local text = "Ceci est un test, Monsieur !"
 
 local x = 10
 local y = 10
