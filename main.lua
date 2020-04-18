@@ -5,17 +5,15 @@ Scene = require("Scene")
 
 love.window.setTitle("TEST")
 
-local text = "Ceci est un test, Monsieur !"
-
-local x = 10
-local y = 10
 
 function love.load()
+  Scene.load()
 end
 
 function love.update(dt)
+  Scene.update(dt)
 end
 
 function love.draw()
-  love.graphics.print(text, x, y)--, r, sx, sy, ox, oy, kx, ky)
+  Scene.draw()
 end
