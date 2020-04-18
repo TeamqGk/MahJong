@@ -1,6 +1,8 @@
 -- debug
 io.stdout:setvbuf("no")
 
+Scene = require("Scene")
+
 love.window.setTitle("TEST")
 
 local text = "test"
