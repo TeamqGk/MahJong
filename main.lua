@@ -8,7 +8,7 @@ globals = require("globals")
 -- List require Alls files
 SceneManager = require("SceneManager")
 SceneGame = require("SceneGame")
-
+-- etc.
 
 
 
@@ -44,7 +44,7 @@ function love.update(dt)
 end
 
 function love.draw()
-  SceneManager:draw()
+  SceneManager:draw() -- SceneGame:draw()
 end
 
 -- et c'est tout !
