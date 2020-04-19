@@ -40,7 +40,7 @@ function SceneLogo.draw()-- love.draw()
 end
 --
 
-function love.keypressed(key, scancode, isrepeat)
+function SceneLogo.keypressed(key, scancode, isrepeat)
   if key == "return" or key == "space" then
     SceneManager:setScene("SceneGame")
   end
