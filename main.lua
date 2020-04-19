@@ -10,8 +10,6 @@ SceneManager = require("SceneManager")
 SceneGame = require("SceneGame")
 -- etc.
 
--- test encore
-
 --[[
  SceneManager using for :
  change file.lua actually use for
