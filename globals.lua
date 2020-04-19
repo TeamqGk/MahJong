@@ -1,6 +1,14 @@
 local globals = {}
 
 
+-- Police par defaut
+Font = {}
+for i=1, 100 do
+Font[i] = love.graphics.newFont(i)
+end
+
+
+
 -- Vars Globals
 mouse = love.mouse
 mouse.x, mouse.y = love.mouse.getPosition()
@@ -12,6 +20,7 @@ end
 
 
 screen = {}
+screen.x, screen.y = 0, 0
 screen.w_def, screen.h_def = love.graphics.getDimensions()
 screen.w, screen.h = screen.w_def, screen.h_def
 screen.ox, screen.oy = screen.w * 0.5, screen.h * 0.5

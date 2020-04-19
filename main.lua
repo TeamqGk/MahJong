@@ -13,12 +13,12 @@ MaSceneVierge = require("SceneVierge")
 -- etc.
 
 --[[
- SceneManager using for :
- change file.lua actually use for
- love.load()
- love.draw,
- and love.update etc...
- ]]
+SceneManager using for :
+change file.lua actually use for
+love.load()
+love.draw,
+and love.update etc...
+]]
 --[[
 SceneManager:addScene(module, name, pSetActiveScene)
 module "NomduFichierDelaScene".lua on ne mets pas l'extenesion .lua
@@ -27,7 +27,7 @@ pSetActiveScene -- pour ajouter et mettre celle-ci directement..]]--
 SceneManager:addScene(SceneGame, "SceneGame")
 SceneManager:addScene(SceneLogo, "SceneLogo")
 SceneManager:addScene(MaSceneVierge, "MaSceneTest")
-SceneManager:setScene("MaSceneTest")
+SceneManager:setScene("SceneLogo")
 --[[
 Now the first scene loading is "SceneGame"
 Hox to change Scene Later ? simply use this :
@@ -43,6 +43,8 @@ function love.load()
 end
 
 function love.update(dt)
+  mouse.update(dt)
+  screen.update(dt)
   SceneManager:update(dt)
 end
 
@@ -57,12 +59,12 @@ end
 --
 
 function love.keyreleased(key, scancode)
-SceneManager:keyreleased(key, scancode)
+  SceneManager:keyreleased(key, scancode)
 end
 --
 
 function love.mousepressed(x, y, button, isTouch)
-SceneManager:mousepressed(x, y, button, isTouch)
+  SceneManager:mousepressed(x, y, button, isTouch)
 end
 --
 
