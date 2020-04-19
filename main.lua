@@ -12,6 +12,7 @@ SceneGame = require("SceneGame")
 
 --test
 -- test 2
+-- test 3
 
 --[[
  SceneManager using for :
