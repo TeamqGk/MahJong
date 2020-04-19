@@ -1,6 +1,39 @@
 local globals = {}
 
 
+-- Vars Globals
+mouse = love.mouse
+mouse.x, mouse.y = love.mouse.getPosition()
+mouse.w, mouse.h = 1, 1
+mouse.ox, mouse.oh = 0.5, 0.5
+function mouse.update(dt)
+  mouse.x, mouse.y = love.mouse.getPosition()
+end
+
+
+screen = {}
+screen.w_def, screen.h_def = love.graphics.getDimensions()
+screen.w, screen.h = screen.w_def, screen.h_def
+screen.ox, screen.oy = screen.w * 0.5, screen.h * 0.5
+screen.sx, screen.sy = 1, 1
+
+function screen.update(dt)
+  local w,h = love.graphics.getDimensions()
+  if w ~= screen.w_def or h ~= screen.h_def then -- changement de resolution !
+    screen.w, screen.h = love.graphics.getDimensions()
+    screen.ox, screen.oy = screen.w * 0.5, screen.h * 0.5
+    screen.sx = w / screen.w_def
+    screen.sx = h / screen.h_def
+  end
+end
+
+
+
+
+
+
+
+
 
 -- MATH Formules
 globals.math = {}

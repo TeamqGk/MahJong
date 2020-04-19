@@ -8,6 +8,7 @@ globals = require("globals")
 -- List require Alls files
 SceneManager = require("SceneManager")
 SceneGame = require("SceneGame")
+SceneLogo = require("SceneLogo")
 -- etc.
 
 --[[
@@ -22,7 +23,8 @@ SceneManager:addScene(module, name, pSetActiveScene)
 module "NomduFichierDelaScene".lua on ne mets pas l'extenesion .lua
 name , using this name for change scene later
 pSetActiveScene -- pour ajouter et mettre celle-ci directement..]]--
-SceneManager:addScene(SceneGame, "SceneGame", true)
+SceneManager:addScene(SceneGame, "SceneGame", false)
+SceneManager:addScene(SceneLogo, "SceneLogo", true)
 --[[
 Now the first scene loading is "SceneGame"
 Hox to change Scene Later ? simply use this :
