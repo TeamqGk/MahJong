@@ -60,7 +60,6 @@ function GridManager.setRandMahjong()
     local l, c = GridManager.testMohJang(rand) -- placement du premier pion
     GridManager.testMohJang(rand,l,c) -- placement du secon pion
     i = i - 2
-    print(i)
   end
 end
 
@@ -98,17 +97,31 @@ function GridManager.testMohJang(pRand,pLig,pCol)
   return l, c
 end
 
-function GridManager.setGrid(pMap)
-  Grid = require(pMap)
+function GridManager.setGrid(pNum)
+  local name = "level_"..pNum
+  Grid = require(name)
   --[[ return :
   Grid.etages, Grid.lignes, Grid.colonnes
   & all etages Tables
   ]]--
+  Grid.name = name
 
+  -- level actuel ?
+  Grid.level = pNum
+
+  -- Load image BackGround
+  local file = "img/"..name
+  if love.filesystem.getInfo(file..".png","file") then
+    file = file..".png"
+  elseif love.filesystem.getInfo(file..".jpg","file") then
+    file = file..".jpg"
+  end
+  Img.BG = ImgManager.new(file)-- pFile
+  Img.BG:scaleToScreen()
+
+  -- Settings of grid
   Grid.w = Grid.colonnes * Img.MahJong.quad.w
   Grid.h = Grid.lignes * Img.MahJong.quad.h
-  print("w,h : ",w,h)
-  print("quad.w,quad.h : ",Img.MahJong.quad.w,Img.MahJong.quad.h)
   --
   local StartX = (screen.w - Grid.w) * 0.5
   local StartY = (screen.h - Grid.h) * 0.5
@@ -173,6 +186,14 @@ end
 
 function GridManager.draw()
   love.graphics.setColor(1,1,1,1) -- reset color
+
+  -- BackGround :
+  love.graphics.setColor(1,1,1,0.4) -- reset color
+  love.graphics.draw(Img.BG.img, 0, 0, 0, Img.BG.sx, Img.BG.sy)
+  love.graphics.setColor(1,1,1,1) -- reset color
+
+love.graphics.print("Grid.level : "..Grid.level)
+
   --
   local indexTotal = Grid.etages * (Grid.lignes * Grid.colonnes)
   --
@@ -219,7 +240,7 @@ end
 
 function SceneGame.load() -- love.load()
   screen.update(dt)
-  GridManager.setGrid("level_1")
+  GridManager.setGrid(1)
 end
 --
 
