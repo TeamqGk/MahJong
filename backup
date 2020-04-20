@@ -30,12 +30,12 @@ function GridManager.setRandMahjong()
   -- initalisation d'un nouveau math.randomseed
   globals.math.newRandom() --love.math.setRandomSeed(love.timer.getTime()) -- set Random Seed !
 
-  -- Verifier que le nombre de MahJong ne soit pas impaire sinon deux solutions :
-  -- 1. on place un mahjong au piff et on reduit notre total de mahjong a placer de 1
-  -- 2. on en supprime un au piff dans le tableau...
+-- Verifier que le nombre de MahJong ne soit pas impaire sinon deux solutions :
+-- 1. on place un mahjong au piff et on reduit notre total de mahjong a placer de 1
+-- 2. on en supprime un au piff dans le tableau...
 
 
-  -- il faut ques les [Col and Lig] soient differentes sinon impossible a finir (non identique)
+-- il faut ques les [Col and Lig] soient differentes sinon impossible a finir (non identique)
 
   -- on scan les grilles :
   for etages = 1, Grid.etages do-- etage
@@ -46,12 +46,9 @@ function GridManager.setRandMahjong()
         if case.type >= 1 then -- map valeur
           if not case.mahjong then -- y a t'il deja un mahjong de placé ?
             -- selection d'un MahJong pour la case
-            local rand = 32
-            while rand  == 32 do
-              rand = love.math.random(1,MahJong.total) -- on selectione un mahjong au hasard
-            end
-            --
+            local rand = love.math.random(1,MahJong.total) -- on selectione un mahjong au hasard
             case.mahjong = rand -- on attribue le MahJong a cette case
+
             --
             local loop = true
             while not loop do
