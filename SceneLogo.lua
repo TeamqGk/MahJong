@@ -4,7 +4,7 @@ local debug = false
 
 local BouttonManager = {}
 local Boutton = {}
-Boutton.current = nil
+Boutton.current = {}
 
 local Text = {}
 

@@ -2,31 +2,45 @@ local SceneGame = {}
 ----------------------------- START -----------------------------------------
 local GridManager = {}
 local Grid = {}
+local Img = {}
+
 
 -- requires
-local QuadManager = require("QuadManager")
+local QuadManager = require("QuadManager") -- lua file
+local ImgManager = require("ImgManager") -- lua file
 
 -- Images
-local Img = {}
-Img.MahJong = {}
-Img.MahJong.file = "img/mahjong_pieces_modif_1.png"
-Img.MahJong.img = love.graphics.newImage(Img.MahJong.file)
+Img.MahJong = ImgManager.new("img/mahjong_pieces_modif_1.png")-- pFile
+--[[ return :
+img.img
+img.w
+img.h
+]]--
 
 -- Quads Images
 Img.MahJong.quad = QuadManager.new(Img.MahJong,3,16)--ImageTable, Plig, pCol
+-- quad 1 to 37 Mahjong
+-- and quads 38 & 39 Effects styles...
 
 
 
 function GridManager.setGrid(pMap)
-  Grid = require(pMap) -- map
+  Grid = require(pMap)
+  --[[ return :
+  Grid.etages, Grid.lignes, Grid.colonnes
+  & all etages Tables
+  ]]--
+
+  Grid.w = Grid.colonnes * Img.MahJong.quad.w
+  Grid.h = Grid.lignes * Img.MahJong.quad.h
+  print("w,h : ",w,h)
+  print("quad.w,quad.h : ",Img.MahJong.quad.w,Img.MahJong.quad.h)
   --
-  local StartX = screen.w * 0.1
-  local StartY = screen.h * 0.1
+  local StartX = (screen.w - Grid.w) * 0.5
+  local StartY = (screen.h - Grid.h) * 0.5
   --
   Grid.x = StartX
   Grid.y = StartY
-  Grid.w = screen.w - (StartX * 2)
-  Grid.h = screen.h - (StartY * 2)
   Grid.caseW = Grid.w / Grid.colonnes
   Grid.caseH = Grid.h / Grid.lignes
   Grid.caseOx = Grid.caseW * 0.5
@@ -42,7 +56,7 @@ function GridManager.setGrid(pMap)
         local mahjong = 0
         -- on creer un MahJong si il y a un nombre !
         if  type(case) == "number"  then
-          mahjong = case
+          mahjong = etages
         end
         --
         Grid[etages][lignes][colonnes] = {}
@@ -72,7 +86,7 @@ function GridManager.setGrid(pMap)
     --
   end
 
-  print (#Grid, #Grid[1], #Grid[1][1])
+  print ("\n".."Nouvelle Grid of "..#Grid.." etages, "..#Grid[1].." lines and "..#Grid[1][1].." cols !".."\n")
 end
 
 
