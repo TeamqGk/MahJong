@@ -18,6 +18,10 @@ globals = require("modules/globals")
 
 -- Require modules here if is Global needed
 SceneManager = require("modules/SceneManager")
+QuadManager = require("modules/QuadManager") -- lua file
+ImgManager = require("modules/ImgManager") -- lua file
+GridManager = require("modules/GridManager") -- lua file
+
 
 
 
