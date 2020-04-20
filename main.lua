@@ -1,9 +1,15 @@
 -- debug output console showing
 io.stdout:setvbuf("no")
 
+release = false
+dev = true
+
 -- Set Screen Mode
+if release then
 local width, height = love.window.getDesktopDimensions( display )
 love.window.setMode(width, height)
+love.window.maximize()
+end
 
 -- just a Classic Globals for use =)
 globals = require("globals")
