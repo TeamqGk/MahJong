@@ -38,8 +38,11 @@ function GridManager.setRandMahjong()
         --
         if case.type >= 1 then
           if not case.mahjong then
-            -- selction d'un MahJong pour la case
-            local rand = love.math.random(1,MahJong.total) -- on selectione un mahjong au hasard
+            -- selection d'un MahJong pour la case
+            local rand = 32
+            while rand == 32 do -- boucle pour exclure le mahjong vide
+              rand = love.math.random(1,MahJong.total) -- on selectione un mahjong au hasard
+            end
             case.mahjong = rand -- on attribue le MahJong a cette case
 
             --
