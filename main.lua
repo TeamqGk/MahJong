@@ -1,6 +1,10 @@
 -- debug output console showing
 io.stdout:setvbuf("no")
 
+-- Set Screen Mode
+local width, height = love.window.getDesktopDimensions( display )
+love.window.setMode(width, height)
+
 -- just a Classic Globals for use =)
 globals = require("globals")
 
@@ -36,7 +40,6 @@ SceneManager:setScene(name)]]--
 
 --
 love.window.setTitle("MahJong [Mask & CryptoLogiq] TeamqGk.fr")
-
 
 function love.load()
   SceneManager:load()

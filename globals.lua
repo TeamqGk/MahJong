@@ -18,7 +18,6 @@ function mouse.update(dt)
   mouse.x, mouse.y = love.mouse.getPosition()
 end
 
-
 screen = {}
 screen.x, screen.y = 0, 0
 screen.w_def, screen.h_def = love.graphics.getDimensions()
