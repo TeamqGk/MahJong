@@ -4,13 +4,14 @@ function QuadManager.new(pImageTable, pLig, pCol)
   local img = pImageTable
   --
   local newQuad = {}
-  newQuad.w, newQuad.h = img.w / pCol, img.h / pLig
+  newQuad.w = img.w / pCol
+  newQuad.h = img.h / pLig
   --
   local x,y = 0, 0
   local i = 1 -- start Index for newQuad[i] = {}
   --
   for l = 1 , pLig do
-    for c = 1 , pLig do
+    for c = 1 , pCol do
       newQuad[i] = love.graphics.newQuad(x, y, newQuad.w, newQuad.h, img.w, img.h)
       --
       x = x + newQuad.w
@@ -22,6 +23,7 @@ function QuadManager.new(pImageTable, pLig, pCol)
     --
   end
   --
+  print("creation de "..#newQuad.." quads avec l'image "..img.file)
   return newQuad
 end
 --

@@ -21,8 +21,50 @@ img.h
 Img.MahJong.quad = QuadManager.new(Img.MahJong,3,16)--ImageTable, Plig, pCol
 -- quad 1 to 37 Mahjong
 -- and quads 38 & 39 Effects styles...
+local MahJong = {}
+MahJong.total = 37
+MahJong.vide = 38
+MahJong.videmini = 39
 
+function GridManager.setRandMahjong()
+  -- initalisation d'un nouveau math.randomseed
+  globals.math.newRandom() --love.math.setRandomSeed(love.timer.getTime()) -- set Random Seed !
 
+  -- on scan les grilles :
+  for etages = 1, Grid.etages do-- etage
+    for lignes = 1,  Grid.lignes do-- lignes
+      for colonnes = 1, Grid.colonnes do-- colonnes
+        local case = Grid[etages][lignes][colonnes]
+        --
+        if case.type >= 1 then
+          if not case.mahjong then
+            -- selction d'un MahJong pour la case
+            local rand = love.math.random(1,MahJong.total) -- on selectione un mahjong au hasard
+            case.mahjong = rand -- on attribue le MahJong a cette case
+
+            --
+            local loop = true
+            while not loop do
+              local e = love.math.random(1,Grid.etages)
+              local l = love.math.random(1,Grid.lignes)
+              local c = love.math.random(1,Grid.colonnes)
+              local caseTest = Grid[e][l][c]
+              --
+              if caseTest.type >= 1 then
+                if not case.mahjong then
+                  caseTest.mahjong = rand
+                  loop = false
+                end
+              end
+              --
+            end
+          end
+          -- TODO : CODE ICI
+        end
+      end
+    end
+  end
+end
 
 function GridManager.setGrid(pMap)
   Grid = require(pMap)
@@ -53,15 +95,17 @@ function GridManager.setGrid(pMap)
     for lignes = 1,  Grid.lignes do-- lignes
       for colonnes = 1, Grid.colonnes do-- colonnes
         local case = Grid[etages][lignes][colonnes]
-        local mahjong = 0
         -- on creer un MahJong si il y a un nombre !
+        local backup
         if  type(case) == "number"  then
-          mahjong = etages
+          backup = etages
+        else
+          backup = 0
         end
         --
         Grid[etages][lignes][colonnes] = {}
         case = Grid[etages][lignes][colonnes]
-        case.type = mahjong
+        case.type = backup
         case.etages = etages
         case.lignes = lignes
         case.colonnes = colonnes
@@ -85,12 +129,13 @@ function GridManager.setGrid(pMap)
     y = StartY
     --
   end
-
   print ("\n".."Nouvelle Grid of "..#Grid.." etages, "..#Grid[1].." lines and "..#Grid[1][1].." cols !".."\n")
+
+  -- randomise mahjong in grid
+  GridManager.setRandMahjong()
+
 end
 
-
-local indexTest = 0
 
 function GridManager.draw()
   love.graphics.setColor(1,1,1,1) -- reset color
@@ -120,7 +165,7 @@ function GridManager.draw()
         if case.type >= 1 then
           -- draw Mahjong Test
           -- TODO: Set Scales for Quads MahJong
-          love.graphics.draw(Img.MahJong.img, Img.MahJong.quad[case.type], case.x, case.y)--, 0, 1, 1, case.ox, case.oy)
+          love.graphics.draw(Img.MahJong.img, Img.MahJong.quad[case.mahjong], case.x, case.y)--, 0, 1, 1, case.ox, case.oy)
 
           -- draw Rect represent Grid Pos, color represent etage
           love.graphics.setColor(colorRect)
