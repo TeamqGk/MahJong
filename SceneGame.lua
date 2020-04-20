@@ -76,6 +76,10 @@ function GridManager.setRandMahjong()
   end
 end
 
+function GridManager.test(pCode)
+  print("test")
+end
+
 function GridManager.setGrid(pMap)
   Grid = require(pMap)
   --[[ return :
