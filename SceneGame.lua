@@ -4,8 +4,6 @@ local GridManager = {}
 local Grid = {}
 local Img = {}
 
-local MergeMeOrNot = {}
-
 -- requires
 local QuadManager = require("QuadManager") -- lua file
 local ImgManager = require("ImgManager") -- lua file
@@ -35,49 +33,69 @@ function GridManager.setRandMahjong()
   -- 1. on place un mahjong au piff et on reduit notre total de mahjong a placer de 1
   -- 2. on en supprime un au piff dans le tableau...
 
-  -- il faut ques les [Col and Lig] soient differentes sinon impossible a finir (non identique)
+  -- Mask note : il faut ques les [Col and Lig] soient differentes sinon impossible a finir (non identique)
+
+  -- test Paire ou Impaire ?!
+  local testPaire = 2 -- le plus petit chiffre paire que je connaisse xD
+  if debug then print("Grid.mahjongTotal % ToalMahJong = "..Grid.mahjongTotal % testPaire) end
+  if Grid.mahjongTotal % testPaire == 0 then -- return le reste de la division (donc si le reste vaut zero c'est un nombre paire, sinon impaire)
+    Grid.impaire = false
+  else
+    Grid.impaire = true
+  end
+  print("Grid.impaire : "..tostring(Grid.impaire))
+
 
   -- on scan les grilles :
-  for etages = 1, Grid.etages do-- etage
-    for lignes = 1,  Grid.lignes do-- lignes
-      for colonnes = 1, Grid.colonnes do-- colonnes
-        local case = Grid[etages][lignes][colonnes]
-        --
-        if case.type >= 1 then -- map valeur
-          if not case.mahjong then -- y a t'il deja un mahjong de placé ?
-            -- selection d'un MahJong pour la case
-            local rand = 32
-            while rand  == 32 do
-              rand = love.math.random(1,MahJong.total) -- on selectione un mahjong au hasard
-            end
-            --
-            case.mahjong = rand -- on attribue le MahJong a cette case
-            --
-            local loop = true
-            while not loop do
-              local l = love.math.random(1,Grid.lignes)
-              local c = love.math.random(1,Grid.colonnes)
-              local e = love.math.random(1,Grid.etages)
-              --
-              local caseTest = Grid[e][l][c]
-              --
-              if caseTest.type >= 1 then
-                if not case.mahjong then
-                  caseTest.mahjong = rand
-                  loop = false
-                end
-              end
-              --
-            end
-          end
-        end
-      end
+  local i = Grid.mahjongTotal
+  while  i >= 1 do
+
+    -- on selectione un mahjong au hasard
+    local rand = 32
+    while rand  == 32 do
+      rand = love.math.random(1,MahJong.total)
     end
+
+    -- on place le pahlong sur un etage visible en Col et Lig aleatoire
+    local l, c = GridManager.testMohJang(rand) -- placement du premier pion
+    GridManager.testMohJang(rand,l,c) -- placement du secon pion
+    i = i - 2
+    print(i)
   end
 end
 
-function GridManager.test(pCode)
-  print("test")
+function GridManager.testMohJang(pRand,pLig,pCol)
+  local loopTest = true
+  local l = 0
+  local c = 0
+  while loopTest do
+    local superposed = false
+    l = love.math.random(1,Grid.lignes)
+    c = love.math.random(1,Grid.colonnes)
+    if PLig and pCol then
+      if PLig == l and pCol == c then
+        superposed = true
+      end
+    end
+    if not superposed then
+      for e = 1, Grid.etages do
+        --
+        if loopTest then
+          local caseTest = Grid[e][l][c]
+          -- print("caseTest en Grid["..e.."]["..l.."]["..c.."].type : "..caseTest.type)
+          --
+          if caseTest.type >= 1 then
+            if not caseTest.mahjong then
+              caseTest.mahjong = pRand
+              loopTest = false
+            end
+          end
+        end
+        --
+      end
+    end
+  end
+  return l, c
 end
 
 function GridManager.setGrid(pMap)
@@ -105,6 +123,8 @@ function GridManager.setGrid(pMap)
   local x = StartX
   local y = StartY
   --
+  Grid.mahjongTotal = 0
+  --
   for etages = 1, Grid.etages do-- etage
     for lignes = 1,  Grid.lignes do-- lignes
       for colonnes = 1, Grid.colonnes do-- colonnes
@@ -113,6 +133,7 @@ function GridManager.setGrid(pMap)
         local backup
         if  type(case) == "number"  then
           backup = etages
+          Grid.mahjongTotal = Grid.mahjongTotal + 1
         else
           backup = 0
         end
