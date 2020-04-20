@@ -13,10 +13,9 @@ function SceneLogo.load() -- love.load()
   Boutton[1]:setCenterPos(screen.ox, screen.oy)
   Boutton[1]:setColor(0,1,0,0.25)
   Boutton[1]:setColorFixe()
-  Boutton[1]:addText(Font[22], "Ready to Play !")
+  Boutton[1]:addText(Font[22], "Jouer !")
 end
 --
-
 
 function SceneLogo.update(dt) -- love.load()
   Boutton[1]:update(dt)
@@ -37,6 +36,7 @@ function SceneLogo.draw()-- love.draw()
   --
   Boutton[1]:draw()
   --
+--(drawable, x, y, r, sx, sy, ox, oy, kx, ky)
 end
 --
 
