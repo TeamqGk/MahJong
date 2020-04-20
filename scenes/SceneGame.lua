@@ -4,6 +4,11 @@ local SceneGame = {}
 Grid = {}
 Img = {}
 MahJong = {}
+--
+SaveGame = {}
+SaveGame.levelMax = 0
+SaveGame.levelCurrent = 0
+SaveGame.tutorial = false
 
 
 -- Images
