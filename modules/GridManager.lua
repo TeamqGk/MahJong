@@ -12,14 +12,8 @@ function GridManager.setGrid(pNum)
   -- level actuel ?
   Grid.level = pNum
 
-  -- Load image BackGround
-  local file = name
-  if love.filesystem.getInfo(file..".png","file") then
-    file = file..".png"
-  elseif love.filesystem.getInfo(file..".jpg","file") then
-    file = file..".jpg"
-  end
-  Img.BG = ImgManager.new(file)-- pFile
+  -- Load image BackGround ( info is on map level_x.lua)
+  Img.BG = ImgManager.new("levels/img/"..Grid.image)-- pFile
   Img.BG:scaleToScreen()
 
 
