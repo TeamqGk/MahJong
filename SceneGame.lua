@@ -98,7 +98,7 @@ function GridManager.testMohJang(pRand,pLig,pCol)
 end
 
 function GridManager.setGrid(pNum)
-  local name = "level_"..pNum
+  local name = "levels/level_"..pNum
   Grid = require(name)
   --[[ return :
   Grid.etages, Grid.lignes, Grid.colonnes
@@ -110,7 +110,7 @@ function GridManager.setGrid(pNum)
   Grid.level = pNum
 
   -- Load image BackGround
-  local file = "img/"..name
+  local file = name
   if love.filesystem.getInfo(file..".png","file") then
     file = file..".png"
   elseif love.filesystem.getInfo(file..".jpg","file") then
@@ -192,7 +192,7 @@ function GridManager.draw()
   love.graphics.draw(Img.BG.img, 0, 0, 0, Img.BG.sx, Img.BG.sy)
   love.graphics.setColor(1,1,1,1) -- reset color
 
-love.graphics.print("Grid.level : "..Grid.level)
+  love.graphics.print("Grid.level : "..Grid.level)
 
   --
   local indexTotal = Grid.etages * (Grid.lignes * Grid.colonnes)
@@ -204,27 +204,31 @@ love.graphics.print("Grid.level : "..Grid.level)
         local case = Grid[etages][lignes][colonnes] -- table
         love.graphics.setColor(1,1,1,1) -- reset color
 
-        -- draw chaque etage d'une douleur diff pour le debug
-        local colorRect = {}
-        if case.type == 1 then
-          colorRect = {0,1,0,0.25}--vert
-        elseif case.type == 2 then
-          colorRect = {1,0,0,0.25}--rouge
-        elseif case.type == 3 then
-          colorRect = {0,0,1,0.25}--bleu
-        elseif case.type == 4 then
-          colorRect = {1,1,0,0.25}--jaune (r+g)
-        end
-
-        --
         if case.type >= 1 then
           -- draw Mahjong Test
           -- TODO: Set Scales for Quads MahJong
           love.graphics.draw(Img.MahJong.img, Img.MahJong.quad[case.mahjong], case.x, case.y)--, 0, 1, 1, case.ox, case.oy)
+        end
 
-          -- draw Rect represent Grid Pos, color represent etage
-          love.graphics.setColor(colorRect)
-          love.graphics.rectangle("fill", case.x+2, case.y+2, case.w-3, case.h-3)
+        -- draw chaque etage d'une douleur diff pour le debug
+        if debug then
+          local colorRect = {}
+          if case.type == 1 then
+            colorRect = {0,1,0,0.25}--vert
+          elseif case.type == 2 then
+            colorRect = {1,0,0,0.25}--rouge
+          elseif case.type == 3 then
+            colorRect = {0,0,1,0.25}--bleu
+          elseif case.type == 4 then
+            colorRect = {1,1,0,0.25}--jaune (r+g)
+          end
+
+          --
+          if case.type >= 1 then
+            -- draw Rect represent Grid Pos, color represent etage
+            love.graphics.setColor(colorRect)
+            love.graphics.rectangle("fill", case.x+2, case.y+2, case.w-3, case.h-3)
+          end
         end
 
         -- reset color
@@ -240,7 +244,7 @@ end
 
 function SceneGame.load() -- love.load()
   screen.update(dt)
-  GridManager.setGrid(1)
+  GridManager.setGrid(0)
 end
 --
 
