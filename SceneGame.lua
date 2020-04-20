@@ -1,25 +1,43 @@
 local SceneGame = {}
 ----------------------------- START -----------------------------------------
-
 local GridManager = {}
-
 local Grid = {}
+
+-- requires
+local QuadManager = require("QuadManager")
+
+-- Images
+local Img = {}
+Img.MahJong = {}
+Img.MahJong.file = "img/mahjong_pieces_modif_1.png"
+Img.MahJong.img = love.graphics.newImage(Img.MahJong.file)
+
+-- Quads Images
+Img.MahJong.quad = QuadManager.new(Img.MahJong,3,16)--ImageTable, Plig, pCol
+
 
 
 function GridManager.setGrid(pMap)
   Grid = require(pMap) -- map
   --
-  local x = 0
-  local y = 0
-  local caseW = love.graphics.getWidth() / Grid.colonnes
-  local caseH = love.graphics.getHeight() / Grid.lignes
-  local caseOx = caseW * 0.5
-  local caseOy = caseH * 0.5
+  local StartX = screen.w * 0.1
+  local StartY = screen.h * 0.1
+  --
+  Grid.x = StartX
+  Grid.y = StartY
+  Grid.w = screen.w - (StartX * 2)
+  Grid.h = screen.h - (StartY * 2)
+  Grid.caseW = Grid.w / Grid.colonnes
+  Grid.caseH = Grid.h / Grid.lignes
+  Grid.caseOx = Grid.caseW * 0.5
+  Grid.caseOy = Grid.caseH * 0.5
+  --
+  local x = StartX
+  local y = StartY
   --
   for etages = 1, Grid.etages do-- etage
     for lignes = 1,  Grid.lignes do-- lignes
       for colonnes = 1, Grid.colonnes do-- colonnes
-        local mahjong = Grid[etages][lignes][colonnes]
         local case = Grid[etages][lignes][colonnes]
         local mahjong = 0
         -- on creer un MahJong si il y a un nombre !
@@ -35,22 +53,22 @@ function GridManager.setGrid(pMap)
         case.colonnes = colonnes
         case.x = x
         case.y = y
-        case.w = caseW
-        case.h = caseH
-        case.ox = x + caseOx
-        case.oy = y + caseOy
+        case.w = Grid.caseW
+        case.h = Grid.caseH
+        case.ox = x + Grid.caseOx
+        case.oy = y + Grid.caseOy
 
         -- incrementation de x + la largeur d'une case (w)
-        x = x + caseW
+        x = x + Grid.caseW
       end
       --
-      x = 0
-      y = y + caseH
+      x = StartX
+      y = y + Grid.caseH
       --
     end
     --
-    x = 0
-    y = 0
+    x = StartX
+    y = StartY
     --
   end
 
@@ -61,7 +79,7 @@ end
 local indexTest = 0
 
 function GridManager.draw()
-  love.graphics.setColor(1,1,1,1)
+  love.graphics.setColor(1,1,1,1) -- reset color
   --
   local indexTotal = Grid.etages * (Grid.lignes * Grid.colonnes)
   --
@@ -72,46 +90,36 @@ function GridManager.draw()
         local case = Grid[etages][lignes][colonnes] -- table
         love.graphics.setColor(1,1,1,1) -- reset color
 
-        local debug = false
-
         -- draw chaque etage d'une douleur diff pour le debug
+        local colorRect = {}
         if case.type == 1 then
-          love.graphics.setColor(0,1,0,1)
-          debug = 1
+          colorRect = {0,1,0,0.25}--vert
         elseif case.type == 2 then
-          love.graphics.setColor(1,0,0,1)
-          debug = 2
+          colorRect = {1,0,0,0.25}--rouge
         elseif case.type == 3 then
-          love.graphics.setColor(0,0,1,1)
-          debug = 3
+          colorRect = {0,0,1,0.25}--bleu
         elseif case.type == 4 then
-          love.graphics.setColor(1,1,0,1)
-          debug = 4
+          colorRect = {1,1,0,0.25}--jaune (r+g)
         end
+
         --
         if case.type >= 1 then
+          -- draw Mahjong Test
+          -- TODO: Set Scales for Quads MahJong
+          love.graphics.draw(Img.MahJong.img, Img.MahJong.quad[case.type], case.x, case.y)--, 0, 1, 1, case.ox, case.oy)
+
+          -- draw Rect represent Grid Pos, color represent etage
+          love.graphics.setColor(colorRect)
           love.graphics.rectangle("fill", case.x+2, case.y+2, case.w-3, case.h-3)
         end
 
-        --
-        love.graphics.setColor(1,0,1,1)
-
-        --love.graphics.print("l:"..lignes.."\n".."c:"..colonnes, case.ox, case.oy)
-
-        if debug then
-          if indexTest <= indexTotal then
-            indexTest = indexTest + 1
-            print(etages , lignes, colonnes, debug)
-          end
-          love.graphics.print(debug, case.ox, case.oy)
-        end
-
+        -- reset color
         love.graphics.setColor(1,1,1,1) -- reset color
       end
     end
   end
 
-  --
+  --reset color
   love.graphics.setColor(1,1,1,1)
 end
 
