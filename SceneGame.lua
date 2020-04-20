@@ -4,6 +4,7 @@ local GridManager = {}
 local Grid = {}
 local Img = {}
 
+local MergeMeOrNot = {}
 
 -- requires
 local QuadManager = require("QuadManager") -- lua file
@@ -33,7 +34,6 @@ function GridManager.setRandMahjong()
   -- Verifier que le nombre de MahJong ne soit pas impaire sinon deux solutions :
   -- 1. on place un mahjong au piff et on reduit notre total de mahjong a placer de 1
   -- 2. on en supprime un au piff dans le tableau...
-
 
   -- il faut ques les [Col and Lig] soient differentes sinon impossible a finir (non identique)
 
