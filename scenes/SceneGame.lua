@@ -5,8 +5,8 @@ local Grid = {}
 local Img = {}
 
 -- requires
-local QuadManager = require("QuadManager") -- lua file
-local ImgManager = require("ImgManager") -- lua file
+local QuadManager = require("modules/QuadManager") -- lua file
+local ImgManager = require("modules/ImgManager") -- lua file
 
 -- Images
 Img.MahJong = ImgManager.new("img/mahjong_pieces_modif_1.png")-- pFile
@@ -207,7 +207,9 @@ function GridManager.draw()
         if case.type >= 1 then
           -- draw Mahjong Test
           -- TODO: Set Scales for Quads MahJong
+          love.graphics.setColor(1,1,1,1) -- reset color
           love.graphics.draw(Img.MahJong.img, Img.MahJong.quad[case.mahjong], case.x, case.y)--, 0, 1, 1, case.ox, case.oy)
+          love.graphics.setColor(1,1,1,1) -- reset color
         end
 
         -- draw chaque etage d'une douleur diff pour le debug

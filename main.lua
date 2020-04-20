@@ -13,15 +13,22 @@ love.window.maximize()
 end
 
 -- just a Classic Globals for use =)
-globals = require("globals")
+globals = require("modules/globals")
 
 
--- List require Alls files
-SceneManager = require("SceneManager")
-SceneGame = require("SceneGame")
-SceneLogo = require("SceneLogo")
-MaSceneVierge = require("SceneVierge")
+-- Require modules here if is Global needed
+SceneManager = require("modules/SceneManager")
+
+
+
+
+-- List alls scenes here
+SceneGame = require("scenes/SceneGame")
+SceneLogo = require("scenes/SceneLogo")
+MaSceneVierge = require("scenes/SceneVierge")
 -- etc.
+
+
 
 --[[
 SceneManager using for :
@@ -38,11 +45,14 @@ pSetActiveScene -- pour ajouter et mettre celle-ci directement..]]--
 SceneManager:addScene(SceneGame, "SceneGame")
 SceneManager:addScene(SceneLogo, "SceneLogo")
 SceneManager:addScene(MaSceneVierge, "MaSceneTest")
-SceneManager:setScene("SceneLogo")
 --[[
 Now the first scene loading is "SceneGame"
 Hox to change Scene Later ? simply use this :
 SceneManager:setScene(name)]]--
+--
+
+-- Set the first scene need to load
+SceneManager:setScene("SceneLogo")
 
 
 --

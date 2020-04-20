@@ -2,7 +2,7 @@ local SceneLogo = {}
 
 local debug = false
 
-local BouttonManager = require ("BouttonManager")
+local BouttonManager = require ("modules/BouttonManager")
 local Boutton = {}
 Boutton.current = {}
 
