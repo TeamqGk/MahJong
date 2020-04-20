@@ -1,16 +1,18 @@
 local GridManager = {}
 
-function GridManager.setGrid(pNum)
-  local name = "levels/level_"..pNum
-  Grid = require(name)
+function GridManager.setGrid(pLevel)
+  Grid = {}
+  Grid = Levels[pLevel]
   --[[ return :
   Grid.etages, Grid.lignes, Grid.colonnes
   & all etages Tables
   ]]--
-  Grid.name = name
 
   -- level actuel ?
-  Grid.level = pNum
+  Grid.level = pLevel
+  
+  --
+  Grid.name = "Level : "..pLevel
 
   -- Load image BackGround ( info is on map level_x.lua)
   Img.BG = ImgManager.new("levels/img/"..Grid.image)-- pFile

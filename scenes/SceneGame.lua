@@ -1,6 +1,7 @@
 local SceneGame = {}
 ----------------------------- START -----------------------------------------
 -- Declare Global Tables of Game
+Levels = {}
 Grid = {}
 Img = {}
 MahJong = {}
@@ -30,21 +31,40 @@ MahJong.videmini = 39
 
 
 
-function Img.switch()
-
-end
---
-
 
 function SceneGame.load() -- love.load()
   screen.update(dt)
-  GridManager.setGrid(0)
+  --
+  LevelsManager.autoload()
+  --
+  GridManager.setGrid(1)
 end
 --
 
 function SceneGame.draw()-- love.draw()
   love.graphics.scale(screen.sx, screen.sy)
   GridManager.draw()
+end
+--
+
+function SceneGame:keypressed(key, scancode)
+  if debug then
+    if key == "kp+" or key == "kp-" then
+      local level = Grid.level
+      if key == "kp+" then
+        level = level + 1
+      elseif key == "kp-" then
+                level = level - 1
+    end
+    --
+    if level > #Levels then level = 1 elseif level < 1 then level = #Levels end
+    --
+    GridManager.setGrid(level)
+    end
+  end
+  if key == "escape" then
+    SceneManager:setScene("SceneLogo")
+  end
 end
 --
 

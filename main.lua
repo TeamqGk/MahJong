@@ -3,7 +3,7 @@ io.stdout:setvbuf("no")
 
 release = false
 dev = true
-debug = false
+debug = true
 
 -- Set Screen Mode
 if release then
@@ -18,6 +18,7 @@ globals = require("modules/globals")
 
 -- Require modules here if is Global needed
 SceneManager = require("modules/SceneManager")
+LevelsManager = require("modules/LevelsManager")
 QuadManager = require("modules/QuadManager") -- lua file
 ImgManager = require("modules/ImgManager") -- lua file
 GridManager = require("modules/GridManager") -- lua file
