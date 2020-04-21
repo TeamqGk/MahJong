@@ -1,7 +1,9 @@
 local BouttonManager = {}
+BouttonManager.current = {ready = false}
 
 function BouttonManager.newBox (pw, ph)
   local new = {}
+  new.id = #BouttonManager+1
   new.x = 0
   new.y = 0
   new.w = pw
@@ -94,13 +96,71 @@ function BouttonManager.newBox (pw, ph)
       love.graphics.draw(t.print, t.x, t.y, 0, 1, 1, t.ox, t.oy)
     end
     if self.ready and debug then
-      love.graphics.print("button.ready : "..tostring(self.ready))
+      love.graphics.print("button["..self.id.."].ready : "..tostring(self.ready))
     end
     --
     love.graphics.setColor(1,1,1,1)
   end
   --
+  --
+  table.insert(BouttonManager, new)
   return new
 end
+--
+
+function BouttonManager:setPosAlignY()
+  if #BouttonManager >= 1 then
+    --
+    local temp = {}
+    temp.x = 0
+    temp.y = 0
+    temp.w = 0
+    temp.h = 0
+    temp.oy = 0
+    --
+    temp.espace = 8
+    --
+    for i = 1, #BouttonManager do
+      local b = BouttonManager[1]
+      temp.h = b.h + temp.espace
+    end
+    --
+    temp.oy = temp.h * 0.5
+    --
+    temp.x = screen.ox
+    temp.y = 0--screen.oy - temp.h
+    --
+    for i = 1, #BouttonManager do
+      local b = BouttonManager[1]
+      local x = temp.x - b.ox
+      local y = temp.y + (temp.h * i)
+      b:setPos(x,y)
+    end
+  end
+end
+--
+
+function BouttonManager.update(dt)
+  if #BouttonManager >= 1 then
+    for i = 1, #BouttonManager do
+      local b = BouttonManager[1]
+      b:update(dt)
+      if b.ready then
+        BouttonManager.current = b
+      end
+    end
+  end
+end
+--
+
+function BouttonManager.draw()
+  if #BouttonManager >= 1 then
+    for i = 1, #BouttonManager do
+      local b = BouttonManager[1]
+      b:draw()
+    end
+  end
+end
+--
 
 return BouttonManager
