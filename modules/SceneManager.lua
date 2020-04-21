@@ -18,7 +18,7 @@ function SceneManager:setScene(name)
     if name == self.scenes[i].name then
       self.current = self.scenes[i]
       if not self.current.module.loadScene then
-        self.current.module.load()
+        SceneManager:load()
       end
       return
     end
@@ -33,8 +33,8 @@ function SceneManager:load()
   else
     if self.current.module.load ~= nil then
       if not self.current.module.loadScene then
-        self.current.module.load()
         self.current.module.loadScene = true
+        self.current.module.load()
       end
     end
   end

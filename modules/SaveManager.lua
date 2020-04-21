@@ -1,8 +1,9 @@
 local SaveManager = {}
 
 local SaveGame = {}
-
-function SaveManager.load()
+--
+function SaveManager.load(pNumber)
+  --
   local folder = "Saves/"
   local filename = "save.sav"
   --
@@ -21,13 +22,19 @@ function SaveManager.load()
 end
 --
 
+function SaveManager.save(pNumber)
+  --
+  if not SaveGame[pNumber] then
+    SaveGame[pNumber]= {}
+  end
+  --
+end
+--
+
 
 
 function SaveManager.new()
   local f = {}
-
-
-
 
   function f.init()
     SaveGame.levelMax = 0
@@ -35,10 +42,9 @@ function SaveManager.new()
     SaveGame.tutorial = false
   end
 --
-
   return f
 end
-
+--
 
 
 return SaveManager

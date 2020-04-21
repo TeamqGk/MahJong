@@ -44,18 +44,23 @@ end
 --
 
 function SceneGame:keypressed(key, scancode)
+  if debug then print(key) end
+  --
   if debug then
     if key == "kp+" or key == "kp-" then
       local level = Grid.level
       if key == "kp+" then
         level = level + 1
       elseif key == "kp-" then
-                level = level - 1
+        level = level - 1
+      end
+      --
+      if level > #Levels then level = 1 elseif level < 1 then level = #Levels end
+      --
+      GridManager.setGrid(level)
     end
-    --
-    if level > #Levels then level = 1 elseif level < 1 then level = #Levels end
-    --
-    GridManager.setGrid(level)
+    if key == "delete" then -- suppr
+      GridManager.resetLevel(Grid.level)
     end
   end
   if key == "escape" then

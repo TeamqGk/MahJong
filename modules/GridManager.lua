@@ -1,8 +1,20 @@
 local GridManager = {}
 
-function GridManager.setGrid(pLevel)
+function GridManager.resetLevel(pLevel)
+  GridManager.setGrid(pLevel, true)  
+end
+--
+
+function GridManager.setGrid(pLevel, pReset)
   Grid = {}
   Grid = Levels[pLevel]
+  if pReset == true then
+    LevelsManager.reset(pLevel)
+  end
+  if debug then print("Grid.load : "..tostring(Grid.load)) end
+
+--
+
   --[[ return :
   Grid.etages, Grid.lignes, Grid.colonnes
   & all etages Tables
@@ -10,7 +22,7 @@ function GridManager.setGrid(pLevel)
 
   -- level actuel ?
   Grid.level = pLevel
-  
+
   --
   Grid.name = "Level : "..pLevel
 
@@ -43,21 +55,24 @@ function GridManager.setGrid(pLevel)
     for lignes = 1,  Grid.lignes do-- lignes
       for colonnes = 1, Grid.colonnes do-- colonnes
         local case = Grid[etages][lignes][colonnes]
-        -- on creer un MahJong si il y a un nombre !
-        local backup
-        if  type(case) == "number"  then
-          backup = etages
-          Grid.mahjongTotal = Grid.mahjongTotal + 1
-        else
-          backup = 0
+
+        if not Grid.load or pReset then
+          -- on creer un MahJong si il y a un nombre !
+          local backup
+          if  type(case) == "number"  then
+            backup = etages
+            Grid.mahjongTotal = Grid.mahjongTotal + 1
+          else
+            backup = 0
+          end
+          --
+          Grid[etages][lignes][colonnes] = {}
+          case = Grid[etages][lignes][colonnes]
+          case.type = backup
+          case.etages = etages
+          case.lignes = lignes
+          case.colonnes = colonnes
         end
-        --
-        Grid[etages][lignes][colonnes] = {}
-        case = Grid[etages][lignes][colonnes]
-        case.type = backup
-        case.etages = etages
-        case.lignes = lignes
-        case.colonnes = colonnes
         case.x = x
         case.y = y
         case.w = Grid.caseW
@@ -81,7 +96,12 @@ function GridManager.setGrid(pLevel)
   print ("\n".."Nouvelle Grid of "..#Grid.." etages, "..#Grid[1].." lines and "..#Grid[1][1].." cols !".."\n")
 
   -- randomise mahjong in grid
-  GridManager.setRandMahjong()
+  if not Grid.load or pReset  then
+    GridManager.setRandMahjong()
+    --
+    Grid.load = true
+    if pReset then print("ICI") end
+  end
 end
 --
 
@@ -125,13 +145,13 @@ end
 --
 
 function GridManager.testMohJang(pRand,pLig,pCol)
+  --
   local loopTest = true
-  local l = 0
-  local c = 0
+  --
   while loopTest do
     local superposed = false
-    l = love.math.random(1,Grid.lignes)
-    c = love.math.random(1,Grid.colonnes)
+    local l = love.math.random(1,Grid.lignes)
+    local c = love.math.random(1,Grid.colonnes)
     if PLig and pCol then
       if PLig == l and pCol == c then
         superposed = true
