@@ -10,7 +10,7 @@ BouttonManager.colorText = {0,0,0,1}
 BouttonManager.colorMouseOver = {1,0,0,1}
 --
 BouttonManager.effect = 0
-BouttonManager.effectMax = -10
+BouttonManager.effectMax = -15
 BouttonManager.effectSpeed = 10
 
 --
@@ -145,7 +145,13 @@ function BouttonManager.newBox ()
   --
   function new:draw()
     love.graphics.setColor(self.color)
+    -- mirror W
     love.graphics.rectangle("fill", self.x, self.y, self.w, self.h,BouttonManager.effect)
+    love.graphics.rectangle("fill", self.x+self.w, self.y, 0 - self.w, self.h,(1*BouttonManager.effect) - BouttonManager.effect)
+    -- mirror H
+    love.graphics.rectangle("fill", self.x, self.y + self.h, self.w, 0 - self.h,BouttonManager.effect*1.5)
+    love.graphics.rectangle("fill", self.x+self.w, self.y + self.h, 0 - self.w, 0 - self.h,BouttonManager.effect* - 1.5)
+    --
     love.graphics.setColor(1,1,1,1)
     --
     if self.text then

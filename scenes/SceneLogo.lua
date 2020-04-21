@@ -9,9 +9,9 @@ local BackGround = ImgManager.new("img/bg_logo.jpg")-- pFile
 local loop = 0
 function SceneLogo.load() -- love.load()
   BouttonManager:setDimensions(screen.w * 0.2, screen.h * 0.05)
-  BouttonManager:setColor(0,1,0,0.40)
+  BouttonManager:setColor(0,1,0,0.15)
   BouttonManager:setColorText(0,0,0,0.75)
-  BouttonManager:setColorMouseOver(0,0,1,0.45)
+  BouttonManager:setColorMouseOver(0,0,1,0.15)
   --
   Boutton[1] = BouttonManager.newBox ()
   Boutton[1]:addText(Font[22], "Jouer !")
