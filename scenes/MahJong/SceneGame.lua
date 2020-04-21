@@ -9,7 +9,7 @@ MahJong = {}
 
 
 -- Images
-Img.MahJong = ImgManager.new("img/mahjong_pieces_modif_1.png")-- pFile
+Img.MahJong = ImgManager.new("scenes/MahJong/img/mahjong_pieces_modif_1.png")-- pFile
 --[[ return :
 img.img
 img.w

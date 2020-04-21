@@ -1,8 +1,8 @@
 local LevelsManager = {}
 
 -- gestion of folder and files of levels
-local pFolder = "levels"
-local filesTable = love.filesystem.getDirectoryItems("levels")
+local pFolder = "scenes/MahJong/levels"
+local filesTable = love.filesystem.getDirectoryItems(pFolder)
 
 function LevelsManager.autoload()
   --

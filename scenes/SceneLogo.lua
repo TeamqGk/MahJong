@@ -1,32 +1,31 @@
 local SceneLogo = {}
 
 local BouttonManager = require ("modules/BouttonManager")
-print("#BouttonManager = "..#BouttonManager)
 local Boutton = {}
 
 
 local loop = 0
 function SceneLogo.load() -- love.load()
-  Boutton[1] = BouttonManager.newBox (screen.w * 0.3, screen.h * 0.1)
+  Boutton[1] = BouttonManager.newBox (screen.w * 0.2, screen.h * 0.05)
   Boutton[1]:setColor(0,1,0,0.25)
   Boutton[1]:setColorFixe()
   Boutton[1]:addText(Font[22], "Jouer !")
   --
-  Boutton[2] = BouttonManager.newBox (screen.w * 0.3, screen.h * 0.1)
+  Boutton[2] = BouttonManager.newBox (screen.w * 0.2, screen.h * 0.05)
   Boutton[2]:setColor(0,1,0,0.25)
   Boutton[2]:setColorFixe()
   Boutton[2]:addText(Font[22], "Options")
   --
-  print("#BouttonManager = "..#BouttonManager)
+  Boutton[3] = BouttonManager.newBox (screen.w * 0.2, screen.h * 0.05)
+  Boutton[3]:setColor(0,1,0,0.25)
+  Boutton[3]:setColorFixe()
+  Boutton[3]:addText(Font[22], "Quitter")
   --
-  loop = loop + 1
-  print("if find the bug look the value of loop : "..loop)
+  BouttonManager:setPos("Y")
 end
 --
 
 function SceneLogo.update(dt) -- love.load()
-  BouttonManager:setPosAlignY()
-  --
   BouttonManager.update(dt)
 end
 --
@@ -40,14 +39,21 @@ function SceneLogo.draw()-- love.draw()
   BouttonManager.draw()
   --
   if #BouttonManager ~= #Boutton then
-  love.graphics.print(#BouttonManager.." #BouttonManager for only "..#Boutton.." #Boutton ?! Bug ! You do FixMe !",10,10)
+    love.graphics.print(#BouttonManager.." #BouttonManager for only "..#Boutton.." #Boutton ?! Bug ! You do FixMe !",10,10)
   end
 end
 --
 
 function SceneLogo.keypressed(key, scancode, isrepeat)
-  if key == "return" or key == "space" then
-    SceneManager:setScene("SceneGame")
+  if debug then
+    if key == "kp+" then
+      BouttonManager:setPos("Y")
+    elseif key == "kp-" then      
+      BouttonManager:setPos("X")
+    end
+  end
+  if key == "escape" then
+    love.event.quit()
   end
 end
 --
@@ -55,7 +61,7 @@ end
 function SceneLogo.mousepressed(x, y, button, isTouch)
   if button == 1 then -- left clic
     if BouttonManager.current.ready then
-      SceneManager:setScene("SceneGame")
+      SceneManager:setScene("SceneMahJong")
     end
   end
 end

@@ -11,10 +11,10 @@ function SaveManager.load(pNumber)
   local f = {}
 
   if love.filesystem.getInfo( path, "file" ) then
-    print("not save game find.")
-  else
     f.load = love.filesystem.load(path)
-    f.load()
+    SaveGame[pNumber] = f.load()
+  else
+    print("not save game find.")
   end
 
 --  love.filesystem.read(filename)

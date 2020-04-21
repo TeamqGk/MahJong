@@ -27,7 +27,7 @@ function GridManager.setGrid(pLevel, pReset)
   Grid.name = "Level : "..pLevel
 
   -- Load image BackGround ( info is on map level_x.lua)
-  Img.BG = ImgManager.new("levels/img/"..Grid.image)-- pFile
+  Img.BG = ImgManager.new("scenes/MahJong/levels/img/"..Grid.image)-- pFile
   Img.BG:scaleToScreen()
 
 

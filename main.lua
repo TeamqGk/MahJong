@@ -29,7 +29,7 @@ GridManager = require("modules/GridManager") -- lua file
 
 
 -- List alls scenes here
-SceneGame = require("scenes/SceneGame")
+SceneMahJong = require("scenes/MahJong/SceneGame")
 SceneLogo = require("scenes/SceneLogo")
 MaSceneVierge = require("scenes/SceneVierge")
 -- etc.
@@ -48,7 +48,7 @@ SceneManager:addScene(module, name, pSetActiveScene)
 module "NomduFichierDelaScene".lua on ne mets pas l'extenesion .lua
 name , using this name for change scene later
 pSetActiveScene -- pour ajouter et mettre celle-ci directement..]]--
-SceneManager:addScene(SceneGame, "SceneGame")
+SceneManager:addScene(SceneMahJong, "SceneMahJong")
 SceneManager:addScene(SceneLogo, "SceneLogo")
 SceneManager:addScene(MaSceneVierge, "MaSceneTest")
 --[[
