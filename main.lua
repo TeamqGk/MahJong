@@ -1,7 +1,7 @@
 -- debug output console showing
 io.stdout:setvbuf("no")
 
-debug = false
+debug = true
 
 -- Set Screen Mode
 if release then

@@ -2,23 +2,24 @@ local SceneLogo = {}
 
 local BouttonManager = require ("modules/BouttonManager")
 local Boutton = {}
+local BackGround = ImgManager.new("img/bg_logo.jpg")-- pFile
+  BackGround:scaleToScreen()
 
 
 local loop = 0
 function SceneLogo.load() -- love.load()
   BouttonManager:setDimensions(screen.w * 0.2, screen.h * 0.05)
-  BouttonManager:setColor(0,1,0,0.25)
+  BouttonManager:setColor(0,1,0,0.40)
+  BouttonManager:setColorText(0,0,0,0.75)
+  BouttonManager:setColorMouseOver(0,0,1,0.45)
   --
   Boutton[1] = BouttonManager.newBox ()
---  Boutton[1]:setColor(0,1,0,0.25)
   Boutton[1]:addText(Font[22], "Jouer !")
   --
   Boutton[2] = BouttonManager.newBox ()
---  Boutton[2]:setColor(0,1,0,0.25)
   Boutton[2]:addText(Font[22], "Options")
   --
   Boutton[3] = BouttonManager.newBox ()
---  Boutton[3]:setColor(0,1,0,0.25)
   Boutton[3]:addText(Font[22], "Quitter")
   --
   BouttonManager:setPos("X")
@@ -31,10 +32,7 @@ end
 --
 
 function SceneLogo.draw()-- love.draw()
-  if debug then
-    love.graphics.line(screen.ox, screen.y, screen.ox, screen.h)
-    love.graphics.line(screen.x, screen.oy, screen.w, screen.oy)
-  end
+  BackGround:draw()
   --
   BouttonManager.draw()
   --

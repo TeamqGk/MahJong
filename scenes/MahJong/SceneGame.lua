@@ -38,7 +38,7 @@ end
 --
 
 function SceneGame.draw()-- love.draw()
-  love.graphics.scale(screen.sx, screen.sy)
+--  love.graphics.scale(screen.sx, screen.sy)
   GridManager.draw()
 end
 --

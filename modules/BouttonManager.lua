@@ -1,7 +1,18 @@
 local BouttonManager = {}
+--
 BouttonManager.w = 150
 BouttonManager.h = 30
+BouttonManager.spaceX = 30
+BouttonManager.spaceY = 30
+--
 BouttonManager.color = {1,1,1,1}
+BouttonManager.colorText = {0,0,0,1}
+BouttonManager.colorMouseOver = {1,0,0,1}
+--
+BouttonManager.effect = 0
+BouttonManager.effectMax = -10
+BouttonManager.effectSpeed = 10
+
 --
 BouttonManager.current = {ready = false}
 
@@ -13,6 +24,16 @@ end
 
 function BouttonManager:setColor(r,g,b,a)
   BouttonManager.color = {r,g,b,a}
+end
+--
+
+function BouttonManager:setColorText(r,g,b,a)
+  BouttonManager.colorText = {r,g,b,a}
+end
+--
+
+function BouttonManager:setColorMouseOver(r,g,b,a)
+  BouttonManager.colorMouseOver = {r,g,b,a}
 end
 --
 
@@ -49,26 +70,32 @@ function BouttonManager.newBox ()
     --
   end
   --
-  function new:setColorText(red, green, blue, alpha)
+  function new:setColorText(r, g, b, a)
     --
-    if not red then
-        self.colorText = {0,0,0,1}
+    if not r or not g or not b or not  a then
+      self.colorText = BouttonManager.colorText
     else
       --
-      self.colorText = {red, green, blue, alpha}
+      self.colorText = {r, g, b, a}
     end
   end
   --
-  function new:setColor(red, green, blue, alpha)
+  function new:setColor(r, g, b, a)
     --
-    if not red then 
+    if not r or not g or not b or not  a then
       self.color =  BouttonManager.color 
     else
-      self.color = {red, green, blue, alpha}
+      self.color = {r, g, b, a}
     end
     --
-    if not self.colorFixe then self.colorFixe = self.color end
+    if not self.colorFixe then self:setColorFixe() end
+    if not self.colorFixe then self:setColorFixe() end
     --
+  end
+  --
+  function new:setcolorMouseOver() -- set the current to Fixe
+    if not self.colorMouseOver then self.colorMouseOver = BouttonManager.colorMouseOver end
+    self.color = self.colorMouseOver
   end
   --
   function new:setColorFixe() -- set the current to Fixe
@@ -86,7 +113,7 @@ function BouttonManager.newBox ()
     self:updateText()
     --
     if not r or not g or not b or not  a then
-      self:setColorText(1,1,1,1)
+      self:setColorText()
     else
       self:setColorText(r,g,b,a)
     end
@@ -108,7 +135,7 @@ function BouttonManager.newBox ()
     if not self.color then self:setColor() end
     self.ready = globals.math.AABB(mouse.x,mouse.y,mouse.w,mouse.h, self.x,self.y,self.w,self.h)
     if self.ready then
-      self:setColor(0,0,1,0.25)
+      self:setcolorMouseOver()
     else
       self:resetColor()
     end
@@ -118,16 +145,13 @@ function BouttonManager.newBox ()
   --
   function new:draw()
     love.graphics.setColor(self.color)
-    love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+    love.graphics.rectangle("fill", self.x, self.y, self.w, self.h,BouttonManager.effect)
     love.graphics.setColor(1,1,1,1)
     --
     if self.text then
       love.graphics.setColor(self.colorText)
       local t = self.text
       love.graphics.draw(t.print, t.x, t.y, 0, 1, 1, t.ox, t.oy)
-    end
-    if debug then
-      love.graphics.print("button["..self.id.."].ready : "..tostring(self.ready),self.x, self.y)
     end
     --
     love.graphics.setColor(1,1,1,1)
@@ -152,8 +176,8 @@ function BouttonManager:setPos(pStyle, DecX, DecY) -- pStyle "x" ou "y", DecX in
     --
     local temp = {}
     --
-    temp.spaceX = 4 or DecX
-    temp.spaceY = 4 or DecY
+    temp.spaceX = BouttonManager.spaceX or DecX
+    temp.spaceY = BouttonManager.spaceY or DecY
     --
     temp.w_total = temp.spaceX
     temp.h_total = temp.spaceY
@@ -204,12 +228,22 @@ end
 --
 
 function BouttonManager.update(dt)
-  if #BouttonManager >= 1 then
-    for i = #BouttonManager, 1, -1 do
-      local b = BouttonManager[i]
+  local BM = BouttonManager
+  BM.effect =  BM.effect + BM.effectSpeed * dt
+  if BM.effect <=  BM.effectMax then
+    BM.effect = BM.effectMax
+    BM.effectSpeed =  0 - BM.effectSpeed
+  elseif BM.effect >= 0  then
+    BM.effect = 0
+    BM.effectSpeed = 0 - BM.effectSpeed
+  end
+
+  if #BM >= 1 then
+    for i = #BM, 1, -1 do
+      local b = BM[i]
       b:update(dt)
       if b.ready then
-        BouttonManager.current = b
+        BM.current = b
       end
     end
   end
@@ -217,9 +251,10 @@ end
 --
 
 function BouttonManager.draw()
-  if #BouttonManager >= 1 then
-    for i = #BouttonManager, 1, -1 do
-      local b = BouttonManager[i]
+  local BM = BouttonManager
+  if #BM >= 1 then
+    for i = #BM, 1, -1 do
+      local b = BM[i]
       b:draw()
     end
   end
