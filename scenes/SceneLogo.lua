@@ -6,22 +6,22 @@ local Boutton = {}
 
 local loop = 0
 function SceneLogo.load() -- love.load()
-  Boutton[1] = BouttonManager.newBox (screen.w * 0.2, screen.h * 0.05)
-  Boutton[1]:setColor(0,1,0,0.25)
-  Boutton[1]:setColorFixe()
+  BouttonManager:setDimensions(screen.w * 0.2, screen.h * 0.05)
+  BouttonManager:setColor(0,1,0,0.25)
+  --
+  Boutton[1] = BouttonManager.newBox ()
+--  Boutton[1]:setColor(0,1,0,0.25)
   Boutton[1]:addText(Font[22], "Jouer !")
   --
-  Boutton[2] = BouttonManager.newBox (screen.w * 0.2, screen.h * 0.05)
-  Boutton[2]:setColor(0,1,0,0.25)
-  Boutton[2]:setColorFixe()
+  Boutton[2] = BouttonManager.newBox ()
+--  Boutton[2]:setColor(0,1,0,0.25)
   Boutton[2]:addText(Font[22], "Options")
   --
-  Boutton[3] = BouttonManager.newBox (screen.w * 0.2, screen.h * 0.05)
-  Boutton[3]:setColor(0,1,0,0.25)
-  Boutton[3]:setColorFixe()
+  Boutton[3] = BouttonManager.newBox ()
+--  Boutton[3]:setColor(0,1,0,0.25)
   Boutton[3]:addText(Font[22], "Quitter")
   --
-  BouttonManager:setPos("Y")
+  BouttonManager:setPos("X")
 end
 --
 

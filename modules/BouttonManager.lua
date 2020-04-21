@@ -1,13 +1,28 @@
 local BouttonManager = {}
+BouttonManager.w = 150
+BouttonManager.h = 30
+BouttonManager.color = {1,1,1,1}
+--
 BouttonManager.current = {ready = false}
 
-function BouttonManager.newBox (pw, ph)
+function BouttonManager:setDimensions(w, h)
+  self.w = w 
+  self.h = h
+end
+--
+
+function BouttonManager:setColor(r,g,b,a)
+  BouttonManager.color = {r,g,b,a}
+end
+--
+
+function BouttonManager.newBox ()
   local new = {}
   new.id = #BouttonManager+1
-  new.w = pw
-  new.h = ph
-  new.ox = pw * 0.5
-  new.oy = ph * 0.5
+  new.w = BouttonManager.w
+  new.h = BouttonManager.h
+  new.ox = BouttonManager.w * 0.5
+  new.oy = BouttonManager.h * 0.5
   --
   new.x = screen.ox - new.ox
   new.y = screen.oy - new.oy
@@ -16,7 +31,8 @@ function BouttonManager.newBox (pw, ph)
   new.green = 1
   new.blue = 1
   new.alpha = 1
-  new.color = {new.red, new.green, new.blue, new.alpha}
+  new.color = false
+  new.colorFixe = false
   --
   new.isVisible = true
 
@@ -35,22 +51,24 @@ function BouttonManager.newBox (pw, ph)
   --
   function new:setColorText(red, green, blue, alpha)
     --
-    if not red then red = 1 end
-    if not green then green = 1 end
-    if not blue then blue = 1 end
-    if not alpha then alpha = 1 end
-    --
-    self.colorText = {red, green, blue, alpha}
+    if not red then
+        self.colorText = {0,0,0,1}
+    else
+      --
+      self.colorText = {red, green, blue, alpha}
+    end
   end
   --
   function new:setColor(red, green, blue, alpha)
     --
-    if not red then red = 1 end
-    if not green then green = 1 end
-    if not blue then blue = 1 end
-    if not alpha then alpha = 1 end
+    if not red then 
+      self.color =  BouttonManager.color 
+    else
+      self.color = {red, green, blue, alpha}
+    end
     --
-    self.color = {red, green, blue, alpha}
+    if not self.colorFixe then self.colorFixe = self.color end
+    --
   end
   --
   function new:setColorFixe() -- set the current to Fixe
@@ -75,6 +93,10 @@ function BouttonManager.newBox (pw, ph)
   end
   --
   function new:updateText()
+    --
+    self.w = BouttonManager.w
+    self.h = BouttonManager.h
+    --
     if self.text then
       self.text.w, self.text.h = self.text.print:getDimensions()
       self.text.ox, self.text.oy = self.text.w*0.5, self.text.h*0.5
@@ -83,6 +105,7 @@ function BouttonManager.newBox (pw, ph)
   end
   --
   function new:update(dt)
+    if not self.color then self:setColor() end
     self.ready = globals.math.AABB(mouse.x,mouse.y,mouse.w,mouse.h, self.x,self.y,self.w,self.h)
     if self.ready then
       self:setColor(0,0,1,0.25)
@@ -94,7 +117,7 @@ function BouttonManager.newBox (pw, ph)
   end
   --
   function new:draw()
-    love.graphics.setColor(self.color )
+    love.graphics.setColor(self.color)
     love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
     love.graphics.setColor(1,1,1,1)
     --
@@ -131,32 +154,32 @@ function BouttonManager:setPos(pStyle, DecX, DecY) -- pStyle "x" ou "y", DecX in
     --
     temp.spaceX = 4 or DecX
     temp.spaceY = 4 or DecY
-    temp.escapeTotalX = temp.spaceX * (#BouttonManager+1)
-    temp.escapeTotalY = temp.spaceY * (#BouttonManager+1)
     --
-    temp.w_total = 0
-    temp.h_total = 0
+    temp.w_total = temp.spaceX
+    temp.h_total = temp.spaceY
     for i = 1, #BouttonManager do
       local b = BouttonManager[1]
       if b.isVisible then
-        temp.w_total = temp.w_total + b.w
-        temp.h_total = temp.h_total + b.h
+        temp.w_total = temp.w_total + b.w + temp.spaceX
+        temp.h_total = temp.h_total + b.h + temp.spaceY
       end
     end
-    temp.w_total = temp.w_total + temp.escapeTotalX
-    temp.h_total = temp.h_total + temp.escapeTotalY
     --
     local start = {}
     start.spaceX = temp.spaceX
     start.spaceY = temp.spaceY
-    start.x = screen.ox - (temp.w_total * 0.5)
-    start.y = screen.oy - (temp.h_total * 0.5)
-    print("start.x : "..start.x)
+    start.x = screen.ox - (temp.w_total * 0.5) + start.spaceX
+    start.y = screen.oy - (temp.h_total * 0.5) + start.spaceY
     --
+    local first = false
     if pStyle == "x" then
       for i = 1, #BouttonManager do
         local b = BouttonManager[i]
         if b.isVisible then
+          if first == false then -- because is centred
+            start.x = start.x + b.ox
+            first = true
+          end
           b:setPos(start.x, screen.oy, "center")
           b:updateText()
           start.x = start.x + b.w + start.spaceX
@@ -166,6 +189,10 @@ function BouttonManager:setPos(pStyle, DecX, DecY) -- pStyle "x" ou "y", DecX in
       for i = 1, #BouttonManager do
         local b = BouttonManager[i]
         if b.isVisible then
+          if first == false then -- because is centred
+            start.y = start.y + b.oy
+            first = true
+          end
           b:setPos(screen.ox, start.y, "center")
           b:updateText()
           start.y = start.y + b.h + start.spaceY
