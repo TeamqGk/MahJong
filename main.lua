@@ -5,13 +5,15 @@ debug = true
 
 -- Set Screen Mode
 if release then
-local width, height = love.window.getDesktopDimensions( display )
-love.window.setMode(width, height)
-love.window.maximize()
+  local width, height = love.window.getDesktopDimensions( display )
+  love.window.setMode(width, height)
+  love.window.maximize()
 end
 
 -- just a Classic Globals for use =)
 globals = require("modules/globals")
+lume = require("modules/lume") -- lib of many's help functions's (and this nice is serialize and deserialize)
+json = require("modules/json") -- lib of many's help functions's (and this nice is serialize and deserialize)
 
 
 -- Require modules here if is Global needed
@@ -78,6 +80,11 @@ end
 
 
 function love.keypressed(key, scancode)
+  if debug then
+    if key == "f12" then
+      love.event.quit("restart")
+    end
+  end
   SceneManager:keypressed(key, scancode)
 end
 --
