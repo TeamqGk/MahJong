@@ -13,7 +13,7 @@ end
 -- just a Classic Globals for use =)
 globals = require("modules/globals")
 lume = require("modules/lume") -- lib of many's help functions's (and this nice is serialize and deserialize)
-json = require("modules/json") -- lib of many's help functions's (and this nice is serialize and deserialize)
+require("modules/libSaveTableToFile")
 
 
 -- Require modules here if is Global needed

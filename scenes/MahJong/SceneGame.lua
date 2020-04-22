@@ -6,6 +6,8 @@ Grid = {}
 Img = {}
 MahJong = {}
 --
+local SaveGame = {}
+--
 
 
 -- Images

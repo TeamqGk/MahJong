@@ -1,72 +1,35 @@
 local SaveManager = {}
 
-local SaveGame = {}
+function SaveManager.saveGame(pDataTable)
+  -- add/update a date on this save, for player see the date of save list
+  pDataTable.saveDate = os.date()
+  -- convertir la table en string --
+  local dataString = lume.serialize(pDataTable)
+  -- encrypte le string --
+  local encryptDataString = love.data.encode( "string", "base64", dataString ,150)
+
+  -- ecriture du fichier --
+  love.filesystem.write("save.sav", encryptDataString)
+end
 --
-function SaveManager.newSave(pDataTable)
-  SaveGame = pDataTable
+function SaveManager.loadGame()
+  local dataFile = love.filesystem.read("save.sav")
+  local decrypt = love.data.decode( "string", "base64", dataFile)
+  local save = lume.deserialize(decrypt)
+  return save -- et le renvoi !
 end
 --
 
-function SaveManager.loadGame(pNumber)
-  --
-  local path = "save/"..pNumber.."/".."mahjong.sav"
-  local file -- the datas of file (encrypted string)
-  local decode -- decrypte file to readable string
-  local data -- transform an decrypte file to readable string
-  --
-  if love.filesystem.getInfo( path, "file" ) then
-    file = love.filesystem.read(path)
-    decode = love.data.decode( "string", "base64", file)
-    data = lume.deserialize(decode)
-  else
-    print("not save find.")
-    return false
-  end
-  --
-  SaveGame = data
-
-end
---
-
-function SaveManager.saveGame(pDataTable,pNumber)
-  --
-  local data -- is a data read by memories
-  local save -- the datas transform to string (not crypted)
-  local encoded -- encrpyt save to string not readable
-  --
-  data = pDataTable
-  data.saveDate = os.date() -- add a date for player see the date of save
-  --
-  save = lume.serialize(data)
-  --
-  encoded = love.data.encode( "string", "base64", save, 150)
-  --
-  love.filesystem.write("save/"..pNumber.."/".."mahjong.sav", encoded)
-end
---
-
+-- Extract Table to .CFG readeable
 function SaveManager.saveCfg(pDataTable)
-  --
-  local data = pDataTable
-  data.saveDate = os.date() -- add a date for player see the date of save
-  --
-  local saveCfg = json.encode(data)
-  --
-  love.filesystem.write("config.json", saveCfg)
-  --
+  table.save(pDataTable,"config.cfg")
 end
 --
-
-function SaveManager.loadCfg(Path)
-  --
-  local file = Path
-  --
-  local data = love.filesystem.read("config.json", file)
-  --
-  local loadcfg = json.decode(file)
-  --
+function SaveManager.loadCfg(pFilePath)
+  local loadcfg = table.load("config.cfg") --
   return loadcfg
 end
 --
+
 
 return SaveManager
