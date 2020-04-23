@@ -1,6 +1,6 @@
 local SceneMenuIntro = {}
 
-local BM = BouttonManager.new()
+local BM = BouttonManager.newBM()
 local Boutton = {}
 local BackGround = ImgManager.new("img/bg_logo.jpg")-- pFile
 BackGround:scaleToScreen()
@@ -30,14 +30,14 @@ end
 --
 
 function SceneMenuIntro.update(dt) -- love.load()
-  BM.update(dt)
+  BM:update(dt)
 end
 --
 
 function SceneMenuIntro.draw()-- love.draw()
   BackGround:draw()
   --
-  BM.draw()
+  BM:draw()
   --
   if #BM ~= #Boutton then
     love.graphics.print(#BM.." #BM for only "..#Boutton.." #Boutton ?! Bug ! You do FixMe !",10,10)

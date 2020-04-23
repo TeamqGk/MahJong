@@ -5,7 +5,7 @@ Levels = {}
 Grid = {}
 Img = {}
 MahJong = {}
-local BM = BouttonManager.new()
+local BM = BouttonManager.newBM()
 local Boutton = {}
 --
 local SaveGame = {}
@@ -56,14 +56,13 @@ end
 --
 
 function SceneGame.update(dt)
-  BM.update(dt)
+  BM:update(dt)
 end
 --
 
 function SceneGame.draw()-- love.draw()
 --  love.graphics.scale(screen.sx, screen.sy)
   GridManager.draw()
-  Boutton[1]:draw()
   BM:draw()
 --  Boutton[1]:draw()
 end
