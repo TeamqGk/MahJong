@@ -14,6 +14,11 @@ mouse = love.mouse
 mouse.x, mouse.y = love.mouse.getPosition()
 mouse.w, mouse.h = 1, 1
 mouse.ox, mouse.oh = 0.5, 0.5
+--
+mouse.l = nil
+mouse.c = nil
+mouse.onGrid = false
+--
 function mouse.update(dt)
   mouse.x, mouse.y = love.mouse.getPosition()
 end

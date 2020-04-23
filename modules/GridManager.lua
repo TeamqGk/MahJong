@@ -1,7 +1,7 @@
 local GridManager = {}
 
 function GridManager.resetLevel(pLevel)
-  GridManager.setGrid(pLevel, true)  
+  GridManager.setGrid(pLevel, true)
 end
 --
 
@@ -226,12 +226,23 @@ function GridManager.draw()
             love.graphics.setColor(colorRect)
             love.graphics.rectangle("fill", case.x+2, case.y+2, case.w-3, case.h-3)
           end
+          if debug then
+            love.graphics.setColor(0,1,0,1) -- reset color
+            love.graphics.rectangle("line", case.x, case.y, case.w, case.h)
+            love.graphics.setColor(1,1,1,1) -- reset color
+          end
         end
 
         -- reset color
         love.graphics.setColor(1,1,1,1) -- reset color
       end
     end
+  end
+
+  if debug then
+    love.graphics.setColor(1,0,0,1) -- reset color
+    love.graphics.rectangle("line", Grid.x, Grid.y, Grid.w, Grid.h)
+    love.graphics.setColor(1,1,1,1) -- reset color
   end
 
   --reset color

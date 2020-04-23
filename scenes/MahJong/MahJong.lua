@@ -43,7 +43,38 @@ MahJong.vide = 38
 MahJong.videmini = 39
 
 
+function SceneMahJong.mouseDraw()
+  if debug then
+    if mouse.onGrid then -- mouse.onGrid == true
+      print("ICI")
+      love.graphics.setColor(1,1,1,1)
+      text = "mouse.l : "..mouse.l.."\n".."mouse.c : "..mouse.c
+      love.graphics.print(text,10,10)
+      love.graphics.setColor(1,1,1,1)
+    end
+  end
+end
 
+--
+
+function SceneMahJong.mouseUpdate(dt)
+  if mouse.x > Grid.x + 1 and mouse.x < Grid.x + Grid.w - 1 and mouse.y > Grid.y + 1 and mouse.y <= Grid.y + Grid.h - 1 then
+    local col = math.floor((mouse.x - Grid.x) / Grid.caseW ) + 1
+    local lig = math.floor((mouse.y - Grid.y) / Grid.caseH ) + 1
+    mouse.c = col
+    mouse.l = lig
+    mouse.onGrid = true
+    -- Grid.x = offsetX
+    -- Grid.y = offsetY
+    -- Grid.w = Grid.colonnes * Img.MahJong.quad.w
+    -- Grid.h = Grid.lignes * Img.MahJong.quad.h
+    -- Grid.caseW = Grid.w / Grid.colonnes
+    -- Grid.caseH = Grid.h / Grid.lignes
+  else
+    mouse.onGrid = false
+  end
+  -- >
+end
 
 function SceneMahJong.load() -- love.load()
   screen.update(dt)
@@ -58,14 +89,16 @@ end
 
 function SceneMahJong.update(dt)
   BM:update(dt)
+  SceneMahJong.mouseUpdate(dt)
 end
 --
 
 function SceneMahJong.draw()-- love.draw()
---  love.graphics.scale(screen.sx, screen.sy)
+  --  love.graphics.scale(screen.sx, screen.sy)
   GridManager.draw()
   BM:draw()
---  Boutton[1]:draw()
+  SceneMahJong.mouseDraw()
+  --  Boutton[1]:draw()
 end
 --
 
@@ -73,11 +106,11 @@ function SceneMahJong:keypressed(key, scancode)
   if debug then print(key) end
   --
   if debug then
-    if key == "kp+" or key == "kp-" then
+    if key == "kp+" or key == "kp-" or key == "up" or key == "down" then
       local level = Grid.level
-      if key == "kp+" then
+      if key == "kp+" or key == "up"  then
         level = level + 1
-      elseif key == "kp-" then
+      elseif key == "kp-" or key == "down" then
         level = level - 1
       end
       --
@@ -99,11 +132,11 @@ function SceneMahJong.mousepressed(x, y, button, isTouch)
   if button == 1 then -- left clic
     if BM.current.ready then
       BM.current.action()-- example if bouton is Play then action is : SceneManager:setScene("MahJong")
+      end
     end
   end
-end
---
+  --
 
 
----------------------------- END -----------------------------------------
-return SceneMahJong
+  ---------------------------- END -----------------------------------------
+  return SceneMahJong
