@@ -1,6 +1,7 @@
 local SceneMenuIntro = {}
 
 local BM = BouttonManager.newBM()
+local BM_License = BouttonManager.newBM()
 local Boutton = {}
 local BackGround = ImgManager.new("img/bg_logo.jpg")-- pFile
 BackGround:scaleToScreen()
@@ -12,6 +13,8 @@ function SceneMenuIntro.load() -- love.load()
   BM:setColor(0,1,0,0.15)
   BM:setColorText(0,0,0,0.75)
   BM:setColorMouseOver(0,0,1,0.15)
+  BM:setSpace("Y", 55) -- def 30
+  BM:setSpace("x", 40) -- def 30
   --
   Boutton[1] = BM.newBox ()
   Boutton[1]:addText(Font[22], "Jouer !")
@@ -25,7 +28,16 @@ function SceneMenuIntro.load() -- love.load()
   Boutton[3]:addText(Font[22], "Quitter")
   Boutton[3]:setAction(function() love.event.quit() end)
   --
-  BM:setPos("X")
+  Boutton[4] = BM.newBox ()
+  Boutton[4]:addText(Font[22], "GitHub project")
+  Boutton[4]:setAction(function() love.system.openURL("https://github.com/TeamqGk/MahJong") end)
+  --
+  BM:setPos("Y")
+  --
+  BM:setDimensions(screen.w * 0.2, screen.h * 0.05)
+  BM:setColor(0,1,0,0.15)
+  BM:setColorText(0,0,0,0.75)
+  BM:setColorMouseOver(0,0,1,0.15)
 end
 --
 

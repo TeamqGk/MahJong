@@ -11,6 +11,7 @@ if release then
 end
 
 -- just a Classic Globals for use =)
+socket = require("socket")
 globals = require("modules/globals")
 lume = require("modules/lume") -- lib of many's help functions's (and this nice is serialize and deserialize)
 require("modules/libSaveTableToFile")
@@ -57,8 +58,6 @@ SceneManager:setScene(name)]]--
 SceneManager:setScene("MenuIntro")
 
 
---
-love.window.setTitle("The Project Grid [Mask & CryptoLogiq] TeamqGk.fr")
 
 function love.load()
   SceneManager:load()

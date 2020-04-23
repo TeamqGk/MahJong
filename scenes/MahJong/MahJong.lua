@@ -46,10 +46,9 @@ MahJong.videmini = 39
 function SceneMahJong.mouseDraw()
   if debug then
     if mouse.onGrid then -- mouse.onGrid == true
-      print("ICI")
-      love.graphics.setColor(1,1,1,1)
-      text = "mouse.l : "..mouse.l.."\n".."mouse.c : "..mouse.c
-      love.graphics.print(text,10,10)
+      love.graphics.setColor(0,0,0,1)
+      text = "L : "..mouse.l.."\n".."C : "..mouse.c
+      love.graphics.print(text,mouse.x + 20,mouse.y - 20)
       love.graphics.setColor(1,1,1,1)
     end
   end

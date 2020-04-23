@@ -19,10 +19,25 @@ function BouttonManager:newBM()
 
 --
   f.current = {ready = false}
-
+  --
+  function f:setSpace(pSTringType, pVar)
+    if pSTringType then pSTringType = tostring(string.lower(pSTringType)) end
+    if pSTringType ~= "x" and pSTringType ~= "y" then
+      print(' Attention f:setSpace(pSTringType) attends un string "x" ou "y" ! ')
+      return false
+    else
+      print("espacement pour "..#f.." boutons sur l'axe "..pSTringType.." ! ")
+    end
+    if pSTringType == "x" then
+      f.spaceX = pVar or 30
+    elseif pSTringType == "y" then
+      f.spaceY = pVar or 30 
+    end
+  end
+  --
   function f:setDimensions(w, h)
-    self.w = w 
-    self.h = h
+    f.w = w 
+    f.h = h
   end
 --
 
