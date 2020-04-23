@@ -62,8 +62,7 @@ end
 function SceneMenuIntro.mousepressed(x, y, button, isTouch)
   if button == 1 then -- left clic
     if BM.current.ready then
-      --SceneManager:setScene("MahJong")
-      BM.current.action()
+      BM.current.action()-- example if bouton is Play then action is : SceneManager:setScene("MahJong")
     end
   end
 end

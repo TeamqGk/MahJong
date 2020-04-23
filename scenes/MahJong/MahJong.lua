@@ -1,4 +1,4 @@
-local SceneGame = {}
+local SceneMahJong = {}
 ----------------------------- START -----------------------------------------
 -- Declare Global Tables of Game
 Levels = {}
@@ -19,6 +19,7 @@ function Boutton.init()
   --
   Boutton[1] = BM.newBox ()
   Boutton[1]:addText(Font[22], "Menu")
+  Boutton[1]:setPos(screen.w - (Boutton[1].w+10),10)
   Boutton[1]:setAction(function() SceneManager:setScene("MenuIntro") end)
   --
 end
@@ -44,7 +45,7 @@ MahJong.videmini = 39
 
 
 
-function SceneGame.load() -- love.load()
+function SceneMahJong.load() -- love.load()
   screen.update(dt)
   --
   Boutton.init()
@@ -55,12 +56,12 @@ function SceneGame.load() -- love.load()
 end
 --
 
-function SceneGame.update(dt)
+function SceneMahJong.update(dt)
   BM:update(dt)
 end
 --
 
-function SceneGame.draw()-- love.draw()
+function SceneMahJong.draw()-- love.draw()
 --  love.graphics.scale(screen.sx, screen.sy)
   GridManager.draw()
   BM:draw()
@@ -68,7 +69,7 @@ function SceneGame.draw()-- love.draw()
 end
 --
 
-function SceneGame:keypressed(key, scancode)
+function SceneMahJong:keypressed(key, scancode)
   if debug then print(key) end
   --
   if debug then
@@ -94,6 +95,15 @@ function SceneGame:keypressed(key, scancode)
 end
 --
 
+function SceneMahJong.mousepressed(x, y, button, isTouch)
+  if button == 1 then -- left clic
+    if BM.current.ready then
+      BM.current.action()-- example if bouton is Play then action is : SceneManager:setScene("MahJong")
+    end
+  end
+end
+--
+
 
 ---------------------------- END -----------------------------------------
-return SceneGame
+return SceneMahJong
