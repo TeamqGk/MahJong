@@ -5,10 +5,24 @@ Levels = {}
 Grid = {}
 Img = {}
 MahJong = {}
+local BM = BouttonManager.new()
+local Boutton = {}
 --
 local SaveGame = {}
 --
 
+function Boutton.init()
+  BM:setDimensions(screen.w * 0.2, screen.h * 0.05)
+  BM:setColor(0,1,0,0.15)
+  BM:setColorText(0,0,0,0.75)
+  BM:setColorMouseOver(0,0,1,0.15)
+  --
+  Boutton[1] = BM.newBox ()
+  Boutton[1]:addText(Font[22], "Menu")
+  Boutton[1]:setAction(function() SceneManager:setScene("MenuIntro") end)
+  --
+end
+--
 
 -- Images
 Img.MahJong = ImgManager.new("scenes/MahJong/img/mahjong_pieces_modif_1.png")-- pFile
@@ -33,15 +47,25 @@ MahJong.videmini = 39
 function SceneGame.load() -- love.load()
   screen.update(dt)
   --
+  Boutton.init()
+  --
   LevelsManager.autoload()
   --
   GridManager.setGrid(1)
 end
 --
 
+function SceneGame.update(dt)
+  BM.update(dt)
+end
+--
+
 function SceneGame.draw()-- love.draw()
 --  love.graphics.scale(screen.sx, screen.sy)
   GridManager.draw()
+  Boutton[1]:draw()
+  BM:draw()
+--  Boutton[1]:draw()
 end
 --
 
@@ -66,7 +90,7 @@ function SceneGame:keypressed(key, scancode)
     end
   end
   if key == "escape" then
-    SceneManager:setScene("SceneLogo")
+    SceneManager:setScene("MenuIntro")
   end
 end
 --

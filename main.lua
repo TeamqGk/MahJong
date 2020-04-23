@@ -23,15 +23,12 @@ SaveManager = require("modules/SaveManager")
 QuadManager = require("modules/QuadManager") -- lua file
 ImgManager = require("modules/ImgManager") -- lua file
 GridManager = require("modules/GridManager") -- lua file
-
-
-
+BouttonManager = require ("modules/BouttonManager")
 
 
 -- List alls scenes here
-SceneMahJong = require("scenes/MahJong/SceneGame")
-SceneLogo = require("scenes/SceneLogo")
-MaSceneVierge = require("scenes/SceneVierge")
+SceneMahJong = require("scenes/MahJong/MahJong")
+SceneMenuIntro = require("scenes/MenuIntro")
 -- etc.
 
 
@@ -48,9 +45,8 @@ SceneManager:addScene(module, name, pSetActiveScene)
 module "NomduFichierDelaScene".lua on ne mets pas l'extenesion .lua
 name , using this name for change scene later
 pSetActiveScene -- pour ajouter et mettre celle-ci directement..]]--
-SceneManager:addScene(SceneMahJong, "SceneMahJong")
-SceneManager:addScene(SceneLogo, "SceneLogo")
-SceneManager:addScene(MaSceneVierge, "MaSceneTest")
+SceneManager:addScene(SceneMahJong, "MahJong")
+SceneManager:addScene(SceneMenuIntro, "MenuIntro")
 --[[
 Now the first scene loading is "SceneGame"
 Hox to change Scene Later ? simply use this :
@@ -58,11 +54,11 @@ SceneManager:setScene(name)]]--
 --
 
 -- Set the first scene need to load
-SceneManager:setScene("SceneLogo")
+SceneManager:setScene("MenuIntro")
 
 
 --
-love.window.setTitle("MahJong [Mask & CryptoLogiq] TeamqGk.fr")
+love.window.setTitle("The Project Grid [Mask & CryptoLogiq] TeamqGk.fr")
 
 function love.load()
   SceneManager:load()
