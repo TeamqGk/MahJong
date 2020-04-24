@@ -93,11 +93,10 @@ end
 --
 
 function SceneMahJong.draw()-- love.draw()
-  --  love.graphics.scale(screen.sx, screen.sy)
   GridManager.draw()
-  BM:draw()
   SceneMahJong.mouseDraw()
-  --  Boutton[1]:draw()
+  --
+  BM:draw()
 end
 --
 
@@ -131,11 +130,11 @@ function SceneMahJong.mousepressed(x, y, button, isTouch)
   if button == 1 then -- left clic
     if BM.current.ready then
       BM.current.action()-- example if bouton is Play then action is : SceneManager:setScene("MahJong")
-      end
     end
   end
-  --
+end
+--
 
 
-  ---------------------------- END -----------------------------------------
-  return SceneMahJong
+---------------------------- END -----------------------------------------
+return SceneMahJong

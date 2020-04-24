@@ -12,6 +12,9 @@ local color = {}
 local BackGround = ImgManager.new("scenes/CasseBrique/img/wall.jpg")
 BackGround:scaleToScreen()
 BackGround:setColor(1,1,1,0.25)
+--
+local BM = BouttonManager.newBM()
+local Boutton = {}
 
 
 -- PAD
@@ -49,6 +52,21 @@ color[7] = {1,0,1,1}
 color[8] = {1,1,1,1}
 color[9] = {1,1,1,1}
 color[10] = {1,1,1,1}
+
+
+function Boutton.init()
+  BM:setDimensions(screen.w * 0.2, screen.h * 0.05)
+  BM:setColor(0,1,0,0.15)
+  BM:setColorText(0,0,0,0.75)
+  BM:setColorMouseOver(0,0,1,0.15)
+  --
+  Boutton[1] = BM.newBox ()
+  Boutton[1]:addText(Font[22], "Menu")
+  Boutton[1]:setPos(screen.w - (Boutton[1].w+10),10)
+  Boutton[1]:setAction(function() SceneManager:setScene("MenuIntro") end)
+  --
+end
+--
 
 
 function mapManager.setLevel(pLevel)
@@ -240,11 +258,15 @@ end
 
 
 function SceneCasseBrique.load()
+  Boutton.init()
+  --
   Demarre()
 end
 --
 
 function SceneCasseBrique.update(dt)
+  BM:update(dt)
+  --
   pad.update(dt)
   --
   ball.update(dt)
@@ -258,6 +280,7 @@ function SceneCasseBrique.draw()
   ball.draw()
   mapManager.draw()
   --
+  BM:draw()
 end
 --
 
@@ -273,7 +296,14 @@ function SceneCasseBrique.mousepressed(x,y,button)
       -- oO
     end
   end
+  --
+  if button == 1 then -- left clic
+    if BM.current.ready then
+      BM.current.action()-- example if bouton is Play then action is : SceneManager:setScene("MahJong")
+    end
+  end
 end
 --
+
 
 return SceneCasseBrique
