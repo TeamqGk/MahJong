@@ -183,16 +183,11 @@ function ball.collideBriques()
   for i = #lst_briques, 1, - 1 do
     local case = lst_briques[i]
     local collide = {}
-    collide = globals.math.circleRect(ball.x, ball.y, ball.rayon,              case.x, case.y, case.w, case.h)
-    if  collide then
---      print("----------------------")
---      print("ball.x"..ball.x.."\t".."ball.y"..ball.y)
---      print("case.x"..case.x.."\t".."case.w"..(case.x+case.w).."\t".."case.y"..case.y.."\t".."case.h"..(case.y+case.h))
---      print("collide in x : "..collide[2].."\t".."y : "..collide[3])
---      print("----------------------")
+    collide = globals.math.circleRect(ball.x, ball.y, ball.rayon,              case.x, case.y, case.w, case.h) -- return true/false, et si c'est true ca retourne uen table ou je recupere ainsi la position x et y de la collision exacte =D'
+    if  collide then -- si y a eu collision..
       --
-      collide.x = collide[2]
-      collide.y = collide[3]
+      collide.x = collide[2] -- mon return X
+      collide.y = collide[3] -- mon return Y
       --
       if collide.x == case.x then -- gauche
         ball.x = case.x - ball.rayon
@@ -211,6 +206,8 @@ function ball.collideBriques()
         ball.vy = 0 - ball.vy
       end
       --
+
+      -- decrementation de la vie
       case.vie = case.vie - 1
       if case.vie == 0 then
         table.remove(lst_briques, i)
