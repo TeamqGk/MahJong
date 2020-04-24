@@ -21,6 +21,7 @@ require("modules/libSaveTableToFile")
 SceneManager = require("modules/SceneManager")
 LevelsManager = require("modules/LevelsManager")
 SaveManager = require("modules/SaveManager")
+AudioManager = require("modules/audioManager")
 QuadManager = require("modules/QuadManager") -- lua file
 ImgManager = require("modules/ImgManager") -- lua file
 GridManager = require("modules/GridManager") -- lua file
