@@ -178,15 +178,52 @@ function mapManager.draw()
 end
 --
 
+function ball.collide()
+  --TEST Collision witch Breack's :
+  for i = #lst_briques, 1, - 1 do
+    local case = lst_briques[i]
+    if globals.math.AABB_circleRect_Object(ball, case) then
+      --
+      if ball.y - ball.rayon <= case.y + case.h or ball.y + ball.rayon >= case.y then -- ball down or ball up
+        ball.vy = 0 - ball.vy
+        -- on replace la balle en Y
+        if ball.y - ball.rayon <= case.y + case.h then -- down
+          ball.y = case.y + case.h + ball.rayon + 1
+        elseif ball.y + ball.rayon >= case.y then -- up
+          ball.y = case.y - ( ball.rayon + 1 )
+        end
+        --
+      elseif ball.x + ball.rayon <= case.x or ball.x - ball.rayon >= case.x + case.w then -- ball left or ball right
+        ball.vx = 0 - ball.vx
+        -- on replace la balle en X
+        if ball.x + ball.rayon <= case.x then -- left
+          ball.x = case.x - (ball.rayon + 1)
+        elseif ball.x - ball.rayon >= case.x + case.w then -- right
+          ball.x = case.x + case.w + ball.rayon + 1
+        end
+        --
+      else
+        print(" error collide Ball :'[ ")
+      end
+      --
+      case.vie = case.vie - 1
+      if case.vie == 0 then
+        table.remove(lst_briques, i)
+      end
+      return
+    end
+  end
+  --------- END ---------
+end
+--
+
 function  ball.update(dt)
   if ball.colle then 
     ball.x = pad.x + pad.ox  
   elseif not ball.colle then
 
-    -- Move :
-    ball.x = ball.x + ( (ball.vx * ball.speed) * dt )
-    ball.y = ball.y + ( (ball.vy * ball.speed) * dt )
-    --------- END ---------
+    --TEST Collision witch Breack's :
+    ball.collide()
 
 
     -- Collide Walls :
@@ -227,20 +264,18 @@ function  ball.update(dt)
     --------- END ---------
 
 
-    --TEST Collision witch Breack's :
-    for i = #lst_briques, 1, - 1 do
-      local case = lst_briques[i]
-      if globals.math.AABB_circleRect_Object(ball, case) then
-      end
-    end
-    --------- END ---------
-
-
     -- Ball Loose :
     if ball.y + ball.rayon >= screen.h then-- >= bas (w)  == PERDU !
       Demarre()
     end
     --------- END ---------
+
+
+    -- Move :
+    ball.x = ball.x + ( (ball.vx * ball.speed) * dt )
+    ball.y = ball.y + ( (ball.vy * ball.speed) * dt )
+    --------- END ---------
+
 
   end
 end

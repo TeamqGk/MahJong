@@ -39,13 +39,7 @@ function screen.update(dt)
     screen.sx = h / screen.h_def
   end
 end
-
-
-
-
-
-
-
+--
 
 
 -- MATH Formules
@@ -77,13 +71,13 @@ end
 function globals.math.AABB_circleRect(x1,y1,r1, x2,y2,w2,h2)
   local circle_x1 = x1 - r1
   local circle_y1 = y1 - r1
-  local circle_w1 = x1 + r1
-  local circle_h1 = y1 + r1
+  local circle_w1 = r1 * 2
+  local circle_h1 = circle_w1
   return circle_x1 < x2+w2 and  x2 < circle_x1+circle_w1 and  y1 < y2+h2 and  y2 < circle_y1+circle_h1 end
   --
 
   function globals.math.AABB_circleRect_Object(pCircle, pRect) -- -- assume object Circle in first and have x, y, rayon and second is Rect with x,y,w,h
-    globals.math.AABB_circleRect(pCircle.x,pCircle.y,pCircle.rayon,    pRect.x,pRect.y,pRect.w,pRect.h)
+    return globals.math.AABB_circleRect(pCircle.x,pCircle.y,pCircle.rayon,    pRect.x,pRect.y,pRect.w,pRect.h)
   end
   --
 
