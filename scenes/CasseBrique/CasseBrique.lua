@@ -3,19 +3,26 @@ local SceneCasseBrique = {}
 local lg = love.graphics
 --
 
-local pad = {}
-local ball = {}
-local mapManager = {}
+local pad = {} -- the pad
+local ball = {} -- the ball's
+local mapManager = {} -- function for map
 mapManager.currentLevel = 0
-local map = {}
+
+local map = {} -- table of current map generated (Infos etc...)
+
+local lst_briques = {} -- The map generated breack's in table with all elements (list)
+
 local color = {}
 local BackGround = ImgManager.new("scenes/CasseBrique/img/wall.jpg")
 BackGround:scaleToScreen()
 BackGround:setColor(1,1,1,0.25)
+local MiniWaal = ImgManager.new("scenes/CasseBrique/img/mini_wall.png")
+MiniWaal:scaleToWidth()
+MiniWaal:setColor(0,1,1,0.75)
+
 --
 local BM = BouttonManager.newBM()
 BM.show = false
-function BM.switchShow() BM.show = not BM.show end
 local Boutton = {}
 
 mouse.onCasseBrique = false
@@ -68,7 +75,7 @@ function Boutton.init()
   Boutton[1]:addText(Font[22], "Menu")
   Boutton[1]:setPos(screen.w - (Boutton[1].w+10),10)
   Boutton[1]:setVisible(false)
-  Boutton[1]:setAction(function() SceneManager:setScene("MenuIntro") end)
+  Boutton[1]:setAction(function() SceneManager:setScene("MenuIntro") ; love.mouse.setVisible(true) end)
   --
   Boutton[2] = BM.newBox ()
   Boutton[2]:addText(Font[22], "Pause/Quit")
@@ -90,24 +97,31 @@ end
 function mapManager.setLevel(pLevel)
   map = {}
   --
-  local StartX = screen.w * 0.1
+  local StartX = 0
   local StartY = screen.h * 0.1
+  --
+  MiniWaal:setPos(0, StartY - MiniWaal.h)
   --
   local x = StartX
   local y = StartY
+  map.x = StartX
+  map.y = StartY
   --
   local pLig = 3 + pLevel
   local pCol = 7 + pLevel
+  map.lig = pLig
+  map.col = pCol
   --
   local w = screen.w - StartX*2
   local h = screen.h - StartY
+  map.w = w
+  map.h = h
+  --
+  map.nbBriques = pLig * pCol
+  map.level = pLevel
   --
   local caseW = w / pCol
   local caseH = h / 15 -- hauteur fixe !
-  --
-  map.lig = pLig
-  map.col = pCol
-  map.level = pLevel
   --
   for l = 1, map.lig  do
     map[l] = {}
@@ -127,6 +141,8 @@ function mapManager.setLevel(pLevel)
       --
       x = x + caseW
       --
+      table.insert(lst_briques, case)
+      --
     end
     --
     x = StartX
@@ -138,30 +154,26 @@ end
 --
 
 function mapManager.update(dt)
-  for l = 1, map.lig  do
-    for c = 1, map.col  do
-      local case = map[l][c]
-      -- HERE ?
-    end
+  for i = #lst_briques, 1, - 1 do
+    local case = lst_briques[i]
+    -- Here ?!
   end
 end
 --
 
 function mapManager.draw()
-  for l = 1, map.lig  do
-    for c = 1, map.col  do
-      local case = map[l][c]
-      lg.setColor(color[case.vie])
-      --
-      lg.rectangle("fill",case.x,case.y,case.w,case.h,15)
-      --
-      lg.setColor(0,0,0,0.65)      
-      --
-      lg.circle("fill",case.ox,case.oy,case.rayon)
-      lg.print(case.vie,case.ox-4,case.oy-8)
-      --
-      lg.setColor(1,1,1,1)      
-    end
+  for i = #lst_briques, 1, - 1 do
+    local case = lst_briques[i]
+    lg.setColor(color[case.vie])
+    --
+    lg.rectangle("fill",case.x,case.y,case.w,case.h,15)
+    --
+    lg.setColor(0,0,0,0.65)      
+    --
+    lg.circle("fill",case.ox,case.oy,case.rayon)
+    lg.print(case.vie,case.ox-4,case.oy-8)
+    --
+    lg.setColor(1,1,1,1)      
   end
 end
 --
@@ -170,10 +182,14 @@ function  ball.update(dt)
   if ball.colle then 
     ball.x = pad.x + pad.ox  
   elseif not ball.colle then
-    --------- START ---------
+
+    -- Move :
     ball.x = ball.x + ( (ball.vx * ball.speed) * dt )
     ball.y = ball.y + ( (ball.vy * ball.speed) * dt )
     --------- END ---------
+
+
+    -- Collide Walls :
     if ball.x + ball.rayon >= screen.w then-- >= droite (w)
       ball.vx = 0 - ball.vx
       ball.x = screen.w - ball.rayon
@@ -182,11 +198,12 @@ function  ball.update(dt)
       ball.x = 0 + ball.rayon
     end
     --
-    if ball.y - ball.rayon <= 0 then -- <= haut (0)
-      ball.y = 0 + ball.rayon
+    if ball.y - ball.rayon <= map.y then -- <= haut (0)
+      ball.y = map.y + ball.rayon
       ball.vy = 0 - ball.vy
     end
-    --
+    --------- END ---------
+
 
     -- REBOND
     if ball.x >= pad.x and ball.x <= pad.x + pad.w then -- Contact possible !! en largeur
@@ -207,35 +224,28 @@ function  ball.update(dt)
       ball.colorX = false
       ball.colorY = false
     end
-    --
+    --------- END ---------
+
+
+    --TEST Collision witch Breack's :
+    for i = #lst_briques, 1, - 1 do
+      local case = lst_briques[i]
+      if globals.math.AABB_circleRect_Object(ball, case) then
+      end
+    end
+    --------- END ---------
+
+
+    -- Ball Loose :
     if ball.y + ball.rayon >= screen.h then-- >= bas (w)  == PERDU !
       Demarre()
     end
+    --------- END ---------
+
   end
 end
 --
 
-function pad.update(dt)
-  pad.x = love.mouse.getX() - pad.ox
-  pad.pointX = pad.x + pad.ox
-  pad.pointY = pad.y + pad.distPointY -- why not mdr
-  --
-  if pad.x <= 0 then
-    pad.x = 1
-  elseif pad.x + pad.w >= screen.w then
-    pad.x = screen.w - (pad.w+1)
-  end
-end
---
-
-function pad.draw()
-  --
-  lg.setColor(1,1,1,1)
-  lg.rectangle("fill", pad.x, pad.y, pad.w, pad.h, 10)
-  lg.setColor(1,1,1,1)
-  --
-end
---
 function ball.draw()
   lg.setColor(1,1,1,1)
   --
@@ -260,6 +270,30 @@ function ball.draw()
 end
 --
 
+function pad.update(dt)
+  --
+  pad.x = love.mouse.getX() - pad.ox
+  pad.pointX = pad.x + pad.ox
+  pad.pointY = pad.y + pad.distPointY -- why not mdr
+  --
+  if pad.x <= 0 then
+    pad.x = 1
+  elseif pad.x + pad.w >= screen.w then
+    pad.x = screen.w - (pad.w+1)
+  end
+end
+--
+
+function pad.draw()
+  --
+  lg.setColor(1,1,1,1)
+  lg.rectangle("fill", pad.x, pad.y, pad.w, pad.h, 10)
+  lg.setColor(1,1,1,1)
+  --
+end
+--
+
+
 function Demarre()
   --
   pad.x = (screen.w * 0.5) - pad.ox
@@ -280,14 +314,35 @@ function nextBall()--
 end
 --
 
+local function mouseIsVisible()
+  if mouse.y <= map.y then
+    mouse.onCasseBrique = false
+  else
+    mouse.onCasseBrique = true
+  end
+  --
+  if BM.show then -- Show Menu Intro
+    love.mouse.setGrabbed(false)
+    love.mouse.setVisible(true)
+  else -- In Game progress !
+    if mouse.onCasseBrique then
+      love.mouse.setVisible(false)
+      love.mouse.setGrabbed(true)
+    else
+      love.mouse.setVisible(true)
+    end
+  end
+end
+--
+
+function BM.switchShow() BM.show = not BM.show end
+
 function BM.showUpdate()
   if BM.show then -- Show Menu Intro
     Boutton[1]:setVisible(true) -- MenuIntro
     Boutton[2]:setVisible(false) -- pause/quit
     Boutton[3]:setVisible(true) -- play
-    love.mouse.setGrabbed(false)
   else -- In Game progress !
-    love.mouse.setGrabbed(true)
     Boutton[1]:setVisible(false) -- MenuIntro
     Boutton[2]:setVisible(true) -- pause/quit
     Boutton[3]:setVisible(false) -- play
@@ -304,6 +359,8 @@ end
 
 
 function SceneCasseBrique.update(dt)
+  mouseIsVisible()
+  --
   BM:update(dt)
   BM.showUpdate()
   if not BM.show then
@@ -323,6 +380,9 @@ function SceneCasseBrique.draw()
   mapManager.draw()
   --
   BM:draw()
+  --
+  MiniWaal:draw()
+
   if BM.show then
 
   else
@@ -338,9 +398,9 @@ end
 --
 
 function SceneCasseBrique.mousepressed(x,y,button)
-  if mouse.onGrid then
-    if button == 1 then
-      if ball.colle then
+  if not BM.show then
+    if ball.colle then
+      if button == 1 then
         ball.colle = false
         --
         local vx = love.math.random(-pad.ox, pad.ox) -- aleatoire varie a droite droite ou a gauche...
