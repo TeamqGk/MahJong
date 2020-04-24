@@ -8,11 +8,17 @@ function ImgManager.new(pFile)
   new.w, new.h = new.w_def, new.h_def
   new.sx = 1
   new.sy = 1
+  new.color = {1,1,1,1}
+    --
+  function new:setColor(r,g,b,a)
+    self.color = {r,g,b,a}
+  end
+  --
   --
   function new:scaleToScreen()
     self.sx = screen.w / self.w_def
     self.sy = screen.h / self.h_def
-    print("new sx, sy : "..self.sx,self.sy)
+    if debug then print("new sx, sy : "..self.sx,self.sy) end
   end
   --
   function new:draw()

@@ -1,7 +1,7 @@
 -- debug output console showing
 io.stdout:setvbuf("no")
 
-debug = true
+debug = false
 
 -- Set Screen Mode
 if release then
@@ -27,9 +27,13 @@ GridManager = require("modules/GridManager") -- lua file
 BouttonManager = require ("modules/BouttonManager")
 
 
--- List alls scenes here
-SceneMahJong = require("scenes/MahJong/MahJong")
+-- List alls scenes require here
 SceneMenuIntro = require("scenes/MenuIntro")
+--
+SceneSelectGame = require("scenes/SelectGame")
+--
+SceneMahJong = require("scenes/MahJong/MahJong")
+SceneCasseBrique = require("scenes/CasseBrique/CasseBrique")
 -- etc.
 
 
@@ -46,8 +50,13 @@ SceneManager:addScene(module, name, pSetActiveScene)
 module "NomduFichierDelaScene".lua on ne mets pas l'extenesion .lua
 name , using this name for change scene later
 pSetActiveScene -- pour ajouter et mettre celle-ci directement..]]--
-SceneManager:addScene(SceneMahJong, "MahJong")
+-- le menu d'intro
 SceneManager:addScene(SceneMenuIntro, "MenuIntro")
+-- le menu de selections des jeux
+SceneManager:addScene(SceneSelectGame, "SelectGame")
+-- les jeux
+SceneManager:addScene(SceneMahJong, "MahJong")
+SceneManager:addScene(SceneCasseBrique, "CasseBrique")
 --[[
 Now the first scene loading is "SceneGame"
 Hox to change Scene Later ? simply use this :

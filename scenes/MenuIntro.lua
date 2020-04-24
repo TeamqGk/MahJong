@@ -1,7 +1,6 @@
 local SceneMenuIntro = {}
 
 local BM = BouttonManager.newBM()
-local BM_License = BouttonManager.newBM()
 local Boutton = {}
 local BackGround = ImgManager.new("img/bg_logo.jpg")-- pFile
 BackGround:scaleToScreen()
@@ -18,7 +17,7 @@ function SceneMenuIntro.load() -- love.load()
   --
   Boutton[1] = BM.newBox ()
   Boutton[1]:addText(Font[22], "Jouer !")
-  Boutton[1]:setAction(function() SceneManager:setScene("MahJong") end)
+  Boutton[1]:setAction(function() SceneManager:setScene("SelectGame") end)
   --
   Boutton[2] = BM.newBox ()
   Boutton[2]:addText(Font[22], "Options")
@@ -30,9 +29,9 @@ function SceneMenuIntro.load() -- love.load()
   --
   Boutton[4] = BM.newBox ()
   Boutton[4]:addText(Font[22], "GitHub project")
-  Boutton[4]:setAction(function() love.system.openURL("https://github.com/TeamqGk/MahJong") end)
+  Boutton[4]:setAction(function() love.system.openURL("https://github.com/TeamqGk/MahJong") end) -- go to webpage of Github project
   --
-  BM:setPos("Y")
+  BM:setPos("Y") -- align alls button to axe Y or X
   --
   BM:setDimensions(screen.w * 0.2, screen.h * 0.05)
   BM:setColor(0,1,0,0.15)
@@ -50,10 +49,6 @@ function SceneMenuIntro.draw()-- love.draw()
   BackGround:draw()
   --
   BM:draw()
-  --
-  if #BM ~= #Boutton then
-    love.graphics.print(#BM.." #BM for only "..#Boutton.." #Boutton ?! Bug ! You do FixMe !",10,10)
-  end
 end
 --
 
