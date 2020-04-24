@@ -67,21 +67,41 @@ function globals.math.AABB_Object(pObjectA, pObjectB) -- assume object havent x,
 end
 --
 
--- Collision detection function; type AABB Adapted for Simulate Rect on a Circle... Not the best but simple.
-function globals.math.AABB_circleRect(x1,y1,r1, x2,y2,w2,h2)
-  local circle_x1 = x1 - r1
-  local circle_y1 = y1 - r1
-  local circle_w1 = r1 * 2
-  local circle_h1 = circle_w1
-  return circle_x1 < x2+w2 and  x2 < circle_x1+circle_w1 and  y1 < y2+h2 and  y2 < circle_y1+circle_h1 end
-  --
+function globals.math.circleRect(Circle_x, Circle_y, Circle_radius,              Rectangle_x, Rectangle_y, Rectangle_w, Rectangle_h)
 
-  function globals.math.AABB_circleRect_Object(pCircle, pRect) -- -- assume object Circle in first and have x, y, rayon and second is Rect with x,y,w,h
-    return globals.math.AABB_circleRect(pCircle.x,pCircle.y,pCircle.rayon,    pRect.x,pRect.y,pRect.w,pRect.h)
+  -- temporary variables to set edges for testing
+  local testX = Circle_x
+  local testY = Circle_y
+
+  -- which edge is closest?
+  -- horizontal (x)
+  if (Circle_x < Rectangle_x) then-- test left edge
+    testX = Rectangle_x    
+  elseif (Circle_x > Rectangle_x + Rectangle_w) then-- right edge
+    testX = Rectangle_x + Rectangle_w
+  end 
+  -- Vertical (Y)
+  if (Circle_y < Rectangle_y) then -- top edge
+    testY = Rectangle_y    
+  elseif (Circle_y > Rectangle_y + Rectangle_h) then -- bottom edge
+    testY = Rectangle_y + Rectangle_h  
+  end 
+
+-- get distance from closest edges
+  local distX = Circle_x - testX
+  local distY = Circle_y - testY
+  local distance = math.sqrt( (distX*distX) + (distY*distY) ) -- Pythagore
+
+-- if the distance is less than the radius, collision!
+  if (distance <= Circle_radius) then
+    return {true, testX, testY}
+  else
+    return false
   end
-  --
+end
+--
 
 
 
 
-  return globals -- return table to require (main)
+return globals -- return table to require (main)

@@ -178,42 +178,47 @@ function mapManager.draw()
 end
 --
 
-function ball.collide()
+function ball.collideBriques()
   --TEST Collision witch Breack's :
   for i = #lst_briques, 1, - 1 do
     local case = lst_briques[i]
-    if globals.math.AABB_circleRect_Object(ball, case) then
+    local collide = {}
+    collide = globals.math.circleRect(ball.x, ball.y, ball.rayon,              case.x, case.y, case.w, case.h)
+    if  collide then
+--      print("----------------------")
+--      print("ball.x"..ball.x.."\t".."ball.y"..ball.y)
+--      print("case.x"..case.x.."\t".."case.w"..(case.x+case.w).."\t".."case.y"..case.y.."\t".."case.h"..(case.y+case.h))
+--      print("collide in x : "..collide[2].."\t".."y : "..collide[3])
+--      print("----------------------")
       --
-      if ball.y - ball.rayon <= case.y + case.h or ball.y + ball.rayon >= case.y then -- ball down or ball up
-        ball.vy = 0 - ball.vy
-        -- on replace la balle en Y
-        if ball.y - ball.rayon <= case.y + case.h then -- down
-          ball.y = case.y + case.h + ball.rayon + 1
-        elseif ball.y + ball.rayon >= case.y then -- up
-          ball.y = case.y - ( ball.rayon + 1 )
-        end
-        --
-      elseif ball.x + ball.rayon <= case.x or ball.x - ball.rayon >= case.x + case.w then -- ball left or ball right
+      collide.x = collide[2]
+      collide.y = collide[3]
+      --
+      if collide.x == case.x then -- gauche
+        ball.x = case.x - ball.rayon
         ball.vx = 0 - ball.vx
-        -- on replace la balle en X
-        if ball.x + ball.rayon <= case.x then -- left
-          ball.x = case.x - (ball.rayon + 1)
-        elseif ball.x - ball.rayon >= case.x + case.w then -- right
-          ball.x = case.x + case.w + ball.rayon + 1
-        end
-        --
-      else
-        print(" error collide Ball :'[ ")
+      end
+      if collide.x == case.x + case.w then -- droite
+        ball.x = (case.x + case.w) + ball.rayon
+        ball.vx = 0 - ball.vx
+      end
+      if collide.y == case.y + case.h then -- bas
+        ball.y = (case.y + case.h) + ball.rayon
+        ball.vy = 0 - ball.vy
+      end
+      if collide.y == case.y then -- haut
+        ball.y = case.y - ball.rayon
+        ball.vy = 0 - ball.vy
       end
       --
       case.vie = case.vie - 1
       if case.vie == 0 then
         table.remove(lst_briques, i)
       end
-      return
+      return true
     end
   end
-  --------- END ---------
+--------- END ---------
 end
 --
 
@@ -222,8 +227,14 @@ function  ball.update(dt)
     ball.x = pad.x + pad.ox  
   elseif not ball.colle then
 
+    -- Move :
+    ball.x = ball.x + ( (ball.vx * ball.speed) * dt )
+    ball.y = ball.y + ( (ball.vy * ball.speed) * dt )
+    --------- END ---------
+
+
     --TEST Collision witch Breack's :
-    ball.collide()
+    ball.collideBriques()
 
 
     -- Collide Walls :
@@ -242,10 +253,10 @@ function  ball.update(dt)
     --------- END ---------
 
 
-    -- REBOND
-    if ball.x >= pad.x and ball.x <= pad.x + pad.w then -- Contact possible !! en largeur
+    -- REBOND PAD
+    if ball.x + ball.rayon >= pad.x and ball.x - ball.rayon <= pad.x + pad.w then -- Contact possible !! en largeur
       ball.colorX = true
-      if ball.y + ball.rayon >= pad.y then -- rebond ! (Hauteur)
+      if ball.y + ball.rayon >= pad.y and ball.y <= pad.y then -- rebond ! (Hauteur)
         ball.y  = pad.y - ( 1 + ball.rayon )-- MDR Je suis con xD ce soir oO
         --
         --ball.vy = 0 - ball.vy
@@ -265,15 +276,9 @@ function  ball.update(dt)
 
 
     -- Ball Loose :
-    if ball.y + ball.rayon >= screen.h then-- >= bas (w)  == PERDU !
+    if ball.y - ball.rayon * 3 >= screen.h then-- >= bas (w)  == PERDU !
       Demarre()
     end
-    --------- END ---------
-
-
-    -- Move :
-    ball.x = ball.x + ( (ball.vx * ball.speed) * dt )
-    ball.y = ball.y + ( (ball.vy * ball.speed) * dt )
     --------- END ---------
 
 

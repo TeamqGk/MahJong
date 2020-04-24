@@ -26,7 +26,7 @@ function BouttonManager:newBM()
       print(' Attention f:setSpace(pSTringType) attends un string "x" ou "y" ! ')
       return false
     else
-      print("espacement pour "..#f.." boutons sur l'axe "..pSTringType.." ! ")
+      if debug then print("espacement pour "..#f.." boutons sur l'axe "..pSTringType.." ! ") end
     end
     if pSTringType == "x" then
       f.spaceX = pVar or 30
@@ -62,7 +62,7 @@ function BouttonManager:newBM()
       print(' Attention f:setPosAlignCenter(pStyle) attends un string "x" ou "y" ! ')
       return false
     else
-      print("alignement pour "..#f.." boutons sur l'axe "..pStyle.." ! ")
+      if debug then print("alignement pour "..#f.." boutons sur l'axe "..pStyle.." ! ") end
     end
     -----------------------------------------------------------------------------------------------
     if #f >= 1 then
