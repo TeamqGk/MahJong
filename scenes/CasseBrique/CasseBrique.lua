@@ -14,7 +14,11 @@ BackGround:scaleToScreen()
 BackGround:setColor(1,1,1,0.25)
 --
 local BM = BouttonManager.newBM()
+BM.show = false
+function BM.switchShow() BM.show = not BM.show end
 local Boutton = {}
+
+mouse.onCasseBrique = false
 
 
 -- PAD
@@ -63,8 +67,22 @@ function Boutton.init()
   Boutton[1] = BM.newBox ()
   Boutton[1]:addText(Font[22], "Menu")
   Boutton[1]:setPos(screen.w - (Boutton[1].w+10),10)
+  Boutton[1]:setVisible(false)
   Boutton[1]:setAction(function() SceneManager:setScene("MenuIntro") end)
   --
+  Boutton[2] = BM.newBox ()
+  Boutton[2]:addText(Font[22], "Pause/Quit")
+  Boutton[2]:setPos(10, 10)
+  Boutton[2]:setVisible(true)
+  Boutton[2]:isEffect(false)
+  Boutton[2]:setAction(function() BM.switchShow() end)
+  --
+  Boutton[3] = BM.newBox ()
+  Boutton[3]:addText(Font[22], "Play")
+  Boutton[3]:setPos(10, 10)
+  Boutton[3]:setVisible(false)
+  Boutton[3]:isEffect(false)
+  Boutton[3]:setAction(function() BM.switchShow() end)
 end
 --
 
@@ -72,12 +90,18 @@ end
 function mapManager.setLevel(pLevel)
   map = {}
   --
+  local StartX = screen.w * 0.1
+  local StartY = screen.h * 0.1
+  --
+  local x = StartX
+  local y = StartY
+  --
   local pLig = 3 + pLevel
   local pCol = 7 + pLevel
-  local x = 0
-  local y = 0
-  local w = screen.w
-  local h = screen.h
+  --
+  local w = screen.w - StartX*2
+  local h = screen.h - StartY
+  --
   local caseW = w / pCol
   local caseH = h / 15 -- hauteur fixe !
   --
@@ -105,7 +129,7 @@ function mapManager.setLevel(pLevel)
       --
     end
     --
-    x = 0
+    x = StartX
     y = y + caseH
     --
   end
@@ -256,6 +280,20 @@ function nextBall()--
 end
 --
 
+function BM.showUpdate()
+  if BM.show then -- Show Menu Intro
+    Boutton[1]:setVisible(true) -- MenuIntro
+    Boutton[2]:setVisible(false) -- pause/quit
+    Boutton[3]:setVisible(true) -- play
+    love.mouse.setGrabbed(false)
+  else -- In Game progress !
+    love.mouse.setGrabbed(true)
+    Boutton[1]:setVisible(false) -- MenuIntro
+    Boutton[2]:setVisible(true) -- pause/quit
+    Boutton[3]:setVisible(false) -- play
+  end
+end
+--
 
 function SceneCasseBrique.load()
   Boutton.init()
@@ -264,12 +302,16 @@ function SceneCasseBrique.load()
 end
 --
 
+
 function SceneCasseBrique.update(dt)
   BM:update(dt)
-  --
-  pad.update(dt)
-  --
-  ball.update(dt)
+  BM.showUpdate()
+  if not BM.show then
+    --
+    pad.update(dt)
+    --
+    ball.update(dt)
+  end
 end
 --
 
@@ -281,25 +323,40 @@ function SceneCasseBrique.draw()
   mapManager.draw()
   --
   BM:draw()
+  if BM.show then
+
+  else
+  end
+end
+--
+
+function SceneCasseBrique.keypressed(key)
+  if key == "escape" then
+    BM.show = not BM.show
+  end
 end
 --
 
 function SceneCasseBrique.mousepressed(x,y,button)
-  if button == 1 then
-    if ball.colle then
-      ball.colle = false
-      --
-      local vx = love.math.random(-pad.ox, pad.ox) -- aleatoire varie a droite droite ou a gauche...
-      local rad = globals.math.angle(pad.pointX + vx, pad.pointY,       ball.x, ball.y) -- MDR
-      ball.vx = math.cos(rad)
-      ball.vy = math.sin(rad)
-      -- oO
+  if mouse.onGrid then
+    if button == 1 then
+      if ball.colle then
+        ball.colle = false
+        --
+        local vx = love.math.random(-pad.ox, pad.ox) -- aleatoire varie a droite droite ou a gauche...
+        local rad = globals.math.angle(pad.pointX + vx, pad.pointY,       ball.x, ball.y) -- MDR
+        ball.vx = math.cos(rad)
+        ball.vy = math.sin(rad)
+        -- oO
+      end
     end
   end
   --
   if button == 1 then -- left clic
     if BM.current.ready then
-      BM.current.action()-- example if bouton is Play then action is : SceneManager:setScene("MahJong")
+      if BM.current.isVisible then
+        BM.current.action()-- example if bouton is Play then action is : SceneManager:setScene("MahJong")
+      end
     end
   end
 end

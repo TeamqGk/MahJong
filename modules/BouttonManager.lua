@@ -134,7 +134,7 @@ function BouttonManager:newBM()
       for i = #self, 1, -1 do
         local b = self[i]
         b:update(dt)
-        if b.ready then
+        if b.ready and b.isVisible then
           self.current = b
         end
       end
@@ -172,7 +172,19 @@ function BouttonManager:newBM()
     Boutton.colorFixe = false
     --
     Boutton.isVisible = true
-
+    Boutton.isEffect = true
+    --
+    function Boutton:isEffect(pBool)
+      if not pBool then self.isEffect = true end
+      self.isEffect = pBool
+    end
+    --
+    --
+    function Boutton:setVisible(pBool)
+      if not pBool then self.isVisible = true end
+      self.isVisible = pBool
+    end
+    --
     function Boutton:setPos(x,y, pStyle)
       --
       if pStyle == "center" then
@@ -235,6 +247,14 @@ function BouttonManager:newBM()
       end
     end
     --
+    --
+    function Boutton:setAction(pAction)
+      --function_name = function( arguments ) corps end
+      if type(pAction) == "function" then
+        self.action = function() pAction () end
+      end
+    end
+    --
     function Boutton:updateText()
       --
       self.w = f.w
@@ -260,32 +280,32 @@ function BouttonManager:newBM()
     end
     --
     function Boutton:draw()
-      love.graphics.setColor(self.color)
-      -- mirror W
-      love.graphics.rectangle("fill", self.x, self.y, self.w, self.h,f.effect)
-      love.graphics.rectangle("fill", self.x+self.w, self.y, 0 - self.w, self.h,(1*f.effect) - f.effect)
-      -- mirror H
-      love.graphics.rectangle("fill", self.x, self.y + self.h, self.w, 0 - self.h,f.effect*1.5)
-      love.graphics.rectangle("fill", self.x+self.w, self.y + self.h, 0 - self.w, 0 - self.h,f.effect* - 1.5)
-      --
-      love.graphics.setColor(1,1,1,1)
-      --
-      if self.text then
-        love.graphics.setColor(self.colorText)
-        local t = self.text
-        love.graphics.draw(t.print, t.x, t.y, 0, 1, 1, t.ox, t.oy)
+      if self.isVisible then
+        love.graphics.setColor(self.color)
+        if self.isEffect then
+          -- mirror W
+          love.graphics.rectangle("fill", self.x, self.y, self.w, self.h,f.effect)
+          love.graphics.rectangle("fill", self.x+self.w, self.y, 0 - self.w, self.h,(1*f.effect) - f.effect)
+          -- mirror H
+          love.graphics.rectangle("fill", self.x, self.y + self.h, self.w, 0 - self.h,f.effect*1.5)
+          love.graphics.rectangle("fill", self.x+self.w, self.y + self.h, 0 - self.w, 0 - self.h,f.effect* - 1.5)
+        else
+          love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+
+        end
+        --
+        love.graphics.setColor(1,1,1,1)
+        --
+        if self.text then
+          love.graphics.setColor(self.colorText)
+          local t = self.text
+          love.graphics.draw(t.print, t.x, t.y, 0, 1, 1, t.ox, t.oy)
+        end
+        --
       end
-      --
       love.graphics.setColor(1,1,1,1)
     end
-    --
-    function Boutton:setAction(pAction)
-      --function_name = function( arguments ) corps end
-      if type(pAction) == "function" then
-        self.action = function() pAction () end
-      end
-    end
-    --
+
     table.insert(f, Boutton)
     return Boutton
   end
