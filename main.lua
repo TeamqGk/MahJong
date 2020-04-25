@@ -32,6 +32,7 @@ BouttonManager = require ("modules/BouttonManager")
 SceneMenuIntro = require("scenes/MenuIntro")
 --
 SceneSelectGame = require("scenes/SelectGame")
+SceneCredits = require("scenes/SceneCredits")
 --
 SceneMahJong = require("scenes/MahJong/MahJong")
 SceneCasseBrique = require("scenes/CasseBrique/CasseBrique")
@@ -55,6 +56,7 @@ pSetActiveScene -- pour ajouter et mettre celle-ci directement..]]--
 SceneManager:addScene(SceneMenuIntro, "MenuIntro")
 -- le menu de selections des jeux
 SceneManager:addScene(SceneSelectGame, "SelectGame")
+SceneManager:addScene(SceneCredits, "Credits")
 -- les jeux
 SceneManager:addScene(SceneMahJong, "MahJong")
 SceneManager:addScene(SceneCasseBrique, "CasseBrique")

@@ -8,6 +8,10 @@ MahJong = {}
 local BM = BouttonManager.newBM()
 local Boutton = {}
 --
+local AM = AudioManager.newAM()
+
+local music_loop = AM:addMusic("scenes/MahJong/music/Mahjong_Theme_By_Hydrogene.mp3", true, 0.25, false)
+--
 local SaveGame = {}
 --
 
@@ -20,7 +24,7 @@ function Boutton.init()
   Boutton[1] = BM.newBox ()
   Boutton[1]:addText(Font[22], "Menu")
   Boutton[1]:setPos(screen.w - (Boutton[1].w+10),10)
-  Boutton[1]:setAction(function() SceneManager:setScene("MenuIntro") end)
+  Boutton[1]:setAction(function() SceneManager:setScene("MenuIntro"); music_loop:pause() end)
   --
 end
 --
@@ -87,6 +91,12 @@ end
 --
 
 function SceneMahJong.update(dt)
+--  if music_loop then
+  if not music_loop:isPlaying() then
+    music_loop:play()
+  end
+--  end
+  AM:update(dt)
   BM:update(dt)
   SceneMahJong.mouseUpdate(dt)
 end

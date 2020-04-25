@@ -20,7 +20,7 @@ function audioManager.newAM()
   f.sound = {}
   f.sound.current = false
   --
-  
+
   function f:addMusic(pFile, pLoop, pVolume, pPlay)
     local new = {}
     new.source = love.audio.newSource(pFile, "stream")
@@ -32,9 +32,10 @@ function audioManager.newAM()
     new.source:setVolume(new.volume.actual)
     table.insert(self.music, new)
     if pPlay then new.source:play() end
+    return new.source
   end
   --
-  
+
   function f:addSound(pFile, pLoop, pVolume)
     local new = {}
     new.source = love.audio.newSource(pFile, "stream")
@@ -44,7 +45,7 @@ function audioManager.newAM()
     return new.source
   end
   --
-  
+
   function f:setVolume(pVolume)
     if type(pVolume) == "number" then
       if pVolume >= 0 and pVolume <= 1 then
@@ -55,7 +56,7 @@ function audioManager.newAM()
     print("error, you need use audioManager.setVolume( 0 to 1) // example : 0 = 0 %; 0.5 = 50 %; 1 = 100 %")
   end
   --
-  
+
   function f:update(dt)
     -- MASTER VOLUME
     if self.volume.up or self.volume.down then
@@ -84,7 +85,7 @@ function audioManager.newAM()
     end
   end
   --
-  
+
   return f
 end
 --
