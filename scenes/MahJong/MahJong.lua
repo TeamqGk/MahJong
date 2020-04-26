@@ -11,6 +11,7 @@ local Boutton = {}
 --
 local AM = AudioManager.newAM()
 local sound_mahjongFind = AM:addSound("scenes/MahJong/sound/mahjong_find.wav", false, 0.4)
+local sound_mahjongNotFind = AM:addSound("scenes/MahJong/sound/mahjong_notfind.wav", false, 0.4)
 
 local music_loop = AM:addMusic("scenes/MahJong/music/Mahjong_Theme_By_Hydrogene.mp3", true, 0.25, false)
 --
@@ -149,6 +150,7 @@ function mouse.selectMahjong()
   end
   --
 
+  -- nous avons deux selections on test donc si ils sont identiques :
   if s[1].select and s[2].select then
     if s[1].mahjong >= 1 and s[2].mahjong >= 1 then
       if s[1].mahjong == s[2].mahjong then -- Youhou !
@@ -181,16 +183,41 @@ function mouse.selectMahjong()
         if debug then print("un Double de Mahjong a été trouvé, il reste "..Grid.mahjongTotal.." mahjong(s) en jeu") end
         --
         return true
-      else
-        return false
       end
-    else
-      return false
     end
-  else
-    return false
   end
 
+  -- si on arrive ici c'est que la selection est fausse :
+  if s[1].select and s[2].select then
+    -- dans tous les cas si on a deux selections on les déselectionne
+    local case_1 = Grid[s[1].e][s[1].l][s[1].c]
+    local case_2 = Grid[s[2].e][s[2].l][s[2].c]
+    --
+    case_1.isActive = true
+    case_1.select = false
+    --
+    case_2.isActive = true
+    case_2.select = false
+    --
+    local cancel_1 = s[1]
+    local cancel_2 = s[2]
+    --
+    cancel_1.l = 0
+    cancel_1.c = 0
+    cancel_1.e = 0
+    cancel_1.mahjong = 0
+    cancel_1.select = false
+    --
+    cancel_2.l = 0
+    cancel_2.c = 0
+    cancel_2.e = 0
+    cancel_2.mahjong = 0
+    cancel_2.select = false
+    --
+    sound_mahjongNotFind:play()
+    --
+  end
+  return false
 end
 --
 
@@ -213,7 +240,7 @@ function SceneMahJong.load() -- love.load()
   --
   LevelsManager.autoload()
   --
-  GridManager.setGrid(1)
+  GridManager.setGrid(3)
 end
 --
 

@@ -26,22 +26,56 @@ function GridManager.setGrid(pLevel, pReset, pRandom)
 
 
 
-  -- Settings of grid
-  Grid.w = Grid.colonnes * Img.MahJong.quad.w
-  Grid.h = Grid.lignes * Img.MahJong.quad.h
+  -- Settings of Scales
+  local espaceW = screen.w * 0.1 -- Min
+  local espaceH = screen.h * 0.1 -- Min
+  local GridW = screen.w - espaceW -- MAX
+  local GridH = screen.h - espaceH -- MAX
   --
-  local StartX = (screen.w - Grid.w) * 0.5
-  local StartY = (screen.h - Grid.h) * 0.5
+  local sy = (GridH * 0.1) / Img.MahJong.quad.h
+  local sx = sy
   --
+  local CaseW = (Img.MahJong.quad.w * sx) -- Initial
+  local CaseH = (Img.MahJong.quad.h * sy) -- Inital
+  --  
+  GridW = CaseW * Grid.colonnes
+  GridH = CaseH * Grid.lignes
+  --
+  if GridW > screen.w - espaceH then
+    local maxH = screen.w - espaceH
+    sy = (maxH / Grid.lignes) / Img.MahJong.quad.h
+    sx = sy
+    --
+    CaseW = (Img.MahJong.quad.w * sx) -- Initial
+    CaseH = (Img.MahJong.quad.h * sy) -- Inital
+    --  
+    GridW = CaseW * Grid.colonnes
+    GridH = CaseH * Grid.lignes
+  end
+  --
+  local StartX = (screen.w - GridW) * 0.5
+  local StartY = (screen.h - GridH) * 0.5
+  print(StartX,StartY)
+  --
+
+
+  -- Settings of Sizes
+  Grid.w = GridW
+  Grid.h = GridH
+
+
+  -- apply settings
   Grid.x = StartX
   Grid.y = StartY
-  Grid.caseW = Grid.w / Grid.colonnes
-  Grid.caseH = Grid.h / Grid.lignes
+  Grid.caseW = CaseW
+  Grid.caseH = CaseH
   Grid.caseOx = Grid.caseW * 0.5
   Grid.caseOy = Grid.caseH * 0.5
   --
   local x = StartX
   local y = StartY
+  --
+
   --
   Grid.mahjongTotal = 0
   --
@@ -78,13 +112,15 @@ function GridManager.setGrid(pLevel, pReset, pRandom)
         case.h = Grid.caseH
         case.ox = x + Grid.caseOx
         case.oy = y + Grid.caseOy
+        case.sy = sy
+        case.sx = sx
 
         -- incrementation de x + la largeur d'une case (w)
-        x = x + Grid.caseW
+        x = x + CaseW
       end
       --
       x = StartX
-      y = y + Grid.caseH
+      y = y + CaseH
       --
     end
     --
@@ -121,14 +157,14 @@ function GridManager.setRandMahjong()
   else
     Grid.impaire = true
   end
-  print("Grid.impaire : "..tostring(Grid.impaire))
+  if debug then print("Grid.impaire : "..tostring(Grid.impaire)) end
 
 
   -- on creer la table qui liste les Mahjong
   local tableRand = {}
   for i = 1 ,   MahJong.total do
     table.insert(tableRand, i)
-    if debug then print("creation du mahjong n° "..i) end
+--    if debug then print("creation du mahjong n° "..i) end
   end
   -- melange de la table :
   for i = #tableRand, 1, -1 do
@@ -137,7 +173,7 @@ function GridManager.setRandMahjong()
   end
   if debug then 
     for k , v in ipairs(tableRand) do
-      print ("tableMahjong["..k.."] : "..v)
+--      print ("tableMahjong["..k.."] : "..v)
     end
   end
   --
@@ -150,26 +186,31 @@ function GridManager.setRandMahjong()
     table.insert(tableMahjong, tableRand[num])
     num = num + 1
   end
-  if debug then print("#tableMahjong : "..#tableMahjong.."/"..Grid.mahjongTotal) end -- ok
-  for k , v in ipairs(tableMahjong) do
-    print ("tableMahjong["..k.."] : "..v)
-  end
+--  if debug then print("#tableMahjong : "..#tableMahjong.."/"..Grid.mahjongTotal) end -- ok
+--  for k , v in ipairs(tableMahjong) do
+--    print ("tableMahjong["..k.."] : "..v)
+--  end
 
   -- on scan les grilles :
   Grid.mahjongPlaced = 0
   local i = 1
   while i < Grid.mahjongTotal  do
     -- on selectione un mahjong au hasard
+    local pose, l, c 
     local rand = tableMahjong[#tableMahjong]
-    local l, c = GridManager.testMohJang(rand) -- placement du premier pion
-    i = i + 1
-    table.remove(tableMahjong, #tableMahjong)
+    pose, l, c = GridManager.testMohJang(rand)
+    if pose then -- placement du premier pion
+      i = i + 1
+      table.remove(tableMahjong, #tableMahjong)
+    end
     --
     rand = tableMahjong[#tableMahjong]
-    GridManager.testMohJang(rand, l, c) -- placement du second pion
-    i = i + 1
-    table.remove(tableMahjong, #tableMahjong)
-    if Grid.mahjongPlaced == Grid.mahjongTotal then break end
+    pose, l, c = GridManager.testMohJang(rand, l, c) -- placement du second pion
+    if pose then
+      i = i + 1
+      table.remove(tableMahjong, #tableMahjong)
+    end
+    if Grid.mahjongPlaced == Grid.mahjongTotal or not pose then break end
   end
 --
 end
@@ -187,7 +228,7 @@ function GridManager.testMohJang(pRand, pLig, pCol)
     if pLig and pCol then
       if l == pLig and c == pCol then
         superposed = true
-        if debug then print("supersposé on recommence !") end
+--        if debug then print("supersposé on recommence !") end
       end
     end
     --
@@ -199,14 +240,14 @@ function GridManager.testMohJang(pRand, pLig, pCol)
           case.mahjong = pRand
           case.isActive = true
           --
-          return l, c  
+          return true, l, c  
         end
       end
     end
     --
     if Grid.mahjongPlaced == Grid.mahjongTotal - 1 and superposed then
-        GridManager.setRandMahjong()
-        return true
+      GridManager.setRandMahjong()
+      return false
     end
   end
 end
@@ -237,7 +278,7 @@ function GridManager.draw()
 
         if case.isActive then -- draw Mahjong
           love.graphics.setColor(1,1,1,1) -- reset color
-          love.graphics.draw(Img.MahJong.img, Img.MahJong.quad[case.mahjong], case.x, case.y)--, 0, 1, 1, case.ox, case.oy)
+          love.graphics.draw(Img.MahJong.img, Img.MahJong.quad[case.mahjong], case.x, case.y, 0, case.sx, case.sy)
           love.graphics.setColor(1,1,1,1) -- reset color
         end
 
@@ -248,27 +289,27 @@ function GridManager.draw()
         end
 
 
-        -- draw chaque etage d'une douleur diff pour le debug
-        if debug then
+        -- draw chaque etage d'une couleur diff pour le debug
+        if case.isActive then
           local colorRect = {}
+          local alpha = 0.20
           if case.etages == 1 then
-            colorRect = {0,1,0,0.25}--vert
+            colorRect = {0,1,0,alpha}--vert
           elseif case.etages == 2 then
-            colorRect = {1,0,0,0.25}--rouge
+            colorRect = {1,0,0,alpha}--rouge
           elseif case.etages == 3 then
-            colorRect = {0,0,1,0.25}--bleu
+            colorRect = {0,0,1,alpha}--bleu
           elseif case.etages == 4 then
-            colorRect = {1,1,0,0.25}
+            colorRect = {1,1,0,alpha}
           elseif case.etages >= 5 then
-            colorRect = {0,1,1,0.25}
+            colorRect = {0,1,1,alpha}
           end
+          love.graphics.setColor(colorRect)
+          love.graphics.rectangle("fill", case.x+2, case.y+2, case.w-4, case.h-4)
+        end
 
-          --
-          if case.isActive then
-            -- draw Rect represent Grid Pos, color represent etage
-            love.graphics.setColor(colorRect)
-            love.graphics.rectangle("fill", case.x+2, case.y+2, case.w-3, case.h-3)
-          end
+        -- debug show alls col and lig
+        if debug then
           love.graphics.setColor(0,1,0,1) -- reset color
           love.graphics.rectangle("line", case.x, case.y, case.w, case.h)
           love.graphics.setColor(1,1,1,1) -- reset color
