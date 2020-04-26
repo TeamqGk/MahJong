@@ -1,11 +1,16 @@
 -- debug output console showing
 io.stdout:setvbuf("no")
+-- Cette ligne permet de déboguer pas à pas dans ZeroBraneStudio
+if arg[#arg] == "-debug" then require("mobdebug").start() end
+if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then  require("lldebugger").start() end -- debug for Visual Code
+-- ###############################################################################################################
 
-debug = false
+local release = false
+debug = true
 
 -- Set Screen Mode
 if release then
-  local width, height = love.window.getDesktopDimensions( display )
+  local width, height = love.window.getDesktopDimensions()
   love.window.setMode(width, height)
   love.window.maximize()
 end

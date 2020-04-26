@@ -40,8 +40,7 @@ local sonLaunch = AM:addSound("scenes/CasseBrique/sons/launch.wav", false, 1)
 local sonPowerUp = AM:addSound("scenes/CasseBrique/sons/powerup.wav", false, 1)
 local sonShoot = AM:addSound("scenes/CasseBrique/sons/shoot.wav", false, 1)
 
---
-mouse.onCasseBrique = false
+
 
 
 -- PAD

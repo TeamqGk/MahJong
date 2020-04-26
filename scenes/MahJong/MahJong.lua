@@ -5,15 +5,19 @@ Levels = {}
 Grid = {}
 Img = {}
 MahJong = {}
+--
 local BM = BouttonManager.newBM()
 local Boutton = {}
 --
 local AM = AudioManager.newAM()
+local sound_mahjongFind = AM:addSound("scenes/MahJong/sound/mahjong_find.wav", false, 0.4)
 
 local music_loop = AM:addMusic("scenes/MahJong/music/Mahjong_Theme_By_Hydrogene.mp3", true, 0.25, false)
 --
 local SaveGame = {}
 --
+
+
 
 function Boutton.init()
   BM:setDimensions(screen.w * 0.2, screen.h * 0.05)
@@ -78,8 +82,131 @@ function SceneMahJong.mouseUpdate(dt)
   end
   -- >
 end
+--
+
+function mouse.selectInit()
+  mouse.select = {}
+  for i = 1, 2 do
+    mouse.select[i] = {l=0, c=0, e=0, select = false, mahjong = 0}
+  end
+end
+--
+
+function mouse.selectMahjong()
+  local l = mouse.l
+  local c = mouse.c
+  local e = 0
+  local s = mouse.select
+
+  -- annulation si col et lig sont identiques
+  for i=1, 2 do
+    if s[i].l == l and s[i].c == c then
+      local cancel = s[i]
+      Grid[cancel.e][cancel.l][cancel.c].select = false
+      --
+      cancel.select = false
+      cancel.l = 0
+      cancel.c = 0
+      cancel.e = 0
+      cancel.mahjong = 0
+      return false -- on arrete la fucntion si on viens d'enlever une selection
+    end
+  end
+  --
+
+  -- on test la case :
+  for i = Grid.etages, 1, -1 do
+    if e == 0 then
+      local case = Grid[i][l][c]
+      if case.isActive then
+        e = i
+      end
+    end
+  end
+  if e == 0 then return end  -- pas de mahjong ici !
+  --
+
+  -- on a l'etage , la ligne et la colonne, il nous faut mémoriser cette selection :
+  local add = false
+  for i = 1, 2 do
+    if add == false then
+      local addMe = s[i]
+      if addMe.select == false then
+        local case = Grid[e][l][c]
+        --
+        addMe.select = true
+        addMe.l = l
+        addMe.c = c
+        addMe.e = e
+        addMe.mahjong = case.mahjong
+        --
+        case.select = true
+        --
+        add = true
+        print("ajout de la selection ".."[e:"..e.."]".."[l:"..l.."]".."[c:"..c.."]".." dans mouse.select["..i.."]")
+      end
+    end
+  end
+  --
+
+  if s[1].select and s[2].select then
+    if s[1].mahjong >= 1 and s[2].mahjong >= 1 then
+      if s[1].mahjong == s[2].mahjong then -- Youhou !
+        local case_1 = Grid[s[1].e][s[1].l][s[1].c]
+        local case_2 = Grid[s[2].e][s[2].l][s[2].c]
+        --
+        case_1.isActive = false
+        case_1.select = false
+        --
+        case_2.isActive = false
+        case_2.select = false
+        --
+        local cancel_1 = s[1]
+        local cancel_2 = s[2]
+        --
+        cancel_1.l = 0
+        cancel_1.c = 0
+        cancel_1.e = 0
+        cancel_1.mahjong = 0
+        cancel_1.select = false
+        --
+        cancel_2.l = 0
+        cancel_2.c = 0
+        cancel_2.e = 0
+        cancel_2.mahjong = 0
+        cancel_2.select = false
+        --
+        Grid.mahjongTotal = Grid.mahjongTotal - 2
+        sound_mahjongFind:play()
+        if debug then print("un Double de Mahjong a été trouvé, il reste "..Grid.mahjongTotal.." mahjong(s) en jeu") end
+        --
+        return true
+      else
+        return false
+      end
+    else
+      return false
+    end
+  else
+    return false
+  end
+
+end
+--
+
+function SceneMahJong.testVictory()
+  print("ici ?!")
+  if Grid.mahjongTotal == 0 and Grid.impaire == false or Grid.mahjongTotal == 1 and Grid.impaire == true then
+    if debug then print("NIVEAU SUIVANT : "..(Grid.level + 1).."/"..#Levels) end
+    mouse.selectInit()
+    GridManager.setGrid(Grid.level + 1)
+  end
+end
+--
 
 function SceneMahJong.load() -- love.load()
+  mouse.selectInit()
+  --
   screen.update(dt)
   --
   Boutton.init()
@@ -137,9 +264,18 @@ end
 --
 
 function SceneMahJong.mousepressed(x, y, button, isTouch)
-  if button == 1 then -- left clic
-    if BM.current.ready then
-      BM.current.action()-- example if bouton is Play then action is : SceneManager:setScene("MahJong")
+  if not mouse.onGrid then
+    if button == 1 then -- left clic
+      if BM.current.ready then
+        BM.current.action()-- example if bouton is Play then action is : SceneManager:setScene("MahJong")
+      end
+    end
+  end
+  if mouse.onGrid then
+    if button == 1 then -- left clic
+      if mouse.selectMahjong() then
+        SceneMahJong.testVictory()
+      end
     end
   end
 end
