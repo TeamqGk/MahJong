@@ -202,7 +202,11 @@ function GridManager.testMohJang(pRand, pLig, pCol)
           return l, c  
         end
       end
-      --
+    end
+    --
+    if Grid.mahjongPlaced == Grid.mahjongTotal - 1 and superposed then
+        GridManager.setRandMahjong()
+        return true
     end
   end
 end
