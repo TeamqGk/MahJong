@@ -240,7 +240,7 @@ function SceneMahJong.load() -- love.load()
   --
   LevelsManager.autoload()
   --
-  GridManager.setGrid(3)
+  GridManager.setGrid(1)
 end
 --
 
