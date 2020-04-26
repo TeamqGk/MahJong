@@ -144,7 +144,7 @@ function mouse.selectMahjong()
         case.select = true
         --
         add = true
-        print("ajout de la selection ".."[e:"..e.."]".."[l:"..l.."]".."[c:"..c.."]".." dans mouse.select["..i.."]")
+        if debug then print("ajout de la selection ".."[e:"..e.."]".."[l:"..l.."]".."[c:"..c.."]".." dans mouse.select["..i.."]") end
       end
     end
   end
@@ -179,7 +179,10 @@ function mouse.selectMahjong()
         cancel_2.select = false
         --
         Grid.mahjongTotal = Grid.mahjongTotal - 2
+        --
+        sound_mahjongFind:stop()
         sound_mahjongFind:play()
+        --
         if debug then print("un Double de Mahjong a été trouvé, il reste "..Grid.mahjongTotal.." mahjong(s) en jeu") end
         --
         return true
@@ -214,6 +217,7 @@ function mouse.selectMahjong()
     cancel_2.mahjong = 0
     cancel_2.select = false
     --
+    sound_mahjongNotFind:stop()
     sound_mahjongNotFind:play()
     --
   end
@@ -222,7 +226,6 @@ end
 --
 
 function SceneMahJong.testVictory()
-  print("ici ?!")
   if Grid.mahjongTotal == 0 and Grid.impaire == false or Grid.mahjongTotal == 1 and Grid.impaire == true then
     if debug then print("NIVEAU SUIVANT : "..(Grid.level + 1).."/"..#Levels) end
     mouse.selectInit()
