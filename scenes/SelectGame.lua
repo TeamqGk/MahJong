@@ -28,7 +28,7 @@ function SceneSelectGame.load() -- love.load()
   Boutton[3]:addText(Font[22], "Retour Menu")
   Boutton[3]:setAction(function()  SceneManager:setScene("MenuIntro") end)
   --
-  BM_Games:setPos("X") -- align alls button to axe Y or X
+  BM_Games:setPos("Y") -- align alls button to axe Y or X
   --
   BM_Games:setDimensions(screen.w * 0.2, screen.h * 0.05)
   BM_Games:setColor(0,1,0,0.15)

@@ -40,8 +40,7 @@ local sonLaunch = AM:addSound("scenes/CasseBrique/sons/launch.wav", false, 1)
 local sonPowerUp = AM:addSound("scenes/CasseBrique/sons/powerup.wav", false, 1)
 local sonShoot = AM:addSound("scenes/CasseBrique/sons/shoot.wav", false, 1)
 
---
-mouse.onCasseBrique = false
+
 
 
 -- PAD
@@ -53,7 +52,7 @@ pad.oy = pad.h * 0.5
 pad.x = (screen.w * 0.5) - pad.ox
 pad.y = screen.h - (pad.h * 2)
 --
-pad.distPointY = 15 -- why not mdr
+pad.distPointY = 10 -- why not mdr
 pad.pointX = pad.x + pad.ox
 pad.pointY = pad.y + pad.distPointY
 
@@ -211,7 +210,7 @@ function mapManager.draw()
     local case = lst_briques[i]
     lg.setColor(color[case.vie])
     --
-    lg.rectangle("fill",case.x,case.y,case.w,case.h,15)
+    lg.rectangle("fill",case.x,case.y,case.w,case.h,5)
     --
     lg.setColor(0,0,0,0.65)      
     --

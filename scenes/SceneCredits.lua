@@ -1,4 +1,4 @@
-local SceneMenuIntro = {}
+local SceneCredits = {}
 
 local BM = BouttonManager.newBM()
 local Boutton = {}
@@ -7,7 +7,7 @@ BackGround:scaleToScreen()
 
 
 local loop = 0
-function SceneMenuIntro.load() -- love.load()
+function SceneCredits.load() -- love.load()
   BM:setDimensions(screen.w * 0.2, screen.h * 0.05)
   BM:setColor(0,1,0,0.15)
   BM:setColorText(0,0,0,0.75)
@@ -16,20 +16,25 @@ function SceneMenuIntro.load() -- love.load()
   BM:setSpace("x", 40) -- def 30
   --
   Boutton[1] = BM.newBox ()
-  Boutton[1]:addText(Font[22], "Jouer !")
-  Boutton[1]:setAction(function() SceneManager:setScene("SelectGame") end)
+  Boutton[1]:addText(Font[16], "CryptoLogiq.itch.io")
+  Boutton[1]:setAction(function() love.system.openURL("https://cryptologiq.itch.io/") end)
   --
   Boutton[2] = BM.newBox ()
-  Boutton[2]:addText(Font[22], "Options")
-  Boutton[2]:setAction(function() SceneManager:setScene("MahJongOptions") end)
+  Boutton[2]:addText(Font[16], "qgkMask.itch.io")
+  Boutton[2]:setAction(function() love.system.openURL("https://itch.io/profile/qgkmask") end)
   --
   Boutton[3] = BM.newBox ()
-  Boutton[3]:addText(Font[22], "Credits")
-  Boutton[3]:setAction(function() SceneManager:setScene("Credits") end)
+  Boutton[3]:addText(Font[16], "Hydrogene.itch.io")
+  Boutton[3]:setAction(function() love.system.openURL("https://hydrogene.itch.io/") end)
   --
   Boutton[4] = BM.newBox ()
-  Boutton[4]:addText(Font[22], "Quitter")
-  Boutton[4]:setAction(function() love.event.quit() end)
+  Boutton[4]:addText(Font[16], "GitHub project")
+  Boutton[4]:setAction(function() love.system.openURL("https://github.com/TeamqGk/MahJong") end) -- go to webpage of Github project
+  --
+  Boutton[5] = BM.newBox ()
+  Boutton[5]:addText(Font[16], "Retour Menu")
+  Boutton[5]:setAction(function() SceneManager:setScene("MenuIntro") end)
+  --
   BM:setPos("Y") -- align alls button to axe Y or X
   --
   BM:setDimensions(screen.w * 0.2, screen.h * 0.05)
@@ -39,19 +44,19 @@ function SceneMenuIntro.load() -- love.load()
 end
 --
 
-function SceneMenuIntro.update(dt) -- love.load()
+function SceneCredits.update(dt) -- love.load()
   BM:update(dt)
 end
 --
 
-function SceneMenuIntro.draw()-- love.draw()
+function SceneCredits.draw()-- love.draw()
   BackGround:draw()
   --
   BM:draw()
 end
 --
 
-function SceneMenuIntro.keypressed(key, scancode, isrepeat)
+function SceneCredits.keypressed(key, scancode, isrepeat)
   if debug then
     if key == "kp+" then
       BM:setPos("Y")
@@ -65,7 +70,7 @@ function SceneMenuIntro.keypressed(key, scancode, isrepeat)
 end
 --
 
-function SceneMenuIntro.mousepressed(x, y, button, isTouch)
+function SceneCredits.mousepressed(x, y, button, isTouch)
   if button == 1 then -- left clic
     if BM.current.ready then
       BM.current.action()-- example if bouton is Play then action is : SceneManager:setScene("MahJong")
@@ -75,4 +80,4 @@ end
 --
 
 ---------------------------- END -----------------------------------------
-return SceneMenuIntro
+return SceneCredits

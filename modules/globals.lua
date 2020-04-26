@@ -17,7 +17,9 @@ mouse.ox, mouse.oh = 0.5, 0.5
 --
 mouse.l = nil
 mouse.c = nil
+--
 mouse.onGrid = false
+mouse.onCasseBrique = false
 --
 function mouse.update(dt)
   mouse.x, mouse.y = love.mouse.getPosition()

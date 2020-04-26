@@ -1,11 +1,16 @@
 -- debug output console showing
 io.stdout:setvbuf("no")
+-- Cette ligne permet de déboguer pas à pas dans ZeroBraneStudio
+if arg[#arg] == "-debug" then require("mobdebug").start() end
+if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then  require("lldebugger").start() end -- debug for Visual Code
+-- ###############################################################################################################
 
+local release = false
 debug = false
 
 -- Set Screen Mode
 if release then
-  local width, height = love.window.getDesktopDimensions( display )
+  local width, height = love.window.getDesktopDimensions()
   love.window.setMode(width, height)
   love.window.maximize()
 end
@@ -32,6 +37,7 @@ BouttonManager = require ("modules/BouttonManager")
 SceneMenuIntro = require("scenes/MenuIntro")
 --
 SceneSelectGame = require("scenes/SelectGame")
+SceneCredits = require("scenes/SceneCredits")
 --
 SceneMahJong = require("scenes/MahJong/MahJong")
 SceneCasseBrique = require("scenes/CasseBrique/CasseBrique")
@@ -55,6 +61,7 @@ pSetActiveScene -- pour ajouter et mettre celle-ci directement..]]--
 SceneManager:addScene(SceneMenuIntro, "MenuIntro")
 -- le menu de selections des jeux
 SceneManager:addScene(SceneSelectGame, "SelectGame")
+SceneManager:addScene(SceneCredits, "Credits")
 -- les jeux
 SceneManager:addScene(SceneMahJong, "MahJong")
 SceneManager:addScene(SceneCasseBrique, "CasseBrique")

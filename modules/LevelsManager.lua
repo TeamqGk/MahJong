@@ -22,6 +22,7 @@ function LevelsManager.autoload()
       Levels[i].name = level.name
       Levels[i].file = level.file
       Levels[i].level = i
+      Levels[i].load = false
       --
     end
   end
