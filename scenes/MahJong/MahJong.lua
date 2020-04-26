@@ -144,7 +144,7 @@ function mouse.selectMahjong()
         case.select = true
         --
         add = true
-        print("ajout de la selection ".."[e:"..e.."]".."[l:"..l.."]".."[c:"..c.."]".." dans mouse.select["..i.."]")
+        if debug then print("ajout de la selection ".."[e:"..e.."]".."[l:"..l.."]".."[c:"..c.."]".." dans mouse.select["..i.."]") end
       end
     end
   end
@@ -222,7 +222,6 @@ end
 --
 
 function SceneMahJong.testVictory()
-  print("ici ?!")
   if Grid.mahjongTotal == 0 and Grid.impaire == false or Grid.mahjongTotal == 1 and Grid.impaire == true then
     if debug then print("NIVEAU SUIVANT : "..(Grid.level + 1).."/"..#Levels) end
     mouse.selectInit()
