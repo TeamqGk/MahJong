@@ -13,10 +13,17 @@ function SaveManager.saveGame(pDataTable)
 end
 --
 function SaveManager.loadGame()
-  local dataFile = love.filesystem.read("save.sav")
-  local decrypt = love.data.decode( "string", "base64", dataFile)
-  local save = lume.deserialize(decrypt)
-  return save -- et le renvoi !
+  print("On test le fichier save.sav :")
+  if  love.filesystem.getInfo("save.sav") then
+    print("fichier présent !")
+    local dataFile = love.filesystem.read("save.sav")
+    local decrypt = love.data.decode( "string", "base64", dataFile)
+    local save = lume.deserialize(decrypt)
+    return save -- et le renvoi !
+  else
+    print("fichier inexistant !")
+    return false
+  end
 end
 --
 

@@ -6,6 +6,7 @@ Grid = {}
 Img = {}
 MahJong = {}
 --
+local Gui = require("scenes/MahJong/Gui")
 local BM = BouttonManager.newBM()
 local Boutton = {}
 --
@@ -228,13 +229,25 @@ end
 function SceneMahJong.testVictory()
   if Grid.mahjongTotal == 0 and Grid.impaire == false or Grid.mahjongTotal == 1 and Grid.impaire == true then
     if debug then print("NIVEAU SUIVANT : "..(Grid.level + 1).."/"..#Levels) end
+    --
     mouse.selectInit()
-    GridManager.setGrid(Grid.level + 1)
+    --
+    SceneMahJong.saveVictory()
+    --
+    GridManager.setGrid(Gui.save.currentLevel)
   end
 end
 --
 
+function SceneMahJong.saveVictory()
+  Gui.save.currentLevel = Gui.save.currentLevel + 1
+  if Gui.save.levelMax < Gui.save.currentLevel then Gui.save.levelMax = Gui.save.currentLevel end
+  SaveManager.saveGame(Gui.save)
+end
+
 function SceneMahJong.load() -- love.load()
+  Gui.load()
+--
   mouse.selectInit()
   --
   screen.update(dt)
@@ -243,7 +256,8 @@ function SceneMahJong.load() -- love.load()
   --
   LevelsManager.autoload()
   --
-  GridManager.setGrid(3)
+  GridManager.setGrid(Gui.save.currentLevel)
+  --
 end
 --
 
