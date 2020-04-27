@@ -243,7 +243,7 @@ function SceneMahJong.load() -- love.load()
   --
   LevelsManager.autoload()
   --
-  GridManager.setGrid(1)
+  GridManager.setGrid(3)
 end
 --
 
