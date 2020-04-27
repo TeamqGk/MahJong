@@ -111,7 +111,7 @@ timer.run = false
 timer.start = 0
 timer.current = 0
 timer.diff = 0
-
+-- http://www.luteus.biz/Download/LoriotPro_Doc/LUA/LUA_Training_FR/LUA_Fonction_OS.html
 function timer.reset()
   timer.run = false
   timer.start = 0
