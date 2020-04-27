@@ -179,10 +179,7 @@ function mouse.selectMahjong()
         cancel_2.select = false
         --
         Grid.mahjongTotal = Grid.mahjongTotal - 2
-        --
-        sound_mahjongFind:stop()
         sound_mahjongFind:play()
-        --
         if debug then print("un Double de Mahjong a été trouvé, il reste "..Grid.mahjongTotal.." mahjong(s) en jeu") end
         --
         return true
@@ -217,7 +214,6 @@ function mouse.selectMahjong()
     cancel_2.mahjong = 0
     cancel_2.select = false
     --
-    sound_mahjongNotFind:stop()
     sound_mahjongNotFind:play()
     --
   end
