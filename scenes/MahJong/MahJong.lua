@@ -15,9 +15,8 @@ local sound_mahjongFind = AM:addSound("scenes/MahJong/sound/mahjong_find.wav", f
 local sound_mahjongNotFind = AM:addSound("scenes/MahJong/sound/mahjong_notfind.wav", false, 0.4)
 
 local music_loop = AM:addMusic("scenes/MahJong/music/Mahjong_Theme_By_Hydrogene.mp3", true, 0.25, false)
---
-local SaveGame = {}
---
+
+local resetMahjongs = ImgManager.new("scenes/MahJong/img/resetLevel.png")
 
 
 
@@ -28,10 +27,41 @@ function Boutton.init()
   BM:setColorMouseOver(0,0,1,0.15)
   --
   Boutton[1] = BM.newBox ()
-  Boutton[1]:addText(Font[22], "Menu")
-  Boutton[1]:setPos(screen.w - (Boutton[1].w+10),10)
-  Boutton[1]:setAction(function() SceneManager:setScene("MenuIntro"); music_loop:pause() end)
+  Boutton[1]:addText(Font[22], "Options")
+  Boutton[1]:setPos(10, 10)
+  Boutton[1]:isEffect(false)
+  Boutton[1]:setAction(function() SceneManager:setScene("MahJongOptions"); music_loop:pause() end)
   --
+  Boutton[2] = BM.newBox ()
+  Boutton[2]:addText(Font[22], "Reset Level")
+  Boutton[2]:setPos(Boutton[1].x + Boutton[1].w + 10, 10)
+  Boutton[2]:isEffect(false)
+  Boutton[2]:setAction(function() SceneMahJong.resetWait = true ; Boutton[3]:setVisible(true) ; Boutton[4]:setVisible(true) end)
+  --
+  Boutton[3] = BM.newBox ()
+  Boutton[3]:addText(Font[22], "Oui")
+  Boutton[3]:setPos(screen.w * 0.5 - (Boutton[3].w+10), screen.ox)
+  Boutton[3]:setVisible(false)
+  Boutton[3]:setAction(function() SceneMahJong.resetWait = false ; Boutton[3]:setVisible(false) ; Boutton[4]:setVisible(false) ; GridManager.resetLevel(Grid.level) end)
+  --
+  Boutton[4] = BM.newBox ()
+  Boutton[4]:addText(Font[22], "Non")
+  Boutton[4]:setPos(screen.w * 0.5 + 10, screen.ox)
+  Boutton[4]:setVisible(false)
+  Boutton[4]:setAction(function() SceneMahJong.resetWait = false ; Boutton[3]:setVisible(false) ; Boutton[4]:setVisible(false)  end)
+  --  
+  --
+  Boutton[5] = BM.newBox ()
+  Boutton[5]:addText(Font[22], "Change Level")
+  Boutton[5]:setPos(Boutton[2].x + Boutton[2].w + 10,10)
+  Boutton[5]:isEffect(false)
+  Boutton[5]:setAction(function() SceneManager:setScene("MenuIntro"); music_loop:pause() end)
+  --
+
+  Boutton[6] = BM.newBox ()
+  Boutton[6]:addText(Font[22], "Menu")
+  Boutton[6]:setPos(screen.w - (Boutton[1].w+10),10)
+  Boutton[6]:setAction(function() SceneManager:setScene("MenuIntro"); music_loop:pause() end)
 end
 --
 
@@ -246,8 +276,15 @@ function SceneMahJong.saveVictory()
 end
 
 function SceneMahJong.load() -- love.load()
+  --
+  SceneMahJong.resetWait = false
+  --
   Gui.load()
---
+  --
+  if debug then
+    Gui.resetSave() -- reset save for debug ... =)
+  end
+  --
   mouse.selectInit()
   --
   screen.update(dt)
@@ -262,20 +299,26 @@ end
 --
 
 function SceneMahJong.update(dt)
+  if not SceneMahJong.resetWait then
 --  if music_loop then
-  if not music_loop:isPlaying() then
-    music_loop:play()
-  end
+    if not music_loop:isPlaying() then
+      music_loop:play()
+    end
 --  end
-  AM:update(dt)
+    AM:update(dt)
+    SceneMahJong.mouseUpdate(dt)
+  end
   BM:update(dt)
-  SceneMahJong.mouseUpdate(dt)
 end
 --
 
 function SceneMahJong.draw()-- love.draw()
-  GridManager.draw()
-  SceneMahJong.mouseDraw()
+  if not SceneMahJong.resetWait then
+    GridManager.draw()
+    SceneMahJong.mouseDraw()
+  else
+    resetMahjongs:draw()
+  end
   --
   BM:draw()
 end

@@ -10,7 +10,11 @@ function GridManager.setGrid(pLevel, pReset, pRandom)
     LevelsManager.reset(pLevel)
   end
   Grid = {}
-  Grid = Levels[pLevel]
+  if pLevel <= #Levels then
+    Grid = Levels[pLevel]
+  else
+    Grid = Levels[1]
+  end
   if debug then print("Grid.load : "..tostring(Grid.load)) end
 
 --

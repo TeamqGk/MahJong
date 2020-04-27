@@ -1,6 +1,12 @@
 local Gui = {}
 
-function Gui.init( pReset)
+
+function Gui.resetSave()
+  Gui.init(true)
+end
+--
+
+function Gui.init(pReset)
   if pReset or not Gui.LoadSave()then
     print("Creation d'un fichier de sauvegarde...")
     Gui.save = {}
@@ -25,8 +31,11 @@ function Gui.init( pReset)
     SaveManager.saveGame(Gui.save, "MahJong")
   else
     --test :
+    if debug then
+      print(" la table Gui.save contient :")
     for k, v in pairs(Gui.save) do
       print(k.." : "..tostring(v))
+    end
     end
   end
 end
