@@ -309,12 +309,7 @@ function SceneMahJong.timer(dt)
 --%%	the character `%´
 
 
-  if timer.run then
-    timer.current = timer.current + dt
-    timer.diff = os.difftime(timer.current, timer.start)
-
---    Boutton[1]:addText(Font[22], os.date("Temps %H : %M : %S") )
-  end
+  timer.upate(dt)
   Boutton[1]:addText(Font[22], timer.diff )
 
 end

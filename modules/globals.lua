@@ -119,7 +119,13 @@ function timer.reset()
   timer.diff = 0
 end
 --
-
+function timer.update(dt)
+  if timer.run then
+    timer.current = timer.current + dt
+    timer.diff = os.difftime(timer.current, timer.start)
+  end
+end
+--
 
 
 
