@@ -6,11 +6,11 @@ end
 --
 
 function GridManager.setGrid(pLevel, pReset, pRandom)
-  Grid = {}
-  Grid = Levels[pLevel]
   if pReset == true then
     LevelsManager.reset(pLevel)
   end
+  Grid = {}
+  Grid = Levels[pLevel]
   if debug then print("Grid.load : "..tostring(Grid.load)) end
 
 --
@@ -132,14 +132,16 @@ function GridManager.setGrid(pLevel, pReset, pRandom)
 
   -- randomise mahjong in grid
   if not Grid.load or pReset  then
-    GridManager.setRandMahjong()
+    if not GridManager.setRandMahjong(pLevel) then
+      GridManager.resetLevel(pLevel)
+    end
     --
     Grid.load = true
   end
 end
 --
 
-function GridManager.setRandMahjong()
+function GridManager.setRandMahjong(pLevel)
   -- initalisation d'un nouveau math.randomseed
 --  globals.math.newRandom() --love.math.setRandomSeed(love.timer.getTime()) -- set Random Seed !
 
@@ -192,30 +194,28 @@ function GridManager.setRandMahjong()
 --  end
 
   -- on scan les grilles :
-  Grid.mahjongPlaced = 0
-  local i = 1
-  while i <= Grid.mahjongTotal  do
+  while #tableMahjong > 0  do
     -- on selectione un mahjong au hasard
-    local pose, l, c 
-    local rand = tableMahjong[#tableMahjong]
-    pose, l, c = GridManager.testMohJang(rand)
-    if pose then -- placement du premier pion
-      i = i + 1
+    local onGrid, l, c 
+    local NewMahjong = tableMahjong[#tableMahjong]
+    onGrid, l, c = GridManager.testMohJang(NewMahjong)
+    if onGrid then -- placement du premier pion
       table.remove(tableMahjong, #tableMahjong)
     else
       return false
     end
     --
-    rand = tableMahjong[#tableMahjong]
-    pose, l, c = GridManager.testMohJang(rand, l, c) -- placement du second pion
-    if pose then
-      i = i + 1
+    NewMahjong = tableMahjong[#tableMahjong]
+    onGrid, l, c = GridManager.testMohJang(NewMahjong, l, c) -- placement du second pion
+    if onGrid then
       table.remove(tableMahjong, #tableMahjong)
     else
       return false
     end
-    if Grid.mahjongPlaced == Grid.mahjongTotal or not pose then break end
   end
+
+-- Ouf on a  reussi !
+  return true
 --
 end
 --
