@@ -21,9 +21,6 @@ function Gui.init(pReset)
       Gui.save.level[i] = {}
       local current = Gui.save.level[i]
       --
-      current.currentScore = 0
-      current.bestScore = 0
-      --
       current.currentTime = 0
       current.bestTime = 0
       --

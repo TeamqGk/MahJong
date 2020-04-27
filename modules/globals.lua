@@ -104,6 +104,23 @@ end
 --
 
 
+-- timer globals (chronometre)
+
+timer = {}
+timer.run = false
+timer.start = 0
+timer.current = 0
+timer.diff = 0
+
+function timer.reset()
+  timer.run = false
+  timer.start = 0
+  timer.current = 0
+  timer.diff = 0
+end
+--
+
+
 
 
 return globals -- return table to require (main)

@@ -6,6 +6,9 @@ end
 --
 
 function GridManager.setGrid(pLevel, pReset, pRandom)
+  timer.reset()
+  
+  --
   if pReset == true then
     LevelsManager.reset(pLevel)
   end
@@ -141,6 +144,7 @@ function GridManager.setGrid(pLevel, pReset, pRandom)
     end
     --
     Grid.load = true
+    timer.run = true
   end
 end
 --

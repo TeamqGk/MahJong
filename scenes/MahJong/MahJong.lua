@@ -27,10 +27,10 @@ function Boutton.init()
   BM:setColorMouseOver(0,0,1,0.15)
   --
   Boutton[1] = BM.newBox ()
-  Boutton[1]:addText(Font[22], "Options")
+  Boutton[1]:addText(Font[22], "Timer")
   Boutton[1]:setPos(10, 10)
   Boutton[1]:isEffect(false)
-  Boutton[1]:setAction(function() SceneManager:setScene("MahJongOptions"); music_loop:pause() end)
+  Boutton[1]:setAction(function() SceneMahJong.pause = not SceneMahJong.pause; music_loop:pause() end)
   --
   Boutton[2] = BM.newBox ()
   Boutton[2]:addText(Font[22], "Reset Level")
@@ -42,7 +42,7 @@ function Boutton.init()
   Boutton[3]:addText(Font[22], "Oui")
   Boutton[3]:setPos(screen.w * 0.5 - (Boutton[3].w+10), screen.ox)
   Boutton[3]:setVisible(false)
-  Boutton[3]:setAction(function() SceneMahJong.resetWait = false ; Boutton[3]:setVisible(false) ; Boutton[4]:setVisible(false) ; GridManager.resetLevel(Grid.level) end)
+  Boutton[3]:setAction(function() SceneMahJong.resetWait = false ; SceneMahJong.pause = false ; Boutton[3]:setVisible(false) ; Boutton[4]:setVisible(false) ; GridManager.resetLevel(Grid.level) end)
   --
   Boutton[4] = BM.newBox ()
   Boutton[4]:addText(Font[22], "Non")
@@ -270,14 +270,61 @@ end
 --
 
 function SceneMahJong.saveVictory()
+  timer.run = false
+  local current = Gui.save.level[Gui.save.currentLevel]
+  current.currentTime = timer.diff
+  if current.currentTime < current.bestTime then current.bestTime = current.currentTime end -- TODO: RECORD !
+
   Gui.save.currentLevel = Gui.save.currentLevel + 1
   if Gui.save.levelMax < Gui.save.currentLevel then Gui.save.levelMax = Gui.save.currentLevel end
   SaveManager.saveGame(Gui.save)
 end
+--
+
+function SceneMahJong.timer(dt)
+--  timer.run = false
+--  timer.start = 0
+--  timer.current = 0
+--  timer.diff = 0
+--
+
+--   os.date(arg,arg,args...)
+--%a	abbreviated weekday name (e.g., Wed)
+--%A	full weekday name (e.g., Wednesday)
+--%b	abbreviated month name (e.g., Sep)
+--%B	full month name (e.g., September)
+--%c	date and time (e.g., 09/16/98 23:48:10)
+--%d	day of the month (16) [01-31]
+--%H	hour, using a 24-hour clock (23) [00-23]
+--%I	hour, using a 12-hour clock (11) [01-12]
+--%M	minute (48) [00-59]
+--%m	month (09) [01-12]
+--%p	either "am" or "pm" (pm)
+--%S	second (10) [00-61]
+--%w	weekday (3) [0-6 = Sunday-Saturday]
+--%x	date (e.g., 09/16/98)
+--%X	time (e.g., 23:48:10)
+--%Y	full year (1998)
+--%y	two-digit year (98) [00-99]
+--%%	the character `%´
+
+
+  if timer.run then
+    timer.current = timer.current + dt
+    timer.diff = os.difftime(timer.current, timer.start)
+
+--    Boutton[1]:addText(Font[22], os.date("Temps %H : %M : %S") )
+  end
+  Boutton[1]:addText(Font[22], timer.diff )
+
+end
+--
+
 
 function SceneMahJong.load() -- love.load()
   --
   SceneMahJong.resetWait = false
+  SceneMahJong.pause = false
   --
   Gui.load()
   --
@@ -299,7 +346,7 @@ end
 --
 
 function SceneMahJong.update(dt)
-  if not SceneMahJong.resetWait then
+  if not SceneMahJong.resetWait and not SceneMahJong.pause then
 --  if music_loop then
     if not music_loop:isPlaying() then
       music_loop:play()
@@ -307,17 +354,20 @@ function SceneMahJong.update(dt)
 --  end
     AM:update(dt)
     SceneMahJong.mouseUpdate(dt)
+    SceneMahJong.timer(dt)
   end
   BM:update(dt)
 end
 --
 
 function SceneMahJong.draw()-- love.draw()
-  if not SceneMahJong.resetWait then
+  if not SceneMahJong.resetWait and not SceneMahJong.pause then
     GridManager.draw()
     SceneMahJong.mouseDraw()
-  else
+  elseif SceneMahJong.resetWait then
     resetMahjongs:draw()
+  elseif SceneMahJong.pause then
+    love.graphics.print("PAUSE", screen.ox, screen.oy)
   end
   --
   BM:draw()
@@ -336,7 +386,7 @@ function SceneMahJong:keypressed(key, scancode)
         level = level - 1
       end
       --
-      if level > #Levels then level = 1 elseif level < 1 then level = #Levels end
+--      if level > #Levels then level = 1 elseif level < 1 then level = #Levels end
       --
       GridManager.setGrid(level)
     end
