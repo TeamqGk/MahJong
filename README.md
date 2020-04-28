@@ -1,2 +1,2 @@
-# GameJam
+# MahJong
 Many Jams project

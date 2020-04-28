@@ -124,14 +124,14 @@ function Boutton.init()
   Boutton[2]:addText(Font[22], "Pause/Quit")
   Boutton[2]:setPos(10, 10)
   Boutton[2]:setVisible(true)
-  Boutton[2]:isEffect(false)
+  Boutton[2]:setEffect(false)
   Boutton[2]:setAction(function() BM.switchShow() end)
   --
   Boutton[3] = BM.newBox ()
   Boutton[3]:addText(Font[22], "Play")
   Boutton[3]:setPos(10, 10)
   Boutton[3]:setVisible(false)
-  Boutton[3]:isEffect(false)
+  Boutton[3]:setEffect(false)
   Boutton[3]:setAction(function() BM.switchShow() end)
 end
 --

@@ -26,7 +26,7 @@ function BouttonManager:newBM()
       print(' Attention f:setSpace(pSTringType) attends un string "x" ou "y" ! ')
       return false
     else
-      if debug then print("espacement pour "..#f.." boutons sur l'axe "..pSTringType.." ! ") end
+--      if debug then print("espacement pour "..#f.." boutons sur l'axe "..pSTringType.." ! ") end
     end
     if pSTringType == "x" then
       f.spaceX = pVar or 30
@@ -62,7 +62,7 @@ function BouttonManager:newBM()
       print(' Attention f:setPosAlignCenter(pStyle) attends un string "x" ou "y" ! ')
       return false
     else
-      if debug then print("alignement pour "..#f.." boutons sur l'axe "..pStyle.." ! ") end
+--      if debug then print("alignement pour "..#f.." boutons sur l'axe "..pStyle.." ! ") end
     end
     -----------------------------------------------------------------------------------------------
     if #f >= 1 then
@@ -174,7 +174,7 @@ function BouttonManager:newBM()
     Boutton.isVisible = true
     Boutton.isEffect = true
     --
-    function Boutton:isEffect(pBool)
+    function Boutton:setEffect(pBool)
       if not pBool then self.isEffect = true end
       self.isEffect = pBool
     end

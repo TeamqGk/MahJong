@@ -6,10 +6,14 @@ Font = {}
 for i=1, 100 do
   Font[i] = love.graphics.newFont(i)
 end
-
+--
 
 
 -- Vars Globals
+SaveMahJong = {}
+SaveCasseBrique = {}
+
+
 mouse = love.mouse
 mouse.x, mouse.y = love.mouse.getPosition()
 mouse.w, mouse.h = 1, 1
@@ -38,7 +42,7 @@ function screen.update(dt)
     screen.w, screen.h = love.graphics.getDimensions()
     screen.ox, screen.oy = screen.w * 0.5, screen.h * 0.5
     screen.sx = w / screen.w_def
-    screen.sx = h / screen.h_def
+    screen.sy = h / screen.h_def
   end
 end
 --

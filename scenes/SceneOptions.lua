@@ -7,6 +7,8 @@ local Boutton2 = {}
 local BackGround = ImgManager.new("img/bg_logo.jpg")-- pFile
 BackGround:scaleToScreen()
 
+local delete = false
+
 
 function Boutton.init()
   BM:setDimensions(screen.w * 0.2, screen.h * 0.05)
@@ -16,15 +18,15 @@ function Boutton.init()
   --
   Boutton[1] = BM.newBox ()
   Boutton[1]:addText(Font[22], "Oui")
-  Boutton[1]:setPos(screen.w * 0.5 - (Boutton[1].w+10), screen.ox)
+  Boutton[1]:setPos(screen.w * 0.5 - (Boutton[1].w+10), screen.oy)
   Boutton[1]:setVisible(false)
-  Boutton[1]:setAction(function()  Gui.resetSave(); love.event.quit("restart") end)
+  Boutton[1]:setAction(function()  SaveMahJongManager.resetSave(); love.event.quit("restart") end)
   --
   Boutton[2] = BM.newBox ()
   Boutton[2]:addText(Font[22], "Non")
-  Boutton[2]:setPos(screen.w * 0.5 + 10, screen.ox)
+  Boutton[2]:setPos(screen.w * 0.5 + 10, screen.oy)
   Boutton[2]:setVisible(false)
-  Boutton[2]:setAction(function()  Boutton2[1]:setVisible(true) ; Boutton2[2]:setVisible(true) ; Boutton[1]:setVisible(false) ; Boutton[2]:setVisible(false)  end)
+  Boutton[2]:setAction(function() SceneOptions.delete(false) end)
   --
 end
 --
@@ -39,7 +41,7 @@ function Boutton2.init()
   --
   Boutton2[1] = BM2.newBox ()
   Boutton2[1]:addText(Font[22], "Reset Save")
-  Boutton2[1]:setAction(function() Boutton2[1]:setVisible(false) ; Boutton2[2]:setVisible(false) ; Boutton[1]:setVisible(true) ; Boutton[2]:setVisible(true) end)
+  Boutton2[1]:setAction(function() SceneOptions.delete(true) end)
   --
   Boutton2[2] = BM2.newBox ()
   Boutton2[2]:addText(Font[22], "Retour Menu")
@@ -52,6 +54,21 @@ function Boutton2.init()
   BM2:setColor(0,1,0,0.15)
   BM2:setColorText(0,0,0,0.75)
   BM2:setColorMouseOver(0,0,1,0.15)
+end
+--
+
+function SceneOptions.delete(pBool)
+  if pBool then
+    Boutton2[1]:setEffect(false) -- reset save
+    Boutton2[2]:setVisible(false) -- Retour Menu
+    Boutton[1]:setVisible(true) -- oui
+    Boutton[2]:setVisible(true) -- non
+  else
+    Boutton2[1]:setEffect(true) -- reset save
+    Boutton2[2]:setVisible(true) -- Retour Menu
+    Boutton[1]:setVisible(false) -- oui
+    Boutton[2]:setVisible(false) -- non
+  end
 end
 --
 

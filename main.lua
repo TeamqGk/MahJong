@@ -5,7 +5,7 @@ if arg[#arg] == "-debug" then require("mobdebug").start() end
 if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then  require("lldebugger").start() end -- debug for Visual Code
 -- ###############################################################################################################
 
-local release = false
+local release = true
 debug = false
 
 -- Set Screen Mode
@@ -17,7 +17,7 @@ end
 --
 
 -- just a Classic Globals for use =)
-socket = require("socket")
+--socket = require("socket")
 globals = require("modules/globals")
 lume = require("modules/lume") -- lib of many's help functions's (and this nice is serialize and deserialize)
 require("modules/libSaveTableToFile")
@@ -32,7 +32,7 @@ QuadManager = require("modules/QuadManager") -- lua file
 ImgManager = require("modules/ImgManager") -- lua file
 GridManager = require("modules/GridManager") -- lua file
 BouttonManager = require ("modules/BouttonManager")
-Gui = require("modules/Gui")
+SaveMahJongManager = require("modules/SaveMahJongManager")
 
 
 
@@ -84,17 +84,18 @@ SceneManager:setScene("MenuIntro")
 function love.load()
   SceneManager:load()
 end
-
+--
 function love.update(dt)
   mouse.update(dt)
   screen.update(dt)
+  --
   SceneManager:update(dt)
 end
-
+--
 function love.draw()
   SceneManager:draw() -- SceneGame:draw()
 end
-
+--
 
 function love.keypressed(key, scancode)
   if debug then
