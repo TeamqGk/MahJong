@@ -19,6 +19,8 @@ local resetMahjongs = ImgManager.new("scenes/MahJong/img/resetLevel.png")
 resetMahjongs:scaleToScreen()
 
 
+local ChangeLevel = require("scenes/MahJong/ChangeLevel")
+ChangeLevel.show = true
 
 function Boutton.init()
   BM:setDimensions(screen.w * 0.15, screen.h * 0.05)
@@ -61,9 +63,8 @@ function Boutton.init()
   Boutton[6]:addText(Font[22], "Options")
   Boutton[6]:setPos(Boutton[5].x + Boutton[2].w + 10,10)
   Boutton[6]:setEffect(false)
-  Boutton[6]:setAction(function() end)
+  Boutton[6]:setAction(function() SceneMahJong.pause = not SceneMahJong.pause; ChangeLevel.show = not ChangeLevel.show end)
   --
-
   Boutton[7] = BM.newBox ()
   Boutton[7]:addText(Font[22], "Menu")
   Boutton[7]:setPos(screen.w - (Boutton[1].w+10),10)
@@ -305,6 +306,14 @@ end
 --
 
 
+function SceneMahJong.backgroundWaitDraw()
+  Img.BG:draw()
+  love.graphics.setColor(0,0,0,0.90)
+  love.graphics.rectangle("fill",0,0,screen.w,screen.h)
+  love.graphics.setColor(1,1,1,1)
+end
+--
+
 function SceneMahJong.load() -- love.load()
   LevelsManager.autoload()
   --
@@ -319,6 +328,7 @@ function SceneMahJong.load() -- love.load()
   --
   GridManager.setGrid(SaveMahJong.currentLevel)
   --
+  ChangeLevel.load()
 end
 --
 
@@ -335,6 +345,7 @@ function SceneMahJong.update(dt)
   end
   BM:update(dt)
   Boutton[5]:addText(Font[22], "Level : "..SaveMahJong.currentLevel)
+  ChangeLevel.update(dt)
 end
 --
 
@@ -343,9 +354,15 @@ function SceneMahJong.draw()-- love.draw()
     GridManager.draw()
     SceneMahJong.mouseDraw()
   elseif SceneMahJong.resetWait then
+    SceneMahJong.backgroundWaitDraw()
     resetMahjongs:draw()
   elseif SceneMahJong.pause then
+    SceneMahJong.backgroundWaitDraw()
     love.graphics.print("PAUSE", screen.ox, screen.oy)
+  end
+  if ChangeLevel.show then
+    SceneMahJong.backgroundWaitDraw()
+    ChangeLevel.draw()
   end
   --
   BM:draw()

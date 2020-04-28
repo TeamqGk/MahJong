@@ -1,6 +1,8 @@
 local ChangeLevel = {}
 
 
+local fenetre = {}
+
 function ChangeLevel.limit(pSelect)
   if not ChangeLevel.current then ChangeLevel.current = SaveMahJong.currentLevel end
   --
@@ -22,6 +24,12 @@ end
 function ChangeLevel.load()
   ChangeLevel.show = false
   --ChangeLevel.current
+
+  --
+  fenetre.w = screen.w * 0.8
+  fenetre.h = screen.h * 0.8
+  fenetre.x = screen.w*0.1
+  fenetre.y = screen.h*0.1
 end
 --
 
@@ -31,7 +39,8 @@ end
 
 function ChangeLevel.draw()
   if ChangeLevel.show then
-    
+    love.graphics.setColor(0.25,0.25,0.25,1)
+    love.graphics.rectangle("fill",fenetre.x,fenetre.y,fenetre.w,fenetre.h,10)
   end
 end
 --
