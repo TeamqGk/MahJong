@@ -12,27 +12,26 @@ debug = false
 if release then
   local width, height = love.window.getDesktopDimensions()
   love.window.setMode(width, height)
-  love.window.maximize()
 end
 --
 
 -- just a Classic Globals for use =)
 --socket = require("socket")
-globals = require("modules/globals")
+globals = require("modules/globals") -- lua file
 lume = require("modules/lume") -- lib of many's help functions's (and this nice is serialize and deserialize)
-require("modules/libSaveTableToFile")
+require("modules/libSaveTableToFile") -- lib file
 
 
 -- Require modules here if is Global needed
-SceneManager = require("modules/SceneManager")
-LevelsManager = require("modules/LevelsManager")
-SaveManager = require("modules/SaveManager")
-AudioManager = require("modules/audioManager")
+SceneManager = require("modules/SceneManager") -- lua file
+LevelsManager = require("modules/LevelsManager") -- lua file
+SaveManager = require("modules/SaveManager") -- lua file
+AudioManager = require("modules/audioManager") -- lua file
 QuadManager = require("modules/QuadManager") -- lua file
 ImgManager = require("modules/ImgManager") -- lua file
 GridManager = require("modules/GridManager") -- lua file
-BouttonManager = require ("modules/BouttonManager")
-SaveMahJongManager = require("modules/SaveMahJongManager")
+BouttonManager = require ("modules/BouttonManager") -- lua file
+SaveMahJongManager = require("modules/SaveMahJongManager") -- lua file
 
 
 

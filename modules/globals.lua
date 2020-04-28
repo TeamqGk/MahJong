@@ -115,22 +115,34 @@ timer.run = false
 timer.start = 0
 timer.current = 0
 timer.diff = 0
+timer.text = ""
 -- http://www.luteus.biz/Download/LoriotPro_Doc/LUA/LUA_Training_FR/LUA_Fonction_OS.html
 function timer.reset()
   timer.run = false
   timer.start = 0
   timer.current = 0
   timer.diff = 0
+  timer.text = ""
 end
 --
 function timer.update(dt)
   if timer.run then
+    --
     timer.current = timer.current + dt
     timer.diff = os.difftime(timer.current, timer.start)
+    --
+    local floor = math.floor
+    local seconds = timer.diff
+    local minutes = floor(seconds / 60)
+    seconds = floor(seconds % 60)
+    local hours = floor(minutes / 60)
+    minutes = floor(minutes % 60)
+    --
+    timer.text = string.format("%02d h %02d m %02d s", hours, minutes, seconds)
+    --
   end
 end
 --
-
 
 
 return globals -- return table to require (main)

@@ -72,12 +72,6 @@ function SceneOptions.delete(pBool)
 end
 --
 
-
-
-
-
-
-
 function SceneOptions.load() -- love.load()
   Boutton.init()
   Boutton2.init()

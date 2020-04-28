@@ -21,7 +21,7 @@ resetMahjongs:scaleToScreen()
 
 
 function Boutton.init()
-  BM:setDimensions(screen.w * 0.2, screen.h * 0.05)
+  BM:setDimensions(screen.w * 0.15, screen.h * 0.05)
   BM:setColor(0,1,0,0.15)
   BM:setColorText(0,0,0,0.75)
   BM:setColorMouseOver(0,0,1,0.15)
@@ -57,11 +57,17 @@ function Boutton.init()
   Boutton[5]:setEffect(false)
   Boutton[5]:setAction(function() end)
   --
-
   Boutton[6] = BM.newBox ()
-  Boutton[6]:addText(Font[22], "Menu")
-  Boutton[6]:setPos(screen.w - (Boutton[1].w+10),10)
-  Boutton[6]:setAction(function() SceneManager:setScene("MenuIntro"); music_loop:pause() end)
+  Boutton[6]:addText(Font[22], "Options")
+  Boutton[6]:setPos(Boutton[5].x + Boutton[2].w + 10,10)
+  Boutton[6]:setEffect(false)
+  Boutton[6]:setAction(function() end)
+  --
+
+  Boutton[7] = BM.newBox ()
+  Boutton[7]:addText(Font[22], "Menu")
+  Boutton[7]:setPos(screen.w - (Boutton[1].w+10),10)
+  Boutton[7]:setAction(function() SceneManager:setScene("MenuIntro"); music_loop:pause() end)
 end
 --
 
@@ -273,6 +279,9 @@ function SceneMahJong.saveVictory()
   timer.run = false
   --
   local current = SaveMahJong.level[SaveMahJong.currentLevel]
+  for k, v in pairs(current) do
+    print(k.." : "..tostring(v))
+  end
   current.currentTime = timer.diff
   if current.currentTime < current.bestTime then current.bestTime = current.currentTime end -- TODO: RECORD !
   timer.reset()
@@ -291,7 +300,7 @@ end
 
 function SceneMahJong.timer(dt)
   timer.update(dt)
-  Boutton[1]:addText(Font[22], timer.diff )
+  Boutton[1]:addText(Font[22], timer.text )
 end
 --
 
