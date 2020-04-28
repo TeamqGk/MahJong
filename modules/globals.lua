@@ -42,7 +42,7 @@ function screen.update(dt)
     screen.w, screen.h = love.graphics.getDimensions()
     screen.ox, screen.oy = screen.w * 0.5, screen.h * 0.5
     screen.sx = w / screen.w_def
-    screen.sx = h / screen.h_def
+    screen.sy = h / screen.h_def
   end
 end
 --

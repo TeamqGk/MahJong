@@ -174,7 +174,7 @@ function BouttonManager:newBM()
     Boutton.isVisible = true
     Boutton.isEffect = true
     --
-    function Boutton:isEffect(pBool)
+    function Boutton:setEffect(pBool)
       if not pBool then self.isEffect = true end
       self.isEffect = pBool
     end

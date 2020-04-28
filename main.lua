@@ -5,8 +5,8 @@ if arg[#arg] == "-debug" then require("mobdebug").start() end
 if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then  require("lldebugger").start() end -- debug for Visual Code
 -- ###############################################################################################################
 
-local release = false
-debug = true
+local release = true
+debug = false
 
 -- Set Screen Mode
 if release then
@@ -84,17 +84,18 @@ SceneManager:setScene("MenuIntro")
 function love.load()
   SceneManager:load()
 end
-
+--
 function love.update(dt)
   mouse.update(dt)
   screen.update(dt)
+  --
   SceneManager:update(dt)
 end
-
+--
 function love.draw()
   SceneManager:draw() -- SceneGame:draw()
 end
-
+--
 
 function love.keypressed(key, scancode)
   if debug then
