@@ -23,7 +23,7 @@ function QuadManager.new(pImageTable, pLig, pCol)
     --
   end
   --
-  if debug then  print("creation de "..#newQuad.." quads avec l'image "..img.file) end
+--  if debug then  print("creation de "..#newQuad.." quads avec l'image "..img.file) end
   return newQuad
 end
 --

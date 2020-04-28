@@ -6,7 +6,7 @@ if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then  require("lldebugger").sta
 -- ###############################################################################################################
 
 local release = false
-debug = false
+debug = true
 
 -- Set Screen Mode
 if release then
@@ -17,7 +17,7 @@ end
 --
 
 -- just a Classic Globals for use =)
-socket = require("socket")
+--socket = require("socket")
 globals = require("modules/globals")
 lume = require("modules/lume") -- lib of many's help functions's (and this nice is serialize and deserialize)
 require("modules/libSaveTableToFile")
@@ -32,7 +32,7 @@ QuadManager = require("modules/QuadManager") -- lua file
 ImgManager = require("modules/ImgManager") -- lua file
 GridManager = require("modules/GridManager") -- lua file
 BouttonManager = require ("modules/BouttonManager")
-Gui = require("modules/Gui")
+SaveMahJongManager = require("modules/SaveMahJongManager")
 
 
 

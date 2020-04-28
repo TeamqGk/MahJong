@@ -270,15 +270,9 @@ function GridManager.draw()
   love.graphics.setColor(1,1,1,1) -- reset color
 
   -- BackGround :
-  if not debug then
     love.graphics.setColor(1,1,1,0.55) -- reset color
     love.graphics.draw(Img.BG.img, 0, 0, 0, Img.BG.sx, Img.BG.sy)
     love.graphics.setColor(1,1,1,1) -- reset color
-  end
-  if debug then
-    love.graphics.print("Grid.level : "..Grid.level)
-  end
-
   --
   local indexTotal = Grid.etages * (Grid.lignes * Grid.colonnes)
   --

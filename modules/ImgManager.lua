@@ -25,19 +25,19 @@ function ImgManager.new(pFile)
     self.sy = screen.h / self.h_def
     self.w = self.w_def * self.sx
     self.h = self.h_def * self.sy
-    if debug then print("new sx, sy : "..self.sx,self.sy) end
+--    if debug then print("new sx, sy : "..self.sx,self.sy) end
   end
   --
   function new:scaleToWidth()
     self.sx = screen.w / self.w_def
     self.w = self.w_def * self.sx
-    if debug then print("new sx: "..self.sx) end
+--    if debug then print("new sx: "..self.sx) end
   end
   --
   function new:scaleToHeight()
     self.sy = screen.h / self.h_def
     self.h = self.h_def * self.sy
-    if debug then print("new sy : "..self.sy) end
+--    if debug then print("new sy : "..self.sy) end
   end
   --
   function new:draw()

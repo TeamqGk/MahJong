@@ -18,7 +18,7 @@ function Boutton.init()
   Boutton[1]:addText(Font[22], "Oui")
   Boutton[1]:setPos(screen.w * 0.5 - (Boutton[1].w+10), screen.ox)
   Boutton[1]:setVisible(false)
-  Boutton[1]:setAction(function()  Gui.resetSave(); love.event.quit("restart") end)
+  Boutton[1]:setAction(function()  SaveMahJongManager.resetSave(); love.event.quit("restart") end)
   --
   Boutton[2] = BM.newBox ()
   Boutton[2]:addText(Font[22], "Non")
