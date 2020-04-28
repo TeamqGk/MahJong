@@ -19,9 +19,10 @@ local resetMahjongs = ImgManager.new("scenes/MahJong/img/resetLevel.png")
 resetMahjongs:scaleToScreen()
 
 
+local ChangeLevel = require("scenes/MahJong/ChangeLevel")
 
 function Boutton.init()
-  BM:setDimensions(screen.w * 0.2, screen.h * 0.05)
+  BM:setDimensions(screen.w * 0.15, screen.h * 0.05)
   BM:setColor(0,1,0,0.15)
   BM:setColorText(0,0,0,0.75)
   BM:setColorMouseOver(0,0,1,0.15)
@@ -57,11 +58,16 @@ function Boutton.init()
   Boutton[5]:setEffect(false)
   Boutton[5]:setAction(function() end)
   --
-
   Boutton[6] = BM.newBox ()
-  Boutton[6]:addText(Font[22], "Menu")
-  Boutton[6]:setPos(screen.w - (Boutton[1].w+10),10)
-  Boutton[6]:setAction(function() SceneManager:setScene("MenuIntro"); music_loop:pause() end)
+  Boutton[6]:addText(Font[22], "Options")
+  Boutton[6]:setPos(Boutton[5].x + Boutton[2].w + 10,10)
+  Boutton[6]:setEffect(false)
+  Boutton[6]:setAction(function() SceneMahJong.pause = not SceneMahJong.pause; ChangeLevel.show = not ChangeLevel.show end)
+  --
+  Boutton[7] = BM.newBox ()
+  Boutton[7]:addText(Font[22], "Menu")
+  Boutton[7]:setPos(screen.w - (Boutton[1].w+10),10)
+  Boutton[7]:setAction(function() SceneManager:setScene("MenuIntro"); music_loop:pause() end)
 end
 --
 
@@ -273,6 +279,9 @@ function SceneMahJong.saveVictory()
   timer.run = false
   --
   local current = SaveMahJong.level[SaveMahJong.currentLevel]
+  for k, v in pairs(current) do
+    print(k.." : "..tostring(v))
+  end
   current.currentTime = timer.diff
   if current.currentTime < current.bestTime then current.bestTime = current.currentTime end -- TODO: RECORD !
   timer.reset()
@@ -291,10 +300,18 @@ end
 
 function SceneMahJong.timer(dt)
   timer.update(dt)
-  Boutton[1]:addText(Font[22], timer.diff )
+  Boutton[1]:addText(Font[22], timer.text )
 end
 --
 
+
+function SceneMahJong.backgroundWaitDraw()
+  Img.BG:draw()
+  love.graphics.setColor(0,0,0,0.90)
+  love.graphics.rectangle("fill",0,0,screen.w,screen.h)
+  love.graphics.setColor(1,1,1,1)
+end
+--
 
 function SceneMahJong.load() -- love.load()
   LevelsManager.autoload()
@@ -310,6 +327,7 @@ function SceneMahJong.load() -- love.load()
   --
   GridManager.setGrid(SaveMahJong.currentLevel)
   --
+  ChangeLevel.load()
 end
 --
 
@@ -326,6 +344,7 @@ function SceneMahJong.update(dt)
   end
   BM:update(dt)
   Boutton[5]:addText(Font[22], "Level : "..SaveMahJong.currentLevel)
+  ChangeLevel.update(dt)
 end
 --
 
@@ -334,9 +353,15 @@ function SceneMahJong.draw()-- love.draw()
     GridManager.draw()
     SceneMahJong.mouseDraw()
   elseif SceneMahJong.resetWait then
+    SceneMahJong.backgroundWaitDraw()
     resetMahjongs:draw()
   elseif SceneMahJong.pause then
+    SceneMahJong.backgroundWaitDraw()
     love.graphics.print("PAUSE", screen.ox, screen.oy)
+  end
+  if ChangeLevel.show then
+    SceneMahJong.backgroundWaitDraw()
+    ChangeLevel.draw()
   end
   --
   BM:draw()
@@ -364,12 +389,21 @@ function SceneMahJong:keypressed(key, scancode)
     end
   end
   if key == "escape" then
-    SceneManager:setScene("MenuIntro")
+    if SceneMahJong.pause or SceneMahJong.resetWait or ChangeLevel.show then
+      SceneMahJong.pause = false
+      ChangeLevel.show = false
+      SceneMahJong.resetWait = false
+      Boutton[3]:setVisible(false)
+      Boutton[4]:setVisible(false)
+    else
+      SceneManager:setScene("MenuIntro")
+    end
   end
 end
 --
 
 function SceneMahJong.mousepressed(x, y, button, isTouch)
+  --
   if not mouse.onGrid then
     if button == 1 then -- left clic
       if BM.current.ready then
@@ -377,12 +411,17 @@ function SceneMahJong.mousepressed(x, y, button, isTouch)
       end
     end
   end
+  --
   if mouse.onGrid then
     if button == 1 then -- left clic
       if mouse.selectMahjong() then
         SceneMahJong.testVictory()
       end
     end
+  end
+  --
+  if ChangeLevel.show then
+    ChangeLevel.mousepressed(x, y, button, isTouch)
   end
 end
 --

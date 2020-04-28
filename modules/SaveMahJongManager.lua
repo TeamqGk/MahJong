@@ -24,7 +24,9 @@ function SaveMahJongManager.init(pReset)
     for i = 1 , #Levels do
       SaveMahJong.level[i] = {}
       SaveMahJong.level[i].currentTime = 0
+      SaveMahJong.level[i].currentTimeText = ""
       SaveMahJong.level[i].bestTime = 0
+      SaveMahJong.level[i].bestTimeText = ""
     end
     SaveManager.saveGame("SaveMahJong", SaveMahJong)
     print("save crée.")

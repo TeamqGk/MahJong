@@ -18,7 +18,7 @@ function GridManager.setGrid(pLevel, pReset, pRandom)
   else
     Grid = Levels[1]
   end
-  if debug then print("Grid.load : "..tostring(Grid.load)) end
+--  if debug then print("Grid.load : "..tostring(Grid.load)) end
 
 --
 
@@ -62,7 +62,6 @@ function GridManager.setGrid(pLevel, pReset, pRandom)
   --
   local StartX = (screen.w - GridW) * 0.5
   local StartY = (screen.h - GridH) * 0.5
-  print(StartX,StartY)
   --
 
 
@@ -161,7 +160,7 @@ function GridManager.setRandMahjong(pLevel)
 
   -- test Paire ou Impaire ?!
   local testPaire = 2 -- le plus petit chiffre paire que je connaisse xD
-  if debug then print("Grid.mahjongTotal % TotalMahJong = "..Grid.mahjongTotal % testPaire) end
+--  if debug then print("Grid.mahjongTotal % TotalMahJong = "..Grid.mahjongTotal % testPaire) end
   if Grid.mahjongTotal % testPaire == 0 then -- return le reste de la division (donc si le reste vaut zero c'est un nombre paire, sinon impaire)
     Grid.impaire = false
   else
