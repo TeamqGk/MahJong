@@ -1,5 +1,5 @@
 function love.conf(t)
-    t.identity = "save"                    -- The name of the save directory (string)
+    t.identity = "The_Project_GRID"                    -- The name of the save directory (string)
     t.appendidentity = true             -- Search files in source directory before save directory (boolean)
     t.version = "11.3"                  -- The LÖVE version this game was made for (string)
     t.console = false                   -- Attach a console (boolean, Windows only)

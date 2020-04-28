@@ -104,6 +104,29 @@ end
 --
 
 
+-- timer globals (chronometre)
+
+timer = {}
+timer.run = false
+timer.start = 0
+timer.current = 0
+timer.diff = 0
+-- http://www.luteus.biz/Download/LoriotPro_Doc/LUA/LUA_Training_FR/LUA_Fonction_OS.html
+function timer.reset()
+  timer.run = false
+  timer.start = 0
+  timer.current = 0
+  timer.diff = 0
+end
+--
+function timer.update(dt)
+  if timer.run then
+    timer.current = timer.current + dt
+    timer.diff = os.difftime(timer.current, timer.start)
+  end
+end
+--
+
 
 
 return globals -- return table to require (main)

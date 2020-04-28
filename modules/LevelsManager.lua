@@ -32,30 +32,23 @@ end
 --
 
 function LevelsManager.reset(pLevel)
+  if debug then print("pLevel ["..pLevel.."] à été trouvé et le level à été chargé ? "..tostring(Levels[pLevel].load)) end
   --
-  for i = 1, #Levels do
-    local reset = Levels[i]
-    --
-    if reset.level == pLevel then
-      if debug then print("pLevel ["..pLevel.."] à été trouvé") end
-      --
-      local backup = {}
-      backup.name = reset.name
-      backup.file = reset.file
-      --
-      reset = {}
-      local reload = love.filesystem.load(backup.file..".lua")
-      reset = reload()
-      --
-      reset.name =  backup.name
-      reset.file =  backup.file
-      --
-      if debug then print(reset.file..", reset ? ") if reset.load == false then print("Yes, Level is Reset !") else print(" erreur !") end end
-      --
-      break
-    end
-    --
-  end
+  local backup = {}
+  backup.name = Levels[pLevel].name
+  backup.file = Levels[pLevel].file
+  --
+  Levels[pLevel] = {}
+  local reload = love.filesystem.load(backup.file..".lua")
+  Levels[pLevel] = reload()
+  --
+  Levels[pLevel].name =  backup.name
+  Levels[pLevel].file =  backup.file
+  Levels[pLevel].level = pLevel
+  --
+  if debug then print(Levels[pLevel].file..", have been clear ? ") if Levels[pLevel].load == false then print("Yes, Level is Reset ! car le level est chargé ? "..tostring(Levels[pLevel].load)) else print(" erreur !") end end
+  --
+  --
 end
 --
 

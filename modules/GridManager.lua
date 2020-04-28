@@ -6,10 +6,17 @@ end
 --
 
 function GridManager.setGrid(pLevel, pReset, pRandom)
-  Grid = {}
-  Grid = Levels[pLevel]
+  timer.reset()
+  
+  --
   if pReset == true then
     LevelsManager.reset(pLevel)
+  end
+  Grid = {}
+  if pLevel <= #Levels then
+    Grid = Levels[pLevel]
+  else
+    Grid = Levels[1]
   end
   if debug then print("Grid.load : "..tostring(Grid.load)) end
 
@@ -132,14 +139,17 @@ function GridManager.setGrid(pLevel, pReset, pRandom)
 
   -- randomise mahjong in grid
   if not Grid.load or pReset  then
-    GridManager.setRandMahjong()
+    if not GridManager.setRandMahjong(pLevel) then
+      GridManager.resetLevel(pLevel)
+    end
     --
     Grid.load = true
+    timer.run = true
   end
 end
 --
 
-function GridManager.setRandMahjong()
+function GridManager.setRandMahjong(pLevel)
   -- initalisation d'un nouveau math.randomseed
 --  globals.math.newRandom() --love.math.setRandomSeed(love.timer.getTime()) -- set Random Seed !
 
@@ -192,26 +202,28 @@ function GridManager.setRandMahjong()
 --  end
 
   -- on scan les grilles :
-  Grid.mahjongPlaced = 0
-  local i = 1
-  while i < Grid.mahjongTotal  do
+  while #tableMahjong > 0  do
     -- on selectione un mahjong au hasard
-    local pose, l, c 
-    local rand = tableMahjong[#tableMahjong]
-    pose, l, c = GridManager.testMohJang(rand)
-    if pose then -- placement du premier pion
-      i = i + 1
+    local onGrid, l, c 
+    local NewMahjong = tableMahjong[#tableMahjong]
+    onGrid, l, c = GridManager.testMohJang(NewMahjong)
+    if onGrid then -- placement du premier pion
       table.remove(tableMahjong, #tableMahjong)
+    else
+      return false
     end
     --
-    rand = tableMahjong[#tableMahjong]
-    pose, l, c = GridManager.testMohJang(rand, l, c) -- placement du second pion
-    if pose then
-      i = i + 1
+    NewMahjong = tableMahjong[#tableMahjong]
+    onGrid, l, c = GridManager.testMohJang(NewMahjong, l, c) -- placement du second pion
+    if onGrid then
       table.remove(tableMahjong, #tableMahjong)
+    else
+      return false
     end
-    if Grid.mahjongPlaced == Grid.mahjongTotal or not pose then break end
   end
+
+-- Ouf on a  reussi !
+  return true
 --
 end
 --
@@ -221,7 +233,9 @@ function GridManager.testMohJang(pRand, pLig, pCol)
   local loopTest = true
   local l = 0
   local c = 0
+  local loop = 0
   while loopTest do
+    loop = loop + 1
     local superposed = false
     l = love.math.random(1, Grid.lignes)
     c = love.math.random(1, Grid.colonnes)
@@ -245,8 +259,7 @@ function GridManager.testMohJang(pRand, pLig, pCol)
       end
     end
     --
-    if Grid.mahjongPlaced == Grid.mahjongTotal - 1 and superposed then
-      GridManager.setRandMahjong()
+    if loop == 100 then
       return false
     end
   end
@@ -292,7 +305,7 @@ function GridManager.draw()
         -- draw chaque etage d'une couleur diff pour le debug
         if case.isActive then
           local colorRect = {}
-          local alpha = 0.20
+          local alpha = 0.1
           if case.etages == 1 then
             colorRect = {0,1,0,alpha}--vert
           elseif case.etages == 2 then

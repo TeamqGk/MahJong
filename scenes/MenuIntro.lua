@@ -21,7 +21,7 @@ function SceneMenuIntro.load() -- love.load()
   --
   Boutton[2] = BM.newBox ()
   Boutton[2]:addText(Font[22], "Options")
-  Boutton[2]:setAction(function() SceneManager:setScene("MahJongOptions") end)
+  Boutton[2]:setAction(function() SceneManager:setScene("Options") end)
   --
   Boutton[3] = BM.newBox ()
   Boutton[3]:addText(Font[22], "Credits")
@@ -60,7 +60,7 @@ function SceneMenuIntro.keypressed(key, scancode, isrepeat)
     end
   end
   if key == "escape" then
-    --SceneManager:setScene("") --> TODO: go to old scene (implement this)
+    --SceneManager:setScene("") --> TODO: go to old scene (implement this if any time)
   end
 end
 --
