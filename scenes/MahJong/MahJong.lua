@@ -6,7 +6,6 @@ Grid = {}
 Img = {}
 MahJong = {}
 --
-local Gui = require("scenes/MahJong/Gui")
 local BM = BouttonManager.newBM()
 local Boutton = {}
 --
@@ -271,9 +270,10 @@ end
 
 function SceneMahJong.saveVictory()
   timer.run = false
-  local current = Gui.save.level[Gui.save.currentLevel]
-  current.currentTime = timer.diff
-  if current.currentTime < current.bestTime then current.bestTime = current.currentTime end -- TODO: RECORD !
+--  local current = Gui.save.level[Gui.save.currentLevel]
+--  current.currentTime = timer.diff
+--  if current.currentTime < current.bestTime then current.bestTime = current.currentTime end -- TODO: RECORD !
+  timer.reset()
 
   Gui.save.currentLevel = Gui.save.currentLevel + 1
   if Gui.save.levelMax < Gui.save.currentLevel then Gui.save.levelMax = Gui.save.currentLevel end
@@ -289,6 +289,7 @@ end
 
 
 function SceneMahJong.load() -- love.load()
+  LevelsManager.autoload()
   --
   SceneMahJong.resetWait = false
   SceneMahJong.pause = false
@@ -304,8 +305,6 @@ function SceneMahJong.load() -- love.load()
   screen.update(dt)
   --
   Boutton.init()
-  --
-  LevelsManager.autoload()
   --
   GridManager.setGrid(Gui.save.currentLevel)
   --

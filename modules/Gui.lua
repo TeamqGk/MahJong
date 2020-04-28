@@ -17,6 +17,7 @@ function Gui.init(pReset)
     Gui.save.name = ""
     --
     Gui.save.level = {}
+    print("#Levels : "..#Levels)
     for i = 1 , #Levels do
       Gui.save.level[i] = {}
       local current = Gui.save.level[i]

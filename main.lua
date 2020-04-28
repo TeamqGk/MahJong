@@ -32,12 +32,15 @@ QuadManager = require("modules/QuadManager") -- lua file
 ImgManager = require("modules/ImgManager") -- lua file
 GridManager = require("modules/GridManager") -- lua file
 BouttonManager = require ("modules/BouttonManager")
+Gui = require("modules/Gui")
+
 
 
 -- List alls scenes require here
 SceneMenuIntro = require("scenes/MenuIntro")
 --
 SceneSelectGame = require("scenes/SelectGame")
+SceneOptions = require("scenes/SceneOptions")
 SceneCredits = require("scenes/SceneCredits")
 --
 SceneMahJong = require("scenes/MahJong/MahJong")
@@ -62,6 +65,7 @@ pSetActiveScene -- pour ajouter et mettre celle-ci directement..]]--
 SceneManager:addScene(SceneMenuIntro, "MenuIntro")
 -- le menu de selections des jeux
 SceneManager:addScene(SceneSelectGame, "SelectGame")
+SceneManager:addScene(SceneOptions, "Options")
 SceneManager:addScene(SceneCredits, "Credits")
 -- les jeux
 SceneManager:addScene(SceneMahJong, "MahJong")
