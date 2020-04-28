@@ -1,2 +1,2 @@
 # MahJong
-Many Jams project
+Gamecodeur Game Jam #24
