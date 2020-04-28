@@ -5,7 +5,7 @@ if arg[#arg] == "-debug" then require("mobdebug").start() end
 if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then  require("lldebugger").start() end -- debug for Visual Code
 -- ###############################################################################################################
 
-local release = true
+local release = false
 debug = false
 
 -- Set Screen Mode

@@ -20,7 +20,6 @@ resetMahjongs:scaleToScreen()
 
 
 local ChangeLevel = require("scenes/MahJong/ChangeLevel")
-ChangeLevel.show = true
 
 function Boutton.init()
   BM:setDimensions(screen.w * 0.15, screen.h * 0.05)
@@ -390,12 +389,21 @@ function SceneMahJong:keypressed(key, scancode)
     end
   end
   if key == "escape" then
-    SceneManager:setScene("MenuIntro")
+    if SceneMahJong.pause or SceneMahJong.resetWait or ChangeLevel.show then
+      SceneMahJong.pause = false
+      ChangeLevel.show = false
+      SceneMahJong.resetWait = false
+      Boutton[3]:setVisible(false)
+      Boutton[4]:setVisible(false)
+    else
+      SceneManager:setScene("MenuIntro")
+    end
   end
 end
 --
 
 function SceneMahJong.mousepressed(x, y, button, isTouch)
+  --
   if not mouse.onGrid then
     if button == 1 then -- left clic
       if BM.current.ready then
@@ -403,12 +411,17 @@ function SceneMahJong.mousepressed(x, y, button, isTouch)
       end
     end
   end
+  --
   if mouse.onGrid then
     if button == 1 then -- left clic
       if mouse.selectMahjong() then
         SceneMahJong.testVictory()
       end
     end
+  end
+  --
+  if ChangeLevel.show then
+    ChangeLevel.mousepressed(x, y, button, isTouch)
   end
 end
 --
