@@ -36,6 +36,7 @@ SaveMahJongManager = require("modules/SaveMahJongManager") -- lua file
 
 
 -- List alls scenes require here
+SceneLogoIntro = require("scenes/SceneIntro")
 SceneMenuIntro = require("scenes/MenuIntro")
 --
 SceneSelectGame = require("scenes/SelectGame")
@@ -61,6 +62,7 @@ module "NomduFichierDelaScene".lua on ne mets pas l'extenesion .lua
 name , using this name for change scene later
 pSetActiveScene -- pour ajouter et mettre celle-ci directement..]]--
 -- le menu d'intro
+SceneManager:addScene(SceneLogoIntro, "SceneIntro")
 SceneManager:addScene(SceneMenuIntro, "MenuIntro")
 -- le menu de selections des jeux
 SceneManager:addScene(SceneSelectGame, "SelectGame")
@@ -76,7 +78,7 @@ SceneManager:setScene(name)]]--
 --
 
 -- Set the first scene need to load
-SceneManager:setScene("MenuIntro")
+SceneManager:setScene("SceneIntro")
 
 
 

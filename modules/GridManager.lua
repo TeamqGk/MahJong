@@ -34,8 +34,8 @@ function GridManager.setGrid(pLevel, pReset, pRandom)
 
 
   -- Settings of Scales
-  local espaceW = screen.w * 0.1 -- Min
-  local espaceH = screen.h * 0.1 -- Min
+  local espaceW = screen.w * 0.4 -- Min
+  local espaceH = screen.h * 0.4 -- Min
   local GridW = screen.w - espaceW -- MAX
   local GridH = screen.h - espaceH -- MAX
   --
