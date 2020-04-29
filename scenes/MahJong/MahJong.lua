@@ -287,6 +287,9 @@ function SceneMahJong.saveVictory()
   timer.reset()
 
   SaveMahJong.currentLevel = SaveMahJong.currentLevel + 1
+  if SaveMahJong.currentLevel > #Levels then
+    SaveMahJong.currentLevel = #Levels
+  end
   if SaveMahJong.levelMax < SaveMahJong.currentLevel then SaveMahJong.levelMax = SaveMahJong.currentLevel end
   SaveManager.saveGame("SaveMahJong", SaveMahJong)
   if debug then

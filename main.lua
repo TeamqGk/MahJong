@@ -45,8 +45,12 @@ SceneCredits = require("scenes/SceneCredits")
 --
 SceneMahJong = require("scenes/MahJong/MahJong")
 SceneCasseBrique = require("scenes/CasseBrique/CasseBrique")
+Scene25D = require("scenes/25D_beta/25D")
 -- etc.
 
+
+local controls = {} -- controls for windows (fullscreen, quit prompt, etc)
+controls.lctrl = false
 
 
 --[[
@@ -71,6 +75,8 @@ SceneManager:addScene(SceneCredits, "Credits")
 -- les jeux
 SceneManager:addScene(SceneMahJong, "MahJong")
 SceneManager:addScene(SceneCasseBrique, "CasseBrique")
+SceneManager:addScene(Scene25D, "Scene25D")
+
 --[[
 Now the first scene loading is "SceneGame"
 Hox to change Scene Later ? simply use this :
@@ -99,15 +105,32 @@ end
 --
 
 function love.keypressed(key, scancode)
-  if debug then
+  if key == "lctrl" then
+    controls.lctrl = true
+  end
+  if controls.lctrl then
+    if key == "return" then
+      if love.window.getFullscreen() then
+        love.window.setFullscreen(false)
+      else
+        love.window.setFullscreen(true)
+      end
+    end
     if key == "f12" then
-      love.event.quit("restart")
+      love.event.quit()
     end
   end
   SceneManager:keypressed(key, scancode)
 end
 --
 
+function love.keyreleased(key, scancode)
+  SceneManager:keyreleased(key, scancode)
+  if key == "lctrl" then
+    controls.lctrl = false
+  end
+end
+--
 function love.keyreleased(key, scancode)
   SceneManager:keyreleased(key, scancode)
 end

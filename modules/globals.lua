@@ -3,7 +3,7 @@ local globals = {}
 
 -- Police par defaut
 Font = {}
-for i=1, 100 do
+for i=1, 200 do
   Font[i] = love.graphics.newFont(i)
 end
 --
