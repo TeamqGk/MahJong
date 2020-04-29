@@ -63,7 +63,7 @@ ball.rayon = 15
 --
 ball.colle = true
 --
-ball.speed = 450
+ball.speed = 600
 ball.vx = 0
 ball.vy = 0
 
