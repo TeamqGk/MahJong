@@ -28,44 +28,44 @@ function Boutton.init()
   BM:setColorMouseOver(0,0,1,0.15)
   --
   Boutton[1] = BM.newBox ()
-  Boutton[1]:addText(Font[22], "Timer")
+  Boutton[1]:addText(Font, 22, "Timer")
   Boutton[1]:setPos(10, 10)
   Boutton[1]:setEffect(false)
   Boutton[1]:setAction(function() SceneMahJong.pause = not SceneMahJong.pause; music_loop:pause() end)
   --
   Boutton[2] = BM.newBox ()
-  Boutton[2]:addText(Font[22], "Reset Level")
+  Boutton[2]:addText(Font, 22, "Reset Level")
   Boutton[2]:setPos(Boutton[1].x + Boutton[1].w + 10, 10)
   Boutton[2]:setEffect(false)
   Boutton[2]:setAction(function() SceneMahJong.resetWait = true ; Boutton[3]:setVisible(true) ; Boutton[4]:setVisible(true) end)
   --
   Boutton[3] = BM.newBox ()
-  Boutton[3]:addText(Font[22], "Oui")
+  Boutton[3]:addText(Font, 22, "Oui")
   Boutton[3]:setPos(screen.w * 0.5 - (Boutton[3].w+10), screen.oy)
   Boutton[3]:setVisible(false)
   Boutton[3]:setAction(function() SceneMahJong.resetWait = false ; SceneMahJong.pause = false ; Boutton[3]:setVisible(false) ; Boutton[4]:setVisible(false) ; GridManager.resetLevel(Grid.level) end)
   --
   Boutton[4] = BM.newBox ()
-  Boutton[4]:addText(Font[22], "Non")
+  Boutton[4]:addText(Font, 22, "Non")
   Boutton[4]:setPos(screen.w * 0.5 + 10, screen.oy)
   Boutton[4]:setVisible(false)
   Boutton[4]:setAction(function() SceneMahJong.resetWait = false ; Boutton[3]:setVisible(false) ; Boutton[4]:setVisible(false)  end)
   --  
   --
   Boutton[5] = BM.newBox ()
-  Boutton[5]:addText(Font[22], "Level : 0")
+  Boutton[5]:addText(Font, 22, "Level : 0")
   Boutton[5]:setPos(Boutton[2].x + Boutton[2].w + 10,10)
   Boutton[5]:setEffect(false)
   Boutton[5]:setAction(function() end)
   --
   Boutton[6] = BM.newBox ()
-  Boutton[6]:addText(Font[22], "Options")
+  Boutton[6]:addText(Font, 22, "Options")
   Boutton[6]:setPos(Boutton[5].x + Boutton[2].w + 10,10)
   Boutton[6]:setEffect(false)
   Boutton[6]:setAction(function() SceneMahJong.pause = not SceneMahJong.pause; ChangeLevel.show = not ChangeLevel.show end)
   --
   Boutton[7] = BM.newBox ()
-  Boutton[7]:addText(Font[22], "Menu")
+  Boutton[7]:addText(Font, 22, "Menu")
   Boutton[7]:setPos(screen.w - (Boutton[1].w+10),10)
   Boutton[7]:setAction(function() SceneManager:setScene("MenuIntro"); music_loop:pause() end)
 end
@@ -300,7 +300,7 @@ end
 
 function SceneMahJong.timer(dt)
   timer.update(dt)
-  Boutton[1]:addText(Font[22], timer.text )
+  Boutton[1]:setText(timer.text )
 end
 --
 
@@ -343,7 +343,7 @@ function SceneMahJong.update(dt)
     SceneMahJong.timer(dt)
   end
   BM:update(dt)
-  Boutton[5]:addText(Font[22], "Level : "..SaveMahJong.currentLevel)
+  Boutton[5]:addText(Font, 22, "Level : "..SaveMahJong.currentLevel)
   ChangeLevel.update(dt)
 end
 --

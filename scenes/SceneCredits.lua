@@ -16,23 +16,23 @@ function SceneCredits.load() -- love.load()
   BM:setSpace("x", 40) -- def 30
   --
   Boutton[1] = BM.newBox ()
-  Boutton[1]:addText(Font[16], "CryptoLogiq.itch.io")
+  Boutton[1]:addText(Font, 22, "CryptoLogiq.itch.io")
   Boutton[1]:setAction(function() love.system.openURL("https://cryptologiq.itch.io/") end)
   --
   Boutton[2] = BM.newBox ()
-  Boutton[2]:addText(Font[16], "qgkMask.itch.io")
+  Boutton[2]:addText(Font, 22, "qgkMask.itch.io")
   Boutton[2]:setAction(function() love.system.openURL("https://itch.io/profile/qgkmask") end)
   --
   Boutton[3] = BM.newBox ()
-  Boutton[3]:addText(Font[16], "Hydrogene.itch.io")
+  Boutton[3]:addText(Font, 22, "Hydrogene.itch.io")
   Boutton[3]:setAction(function() love.system.openURL("https://hydrogene.itch.io/") end)
   --
   Boutton[4] = BM.newBox ()
-  Boutton[4]:addText(Font[16], "GitHub project")
+  Boutton[4]:addText(Font, 22, "GitHub project")
   Boutton[4]:setAction(function() love.system.openURL("https://github.com/TeamqGk/MahJong") end) -- go to webpage of Github project
   --
   Boutton[5] = BM.newBox ()
-  Boutton[5]:addText(Font[16], "Retour Menu")
+  Boutton[5]:addText(Font, 22, "Retour Menu")
   Boutton[5]:setAction(function() SceneManager:setScene("MenuIntro") end)
   --
   BM:setPos("Y") -- align alls button to axe Y or X

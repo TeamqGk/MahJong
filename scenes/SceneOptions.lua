@@ -17,13 +17,13 @@ function Boutton.init()
   BM:setColorMouseOver(0,0,1,0.15)
   --
   Boutton[1] = BM.newBox ()
-  Boutton[1]:addText(Font[22], "Oui")
+  Boutton[1]:addText(Font, 22, "Oui")
   Boutton[1]:setPos(screen.w * 0.5 - (Boutton[1].w+10), screen.oy)
   Boutton[1]:setVisible(false)
   Boutton[1]:setAction(function()  SaveMahJongManager.resetSave(); love.event.quit("restart") end)
   --
   Boutton[2] = BM.newBox ()
-  Boutton[2]:addText(Font[22], "Non")
+  Boutton[2]:addText(Font, 22, "Non")
   Boutton[2]:setPos(screen.w * 0.5 + 10, screen.oy)
   Boutton[2]:setVisible(false)
   Boutton[2]:setAction(function() SceneOptions.delete(false) end)
@@ -40,11 +40,11 @@ function Boutton2.init()
   BM2:setSpace("x", 40) -- def 30
   --
   Boutton2[1] = BM2.newBox ()
-  Boutton2[1]:addText(Font[22], "Reset Save")
+  Boutton2[1]:addText(Font, 22, "Reset Save")
   Boutton2[1]:setAction(function() SceneOptions.delete(true) end)
   --
   Boutton2[2] = BM2.newBox ()
-  Boutton2[2]:addText(Font[22], "Retour Menu")
+  Boutton2[2]:addText(Font, 22, "Retour Menu")
   Boutton2[2]:setAction(function() SceneManager:setScene("MenuIntro") end)
 
   --

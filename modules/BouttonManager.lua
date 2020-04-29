@@ -173,6 +173,7 @@ function BouttonManager:newBM()
     --
     Boutton.isVisible = true
     Boutton.isEffect = true
+    Boutton.action = function() end
     --
     function Boutton:setEffect(pBool)
       if not pBool then self.isEffect = true end
@@ -234,9 +235,12 @@ function BouttonManager:newBM()
       self.color = self.colorFixe
     end
     --
-    function Boutton:addText(pFont, pString, r, g, b, a)
+    function Boutton:addText(pTableFont, pSize, pString, r, g, b, a)
       self.text = {}
-      self.text.print = love.graphics.newText(pFont, pString)
+      self.text.size = pSize
+      self.text.font = pTableFont
+      self.text.string = pString
+      self.text.print = love.graphics.newText(pTableFont[pSize], pString)
       --
       self:updateText()
       --
@@ -245,6 +249,23 @@ function BouttonManager:newBM()
       else
         self:setColorText(r,g,b,a)
       end
+    end
+    --
+    function Boutton:setText(pString)
+      self.text.print:set(pString)
+      self.text.string = pString
+      --
+      self:updateText()
+    end
+    --
+    function Boutton:setFontSize(pTableFont, pSize)
+      self.text.font = pTableFont
+      self.text.size = pSize
+      self.text.print:setFont(self.text.font[self.text.size])
+      self.text.ox, self.text.oy = self.text.w*0.5, self.text.h*0.5
+      self.text.x, self.text.y = self.x + self.ox, self.y + self.oy
+      --
+      self:updateText()
     end
     --
     --
@@ -262,8 +283,15 @@ function BouttonManager:newBM()
       --
       if self.text then
         self.text.w, self.text.h = self.text.print:getDimensions()
+        if self.text.w >= self.w - 2  or self.text.w >= self.w - 2 then
+          print("Oups ! tentative echouée de resize du boutton : "..self.text.string)
+          self.text.size = self.text.size - 1
+--          self.text.print:setFont(self.text.font[self.text.size])
+          self:setFontSize(self.text.font,self.text.size)
+        end
         self.text.ox, self.text.oy = self.text.w*0.5, self.text.h*0.5
         self.text.x, self.text.y = self.x + self.ox, self.y + self.oy
+
       end
     end
     --

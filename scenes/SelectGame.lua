@@ -17,15 +17,15 @@ function SceneSelectGame.load() -- love.load()
   BM_Games:setSpace("x", 40) -- def 30
   --
   Boutton[1] = BM_Games.newBox ()
-  Boutton[1]:addText(Font[22], "MahJong")
+  Boutton[1]:addText(Font, 22, "MahJong")
   Boutton[1]:setAction(function() SceneManager:setScene("MahJong") end)
   --
   Boutton[2] = BM_Games.newBox ()
-  Boutton[2]:addText(Font[22], "Casse Brique")
+  Boutton[2]:addText(Font, 22, "Casse Brique")
   Boutton[2]:setAction(function() SceneManager:setScene("CasseBrique") end)
   --
   Boutton[3] = BM_Games.newBox ()
-  Boutton[3]:addText(Font[22], "Retour Menu")
+  Boutton[3]:addText(Font, 22, "Retour Menu")
   Boutton[3]:setAction(function()  SceneManager:setScene("MenuIntro") end)
   --
   BM_Games:setPos("Y") -- align alls button to axe Y or X

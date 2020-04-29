@@ -16,19 +16,19 @@ function SceneMenuIntro.load() -- love.load()
   BM:setSpace("x", 40) -- def 30
   --
   Boutton[1] = BM.newBox ()
-  Boutton[1]:addText(Font[22], "Jouer !")
+  Boutton[1]:addText(Font, 22, "Jouer !")
   Boutton[1]:setAction(function() SceneManager:setScene("SelectGame") end)
   --
   Boutton[2] = BM.newBox ()
-  Boutton[2]:addText(Font[22], "Options")
+  Boutton[2]:addText(Font, 22, "Options")
   Boutton[2]:setAction(function() SceneManager:setScene("Options") end)
   --
   Boutton[3] = BM.newBox ()
-  Boutton[3]:addText(Font[22], "Credits")
+  Boutton[3]:addText(Font, 22, "Credits")
   Boutton[3]:setAction(function() SceneManager:setScene("Credits") end)
   --
   Boutton[4] = BM.newBox ()
-  Boutton[4]:addText(Font[22], "Quitter")
+  Boutton[4]:addText(Font, 22, "Quitter")
   Boutton[4]:setAction(function() love.event.quit() end)
   BM:setPos("Y") -- align alls button to axe Y or X
   --
