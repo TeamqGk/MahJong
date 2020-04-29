@@ -40,7 +40,7 @@ function Boutton.init()
   Boutton[4] = ChangeLevelBM.newBox ()
   Boutton[4]:addText(Font, 22, "Aller a ce Niveau")
   Boutton[4]:setPos(Boutton[3].x + Boutton[3].w + 10, fenetre.y + 10)
-  Boutton[4]:setAction(function()  sound_clic:stop(); sound_clic:play(); GridManager.setGrid(ChangeLevel.current, true) ; ChangeLevel.show = false ; SceneMahJong.pause = false end)
+  Boutton[4]:setAction(function()  sound_clic:stop(); sound_clic:play(); GridManager.setGrid(ChangeLevel.current, true) ; ChangeLevel.show = false ; SceneMahJong.pause = false ; SaveMahJong.currentLevel = ChangeLevel.current end)
   --  
 end
 --
@@ -66,12 +66,20 @@ function fenetreText.init()
   fenetreText.record.string = "Temps Record à ce niveau"
   fenetreText.record.font = Font
   fenetreText.record.size = 22
-  fenetreText.record.print = love.graphics.newText(Font[22], "Temps Record à ce niveau")
+  fenetreText.record.string = "Votre Meilleur Score !".."\n".."Temps Record à ce niveau : "
+  fenetreText.record.print = love.graphics.newText(Font[22], fenetreText.record.string)
 end
 --
 
 function fenetreText.update(dt)
-  fenetreText.record.print:set("Temps Record à ce niveau : ")
+  local text = ""
+  if SaveMahJong.level[ChangeLevel.current] then
+    local level = SaveMahJong.level[ChangeLevel.current]
+    text = fenetreText.record.string..level.bestTimeText
+  else
+    text = fenetreText.record.string.."bug !"
+  end
+  fenetreText.record.print:set(text)
 end
 --
 
@@ -81,7 +89,6 @@ function ChangeLevel.showRecord()
   if SaveMahJong.level[ChangeLevel.current] then
     local level = SaveMahJong.level[ChangeLevel.current]
     lg.draw(fenetreText.record.print, fenetreText.x, fenetreText.y)
---    lg.draw(, fenetreText.x, fenetreText.y)
   end
   lg.setColor(1,1,1,1)
 end
@@ -109,6 +116,7 @@ end
 
 function ChangeLevel.update(dt)
   ChangeLevelBM:update(dt)
+  --
   Boutton[2]:setText(tostring("Level : "..ChangeLevel.current))
   --
   fenetreText.update(dt)

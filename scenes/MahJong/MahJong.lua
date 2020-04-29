@@ -62,7 +62,7 @@ function Boutton.init()
   Boutton[6]:addText(Font, 22, "Options")
   Boutton[6]:setPos(Boutton[5].x + Boutton[2].w + 10,10)
   Boutton[6]:setEffect(false)
-  Boutton[6]:setAction(function() SceneMahJong.pause = not SceneMahJong.pause; ChangeLevel.show = not ChangeLevel.show end)
+  Boutton[6]:setAction(function() SceneMahJong.pause = not SceneMahJong.pause; ChangeLevel.show = not ChangeLevel.show; ChangeLevel.current = SaveMahJong.currentLevel  end)
   --
   Boutton[7] = BM.newBox ()
   Boutton[7]:addText(Font, 22, "Menu")
@@ -279,11 +279,11 @@ function SceneMahJong.saveVictory()
   timer.run = false
   --
   local current = SaveMahJong.level[SaveMahJong.currentLevel]
-  for k, v in pairs(current) do
-    print(k.." : "..tostring(v))
-  end
   current.currentTime = timer.diff
-  if current.currentTime < current.bestTime then current.bestTime = current.currentTime end -- TODO: RECORD !
+  if current.currentTime < current.bestTime or  current.bestTimeText == "level not clear" then
+    current.bestTime = current.currentTime 
+    current.bestTimeText = timer.text
+  end -- TODO: RECORD !
   timer.reset()
 
   SaveMahJong.currentLevel = SaveMahJong.currentLevel + 1

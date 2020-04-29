@@ -284,7 +284,7 @@ function BouttonManager:newBM()
       if self.text then
         self.text.w, self.text.h = self.text.print:getDimensions()
         if self.text.w >= self.w - 2  or self.text.w >= self.w - 2 then
-          print("Oups ! tentative echouée de resize du boutton : "..self.text.string)
+--          print("Oups ! tentative echouée de resize du boutton : "..self.text.string)
           self.text.size = self.text.size - 1
 --          self.text.print:setFont(self.text.font[self.text.size])
           self:setFontSize(self.text.font,self.text.size)
