@@ -26,7 +26,7 @@ require("modules/libSaveTableToFile") -- lib file
 SceneManager = require("modules/SceneManager") -- lua file
 BouttonManager = require ("modules/BouttonManager") -- lua file
 SaveManager = require("modules/SaveManager") -- lua file
-AudioManager = require("modules/audioManager") -- lua file
+AudioManager = require("modules/AudioManager") -- lua file
 QuadManager = require("modules/QuadManager") -- lua file
 ImgManager = require("modules/ImgManager") -- lua file
 -- for Mahjong
