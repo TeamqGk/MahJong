@@ -5,18 +5,19 @@ function GridManager.resetLevel(pLevel)
 end
 --
 
-function GridManager.setGrid(pLevel, pReset, pRandom)
+function GridManager.setGrid(pLevel, pReset)
   timer.reset()
-  
+
   --
   if pReset == true then
     LevelsManager.reset(pLevel)
   end
-  Grid = {}
   if pLevel <= #Levels then
+    Grid = {}
     Grid = Levels[pLevel]
   else
-    Grid = Levels[1]
+    GridManager.setGrid(1, true)
+    return false
   end
 --  if debug then print("Grid.load : "..tostring(Grid.load)) end
 
@@ -269,9 +270,9 @@ function GridManager.draw()
   love.graphics.setColor(1,1,1,1) -- reset color
 
   -- BackGround :
-    love.graphics.setColor(1,1,1,0.55) -- reset color
-    love.graphics.draw(Img.BG.img, 0, 0, 0, Img.BG.sx, Img.BG.sy)
-    love.graphics.setColor(1,1,1,1) -- reset color
+  love.graphics.setColor(1,1,1,0.55) -- reset color
+  love.graphics.draw(Img.BG.img, 0, 0, 0, Img.BG.sx, Img.BG.sy)
+  love.graphics.setColor(1,1,1,1) -- reset color
   --
   local indexTotal = Grid.etages * (Grid.lignes * Grid.colonnes)
   --

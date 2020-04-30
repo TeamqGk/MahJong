@@ -16,6 +16,7 @@ end
 function SceneManager:setScene(name)
   for i = 1, #self.scenes do
     if name == self.scenes[i].name then
+      love.audio.stop()
       self.current = self.scenes[i]
       if not self.current.module.loadScene then
         SceneManager:load()

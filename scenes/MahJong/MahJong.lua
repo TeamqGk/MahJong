@@ -338,7 +338,6 @@ end
 
 function SceneMahJong.update(dt)
   if not SceneMahJong.resetWait and not SceneMahJong.pause then
---  if music_loop then
     if not music_loop:isPlaying() then
       music_loop:play()
     end
@@ -374,7 +373,6 @@ end
 --
 
 function SceneMahJong:keypressed(key, scancode)
-  if debug then print(key) end
   --
   if debug then
     if key == "kp+" or key == "kp-" or key == "up" or key == "down" then
