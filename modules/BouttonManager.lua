@@ -2,8 +2,8 @@ local BouttonManager = {}
 --
 local AudioManager = require("modules/AudioManager")
 local AM = AudioManager.newAM()
-local blip = AM:addSound("sounds/blip.wav", false, 1)
-local clic = AM:addSound("sounds/clic.wav", false, 1)
+local blip = AM:addSound("sounds/blip.wav", false, 0.20)
+local clic = AM:addSound("sounds/clic.wav", false, 0.55)
 
 function BouttonManager:newBM()
   local f = {}
@@ -22,7 +22,6 @@ function BouttonManager:newBM()
   f.effectSpeed = 10
 --
   f.playSound = false
-  f.playClic = false
 --
   f.current = {ready = false}
   --
@@ -137,7 +136,6 @@ function BouttonManager:newBM()
         end
       end
       self.playSound = false
-      self.playClic = false
     end
   end
 
@@ -156,13 +154,6 @@ function BouttonManager:newBM()
         f.playSound = true
         blip:stop()
         blip:play() 
-      end
-      if love.mouse.isDown(1) then
-        if not f.playClic then
-          f.playClic = true
-          clic:stop()
-          clic:play()
-        end
       end
     end
     --
@@ -299,7 +290,7 @@ function BouttonManager:newBM()
     function Boutton:setAction(pAction)
       --function_name = function( arguments ) corps end
       if type(pAction) == "function" then
-        self.action = function() pAction() ; clic:play() end
+        self.action = function() pAction() ; clic:stop() ; clic:play() end
       end
     end
     --

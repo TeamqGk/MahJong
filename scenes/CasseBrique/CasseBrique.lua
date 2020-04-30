@@ -135,7 +135,7 @@ function Boutton.init()
   Boutton[1]:addText(Font, 22, "Menu")
   Boutton[1]:setPos(screen.w - (Boutton[1].w+10),10)
   Boutton[1]:setVisible(false)
-  Boutton[1]:setAction(function() SceneManager:setScene("MenuIntro") ; love.mouse.setVisible(true) end)
+  Boutton[1]:setAction(function() SceneManager:setScene("MenuIntro") ; love.mouse.setVisible(true) ; music_loop:stop() end)
   --
   Boutton[2] = BM.newBox ()
   Boutton[2]:addText(Font, 22, "Pause/Quit")
