@@ -18,7 +18,6 @@ local music_loop = AM:addMusic("scenes/MahJong/music/Mahjong_Theme_By_Hydrogene.
 local resetMahjongs = ImgManager.new("scenes/MahJong/img/resetLevel.png")
 resetMahjongs:scaleToScreen()
 
-
 local ChangeLevel = require("scenes/MahJong/ChangeLevel")
 
 function Boutton.init()
@@ -50,7 +49,7 @@ function Boutton.init()
   Boutton[4]:setPos(screen.w * 0.5 + 10, screen.oy)
   Boutton[4]:setVisible(false)
   Boutton[4]:setAction(function() SceneMahJong.resetWait = false ; Boutton[3]:setVisible(false) ; Boutton[4]:setVisible(false)  end)
-  --  
+  --
   --
   Boutton[5] = BM.newBox ()
   Boutton[5]:addText(Font, 22, "Level : 0")
@@ -281,7 +280,7 @@ function SceneMahJong.saveVictory()
   local current = SaveMahJong.level[SaveMahJong.currentLevel]
   current.currentTime = timer.diff
   if current.currentTime < current.bestTime or  current.bestTimeText == "level not clear" then
-    current.bestTime = current.currentTime 
+    current.bestTime = current.currentTime
     current.bestTimeText = timer.text
   end -- TODO: RECORD !
   timer.reset()
