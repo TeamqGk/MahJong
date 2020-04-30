@@ -409,8 +409,10 @@ function SceneMahJong:keypressed(key, scancode)
       SceneMahJong.resetWait = false
       Boutton[3]:setVisible(false)
       Boutton[4]:setVisible(false)
+      music_loop:play()
     else
       SceneManager:setScene("MenuIntro")
+      music_loop:stop()
     end
   end
 end

@@ -192,8 +192,12 @@ function GridManager.setRandMahjong(pLevel)
   local num = 1
   while #tableMahjong < Grid.mahjongTotal  do
     if num > MahJong.total then num = 1 end
-    table.insert(tableMahjong, tableRand[num])
-    table.insert(tableMahjong, tableRand[num])
+    if Grid.impaire and #tableMahjong == 0 then
+      table.insert(tableMahjong, tableRand[num])
+    else
+      table.insert(tableMahjong, tableRand[num])
+      table.insert(tableMahjong, tableRand[num])
+    end
     num = num + 1
   end
 --  if debug then print("#tableMahjong : "..#tableMahjong.."/"..Grid.mahjongTotal) end -- ok
@@ -213,12 +217,14 @@ function GridManager.setRandMahjong(pLevel)
       return false
     end
     --
-    NewMahjong = tableMahjong[#tableMahjong]
-    onGrid, l, c = GridManager.testMohJang(NewMahjong, l, c) -- placement du second pion
-    if onGrid then
-      table.remove(tableMahjong, #tableMahjong)
-    else
-      return false
+    if #tableMahjong >= 1 then
+      NewMahjong = tableMahjong[#tableMahjong]
+      onGrid, l, c = GridManager.testMohJang(NewMahjong, l, c) -- placement du second pion
+      if onGrid then
+        table.remove(tableMahjong, #tableMahjong)
+      else
+        return false
+      end
     end
   end
 

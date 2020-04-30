@@ -97,13 +97,13 @@ function playerManager.Demarre()
   color[1] = {1,1,1,1}
   color[2] = {0,1,0,1}
   color[3] = {0,0,1,1}
-  color[4] = {1,0,0,1}
+  color[4] = {0.25,0,0.75,1}
   color[5] = {1,1,0,1}
   color[6] = {0,1,1,1}
   color[7] = {1,0,1,1}
-  color[8] = {1,1,1,1}
-  color[9] = {1,1,1,1}
-  color[10] = {1,1,1,1}
+  color[8] = {1,0,0,0.8}
+  color[9] = {1,0,0,0.9}
+  color[10] = {1,0,0,1}
 --
   mapManager.setLevel(1)
   playerManager.resetBall()
