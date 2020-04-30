@@ -8,6 +8,7 @@ local BackGround = ImgManager.new("img/bg_logo.jpg")-- pFile
 BackGround:scaleToScreen()
 
 local delete = false
+SceneOptions.showMessage = false
 
 
 function Boutton.init()
@@ -20,7 +21,8 @@ function Boutton.init()
   Boutton[1]:addText(Font, 22, "Oui")
   Boutton[1]:setPos(screen.w * 0.5 - (Boutton[1].w+10), screen.oy)
   Boutton[1]:setVisible(false)
-  Boutton[1]:setAction(function()  SaveMahJongManager.resetSave(); love.event.quit("restart") end)
+  Boutton[1]:setAction(function()  SaveMahJongManager.resetSave() ; SceneOptions.showMessageBox = love.window.showMessageBox("Save have been delete","The game need to restart...")
+ ; SceneOptions.showMessage = true end)
   --
   Boutton[2] = BM.newBox ()
   Boutton[2]:addText(Font, 22, "Non")
@@ -79,8 +81,14 @@ end
 --
 
 function SceneOptions.update(dt) -- love.updadte(dt)
-  BM:update(dt)
-  BM2:update(dt)
+  if not SceneOptions.showMessage then
+    BM:update(dt)
+    BM2:update(dt)
+  else
+    if SceneOptions.showMessageBox then
+      love.event.quit("restart")
+    end
+  end
 end
 --
 
