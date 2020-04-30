@@ -1,0 +1,8 @@
+local CCD = {}
+
+
+
+
+
+
+return CCD

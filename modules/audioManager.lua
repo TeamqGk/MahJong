@@ -38,7 +38,7 @@ function audioManager.newAM()
 
   function f:addSound(pFile, pLoop, pVolume)
     local new = {}
-    new.source = love.audio.newSource(pFile, "stream")
+    new.source = love.audio.newSource(pFile, "static")
     new.source:setLooping(pLoop)
     new.source:setVolume(pVolume)
     table.insert(self.sound, new)
@@ -53,7 +53,7 @@ function audioManager.newAM()
         return
       end
     end
-    print("error, you need use audioManager.setVolume( 0 to 1) // example : 0 = 0 %; 0.5 = 50 %; 1 = 100 %")
+    print("error, you need use audioManager:setVolume( 0 to 1) // example : 0 = 0 %; 0.5 = 50 %; 1 = 100 %")
   end
   --
 

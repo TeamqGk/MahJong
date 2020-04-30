@@ -3,6 +3,8 @@ local SceneCasseBrique = {}
 local lg = love.graphics
 --
 
+local CCD = require("scenes/CasseBrique/CCD")
+
 local padManager = {} -- the pad
 local pad = {} -- the pad
 local ballManager = {} -- the ball's
@@ -58,12 +60,6 @@ playlist.played = false
 
 -- musics
 local music_loop = AM:addMusic("scenes/CasseBrique/sons/Casse_Brique_By_Hydrogene.mp3", true, 0.25, false)
-
-
-
-
-
-
 
 
 function playerManager.Demarre()
@@ -249,8 +245,8 @@ end
 function mapManager.finish(dt)
   -- explose score xD
   if not map.clear then
-    playlist.total = map.nbBriques
     if #lst_briques <= 0 then
+      playlist.total = map.nbBriques * 0.25
       for i = 1,  playlist.total do
         playlist[i] = sonScoreUp:clone()
       end
@@ -278,6 +274,8 @@ function mapManager.finish(dt)
   --
   if map.clear and playlist.played then
     -- TODO : level Down, go next !
+    playlist.played = false
+    map.clear = false
     mapManager.setLevel(map.level+1)
   end
   --
