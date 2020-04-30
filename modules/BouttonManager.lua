@@ -1,5 +1,9 @@
 local BouttonManager = {}
 --
+local AudioManager = require("modules/AudioManager")
+local AM = AudioManager.newAM()
+local blip = AM:addSound("sounds/blip.wav", false, 0.20)
+local clic = AM:addSound("sounds/clic.wav", false, 0.55)
 
 function BouttonManager:newBM()
   local f = {}
@@ -16,7 +20,8 @@ function BouttonManager:newBM()
   f.effect = 0
   f.effectMax = -15
   f.effectSpeed = 10
-
+--
+  f.playSound = false
 --
   f.current = {ready = false}
   --
@@ -120,6 +125,20 @@ function BouttonManager:newBM()
   end
 --
 
+  function f:collide()
+    if #self >= 1 then
+      for i = #self, 1, -1 do
+        local b = self[i]
+        b:update(dt)
+        if b.ready and b.isVisible then
+          self.current = b
+          return true
+        end
+      end
+      self.playSound = false
+    end
+  end
+
   function f:update(dt)
     self.effect =  self.effect + self.effectSpeed * dt
     if self.effect <=  self.effectMax then
@@ -129,16 +148,15 @@ function BouttonManager:newBM()
       self.effect = 0
       self.effectSpeed = 0 - self.effectSpeed
     end
-
-    if #self >= 1 then
-      for i = #self, 1, -1 do
-        local b = self[i]
-        b:update(dt)
-        if b.ready and b.isVisible then
-          self.current = b
-        end
+    --
+    if f:collide() then
+      if not f.playSound then
+        f.playSound = true
+        blip:stop()
+        blip:play() 
       end
     end
+    --
   end
 --
 
@@ -272,7 +290,7 @@ function BouttonManager:newBM()
     function Boutton:setAction(pAction)
       --function_name = function( arguments ) corps end
       if type(pAction) == "function" then
-        self.action = function() pAction () end
+        self.action = function() pAction() ; clic:stop() ; clic:play() end
       end
     end
     --

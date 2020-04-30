@@ -264,13 +264,14 @@ end
 
 function SceneMahJong.testVictory()
   if Grid.mahjongTotal == 0 and Grid.impaire == false or Grid.mahjongTotal == 1 and Grid.impaire == true then
-    if debug then print("NIVEAU SUIVANT : "..(Grid.level + 1).."/"..#Levels) end
+
+    -- WIN !
+    mouse.selectInit() -- reset
     --
-    mouse.selectInit()
+    SceneMahJong.saveVictory() -- save and update
     --
-    SceneMahJong.saveVictory()
+    GridManager.setGrid(SaveMahJong.currentLevel) -- load next Grid
     --
-    GridManager.setGrid(SaveMahJong.currentLevel)
   end
 end
 --
@@ -281,11 +282,19 @@ function SceneMahJong.saveVictory()
   local current = SaveMahJong.level[SaveMahJong.currentLevel]
   current.currentTime = timer.diff
   if current.currentTime < current.bestTime or  current.bestTimeText == "level not clear" then
+    if current.bestTimeText == "level not clear"  then
+      Sounds.congratulations:stop() ; Sounds.congratulations:play()
+    else
+      Sounds.new_highscore:stop();Sounds.new_highscore:play()
+    end
+    --
     current.bestTime = current.currentTime 
     current.bestTimeText = timer.text
-  end -- TODO: RECORD !
+  else
+    Sounds.congratulations:stop() ; Sounds.congratulations:play()
+  end
   timer.reset()
-
+  --
   SaveMahJong.currentLevel = SaveMahJong.currentLevel + 1
   if SaveMahJong.currentLevel > #Levels then
     SaveMahJong.currentLevel = #Levels
@@ -317,6 +326,8 @@ end
 --
 
 function SceneMahJong.load() -- love.load()
+  love.graphics.setBackgroundColor(0.412,0.412,0.412,1)
+--
   LevelsManager.autoload()
   --
   SceneMahJong.resetWait = false
@@ -335,8 +346,9 @@ end
 --
 
 function SceneMahJong.update(dt)
+  if Sounds.GPR_Beat_Katana:isPlaying() then Sounds.GPR_Beat_Katana:stop() end
+  --
   if not SceneMahJong.resetWait and not SceneMahJong.pause then
---  if music_loop then
     if not music_loop:isPlaying() then
       music_loop:play()
     end
@@ -372,7 +384,6 @@ end
 --
 
 function SceneMahJong:keypressed(key, scancode)
-  if debug then print(key) end
   --
   if debug then
     if key == "kp+" or key == "kp-" or key == "up" or key == "down" then

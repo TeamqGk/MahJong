@@ -41,10 +41,13 @@ end
 
 function SceneMenuIntro.update(dt) -- love.load()
   BM:update(dt)
+  if not Sounds.GPR_Beat_Katana:isPlaying() then Sounds.GPR_Beat_Katana:play() end
 end
 --
 
 function SceneMenuIntro.draw()-- love.draw()
+  love.graphics.setBackgroundColor(0,0,0,1)
+  --
   BackGround:draw()
   --
   BM:draw()
@@ -58,9 +61,6 @@ function SceneMenuIntro.keypressed(key, scancode, isrepeat)
     elseif key == "kp-" then      
       BM:setPos("X")
     end
-  end
-  if key == "escape" then
-    --SceneManager:setScene("") --> TODO: go to old scene (implement this if any time)
   end
 end
 --

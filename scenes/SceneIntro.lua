@@ -83,11 +83,11 @@ end
 
 function title:init()
   self.show = true
-  self.font = Font
+  self.font = Font_Title
   self.size = (screen.h / 600) * 100 --  800 * 600 == size a 100
-  if self.size > 200 then self.size = 200 end
+  if self.size > #self.font then self.size = #self.font end
   self.sizeReel = self.size
-  self.string = "The Grid Project".."\n\n".."Presented By".."\n\n".."Crypto Logiq".."\n".."MasK".."\n".."Hydrogene"
+  self.string = "THE GRID PROJECT".."\n\n".."PRESENTED BY".."\n\n".."CRYPTO LOGIQ".."\n".."MASK".."\n".."HYDROGENE"
   self.print = love.graphics.newText(self.font[self.size],self.string)
   self.w, self.h = self.print:getDimensions()
   --
@@ -101,7 +101,7 @@ function title:init()
   self.color[1] = {0,1,0,self.alpha}
   self.color[2] = {1,1,1,self.alpha}
   self.color[3] = {1,1,1,self.alpha}
-  self.string = {self.color[1],"The Grid Project","\n\n",self.color[2],"Presented By","\n\n",self.color[3],"Crypto Logiq","\n","MasK","\n","Hydrogene"}
+  self.string = {self.color[1],"THE GRID PROJECT","\n\n",self.color[2],"PRESENTED BY","\n\n",self.color[3],"CRYPTO LOGIQ","\n","MASK","\n","HYDROGENE"}
   self.print:setf(self.string, self.w,'center')
   --
   self.ox = self.w * 0.5 
@@ -531,25 +531,21 @@ function view25D:camDraw()
 end
 --
 
-
-
-
-
-
-
-
-
-
-
-
 function SceneIntro.load() -- love.load()
+  --
   view25D:init()
   map:init()
   title:init()
+  --
 end
 --
 
 function SceneIntro.update(dt) -- love.updadte(dt)
+  --
+  if not Sounds.LogoIntro:isPlaying() and not Sounds.Digital_Number_FX:isPlaying() then 
+    Sounds.Digital_Number_FX:play()
+  end
+  --
   view25D:update(dt)
   map:update(dt)
   title:update(dt)
@@ -558,6 +554,8 @@ end
 --
 
 function SceneIntro.draw()-- love.draw()-- love.draw()
+  love.graphics.setBackgroundColor(0.439,0.502,0.565,1)
+  --
   view25D:camDraw()
   map:draw()
   title:draw()
@@ -565,16 +563,17 @@ function SceneIntro.draw()-- love.draw()-- love.draw()
 end
 --
 
+
 function SceneIntro.keypressed(key, scancode, isrepeat) -- love.keypressesed()
-  if key == "escape" then
-    SceneManager:setScene("MenuIntro")
-  end
-  if SceneIntro.ready then
+  if SceneIntro.ready or key == "escape" then
     if key then
       SceneManager:setScene("MenuIntro")
     end
   end
 end
+--
+
+
 function SceneIntro.mousepressed(x,y,button)-- love.keypressesed()
   if SceneIntro.ready then
     if button then

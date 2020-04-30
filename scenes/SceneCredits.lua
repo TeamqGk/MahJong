@@ -5,9 +5,7 @@ local Boutton = {}
 local BackGround = ImgManager.new("img/bg_logo.jpg")-- pFile
 BackGround:scaleToScreen()
 
-
-local loop = 0
-function SceneCredits.load() -- love.load()
+function Boutton.init()
   BM:setDimensions(screen.w * 0.2, screen.h * 0.05)
   BM:setColor(0,1,0,0.15)
   BM:setColorText(0,0,0,0.75)
@@ -28,12 +26,17 @@ function SceneCredits.load() -- love.load()
   Boutton[3]:setAction(function() love.system.openURL("https://hydrogene.itch.io/") end)
   --
   Boutton[4] = BM.newBox ()
-  Boutton[4]:addText(Font, 22, "GitHub project")
-  Boutton[4]:setAction(function() love.system.openURL("https://github.com/TeamqGk/MahJong") end) -- go to webpage of Github project
-  --
+  Boutton[4]:addText(Font, 22, "Ryo Taka (manga)")
+  Boutton[4]:setAction(function() love.system.openURL("https://pixabay.com/fr/users/jsks-632850/?tab=popular") end) -- go to webpage of Github project
+    --
   Boutton[5] = BM.newBox ()
-  Boutton[5]:addText(Font, 22, "Retour Menu")
-  Boutton[5]:setAction(function() SceneManager:setScene("MenuIntro") end)
+  Boutton[5]:addText(Font, 22, "GitHub project")
+  Boutton[5]:setAction(function() love.system.openURL("https://github.com/TeamqGk/MahJong") end) -- go to webpage of Github project
+ 
+  --
+  Boutton[6] = BM.newBox ()
+  Boutton[6]:addText(Font, 22, "Retour Menu")
+  Boutton[6]:setAction(function() SceneManager:setScene("MenuIntro") end)
   --
   BM:setPos("Y") -- align alls button to axe Y or X
   --
@@ -41,6 +44,12 @@ function SceneCredits.load() -- love.load()
   BM:setColor(0,1,0,0.15)
   BM:setColorText(0,0,0,0.75)
   BM:setColorMouseOver(0,0,1,0.15)
+  end
+--
+
+local loop = 0
+function SceneCredits.load() -- love.load()
+    Boutton.init()
 end
 --
 
@@ -50,6 +59,8 @@ end
 --
 
 function SceneCredits.draw()-- love.draw()
+  love.graphics.setBackgroundColor(0,0,0,1)
+  --
   BackGround:draw()
   --
   BM:draw()
@@ -65,7 +76,7 @@ function SceneCredits.keypressed(key, scancode, isrepeat)
     end
   end
   if key == "escape" then
-    --SceneManager:setScene("") --> TODO: go to old scene (implement this)
+    SceneManager:setScene("MenuIntro")
   end
 end
 --
