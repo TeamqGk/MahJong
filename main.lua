@@ -111,6 +111,7 @@ Sounds.you_win = AMmain:addSound("sounds/you_win.ogg", false, Sounds.volume)
 --
 Sounds.LogoIntro = AMmain:addMusic("sounds/LogoIntro.mp3", false, 1, true) -- addMusic(pFile, pLoop, pVolume, pPlay)
 Sounds.Digital_Number_FX = AMmain:addMusic("sounds/Digital_Number_FX.mp3", false, 1, false) -- addMusic(pFile, pLoop, pVolume, pPlay)
+Sounds.GPR_Beat_Katana = AMmain:addMusic("sounds/GPR_Beat_Katana.wav", false, 0.7, false) -- https://soundcloud.com/beasttrap/gpr-beat-katana-1
 --------------------------------------------------
 
 

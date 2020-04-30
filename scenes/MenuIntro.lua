@@ -41,6 +41,7 @@ end
 
 function SceneMenuIntro.update(dt) -- love.load()
   BM:update(dt)
+  if not Sounds.GPR_Beat_Katana:isPlaying() then Sounds.GPR_Beat_Katana:play() end
 end
 --
 
