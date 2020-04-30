@@ -538,8 +538,8 @@ end
 --
 
 function SceneCasseBrique.update(dt)
-    if Sounds.GPR_Beat_Katana:isPlaying() then Sounds.GPR_Beat_Katana:stop() end
-
+  if Sounds.GPR_Beat_Katana:isPlaying() then Sounds.GPR_Beat_Katana:stop() end
+  --
   AM:update(dt)
   mouseIsVisible()
   --

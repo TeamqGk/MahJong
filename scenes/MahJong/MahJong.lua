@@ -347,6 +347,7 @@ end
 
 function SceneMahJong.update(dt)
   if Sounds.GPR_Beat_Katana:isPlaying() then Sounds.GPR_Beat_Katana:stop() end
+  --
   if not SceneMahJong.resetWait and not SceneMahJong.pause then
     if not music_loop:isPlaying() then
       music_loop:play()
