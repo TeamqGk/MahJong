@@ -21,7 +21,7 @@ function Boutton.init()
   Boutton[1]:addText(Font, 22, "Oui")
   Boutton[1]:setPos(screen.w * 0.5 - (Boutton[1].w+10), screen.oy)
   Boutton[1]:setVisible(false)
-  Boutton[1]:setAction(function()  SaveMahJongManager.resetSave() ; SceneOptions.showMessageBox = love.window.showMessageBox("Save have been delete","The game need to restart...")
+  Boutton[1]:setAction(function()  SaveMahJongManager.resetSave() ; love.window.setFullscreen(false) ;SceneOptions.showMessageBox = love.window.showMessageBox("Save have been delete","The game need to restart...")
  ; SceneOptions.showMessage = true end)
   --
   Boutton[2] = BM.newBox ()
