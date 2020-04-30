@@ -422,8 +422,6 @@ function  ballManager.update(dt)
       playerManager.nextBall()
     end
     --------- END ---------
-
-
   end
 end
 --
@@ -540,6 +538,8 @@ end
 --
 
 function SceneCasseBrique.update(dt)
+    if Sounds.GPR_Beat_Katana:isPlaying() then Sounds.GPR_Beat_Katana:stop() end
+
   AM:update(dt)
   mouseIsVisible()
   --
