@@ -590,16 +590,17 @@ function SceneIntro.draw()-- love.draw()-- love.draw()
 end
 --
 
+
 function SceneIntro.keypressed(key, scancode, isrepeat) -- love.keypressesed()
-  if key == "escape" then
-    SceneManager:setScene("MenuIntro")
-  end
-  if SceneIntro.ready then
+  if SceneIntro.ready or key == "escape" then
     if key then
       SceneManager:setScene("MenuIntro")
     end
   end
 end
+--
+
+
 function SceneIntro.mousepressed(x,y,button)-- love.keypressesed()
   if SceneIntro.ready then
     if button then
