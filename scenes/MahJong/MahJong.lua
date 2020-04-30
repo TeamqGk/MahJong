@@ -317,6 +317,8 @@ end
 --
 
 function SceneMahJong.load() -- love.load()
+  love.graphics.setBackgroundColor(0.412,0.412,0.412,1)
+--
   LevelsManager.autoload()
   --
   SceneMahJong.resetWait = false

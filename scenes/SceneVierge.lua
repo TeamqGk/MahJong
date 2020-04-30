@@ -20,6 +20,8 @@ end
 --
 
 function SceneDeTest.draw()-- love.draw()-- love.draw()
+  love.graphics.setBackgroundColor(0,0,0,1)
+  --
   love.graphics.print("SceneDeTest",screen.ox,screen.oy)
 end
 --

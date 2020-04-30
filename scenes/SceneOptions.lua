@@ -85,6 +85,8 @@ end
 --
 
 function SceneOptions.draw()-- love.draw()-- love.draw()
+  love.graphics.setBackgroundColor(0,0,0,1)
+  --
   BackGround:draw()
   --
   BM:draw()

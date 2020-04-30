@@ -6,10 +6,8 @@ local Boutton = {}
 local BackGround = ImgManager.new("img/bg_logo.jpg")-- pFile
 BackGround:scaleToScreen()
 
-
-
-function SceneSelectGame.load() -- love.load()
-    BM_Games:setDimensions(screen.w * 0.2, screen.h * 0.05)
+function Boutton.init()
+  BM_Games:setDimensions(screen.w * 0.2, screen.h * 0.05)
   BM_Games:setColor(0,1,0,0.15)
   BM_Games:setColorText(0,0,0,0.75)
   BM_Games:setColorMouseOver(0,0,1,0.15)
@@ -37,12 +35,19 @@ function SceneSelectGame.load() -- love.load()
 end
 --
 
+function SceneSelectGame.load() -- love.load()
+  Boutton.init()
+end
+--
+
 function SceneSelectGame.update(dt) -- love.load()
-    BM_Games:update(dt)
+  BM_Games:update(dt)
 end
 --
 
 function SceneSelectGame.draw()-- love.draw()
+  love.graphics.setBackgroundColor(0,0,0,1)
+  --
   BackGround:draw()
   --
   BM_Games:draw()

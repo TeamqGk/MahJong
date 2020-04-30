@@ -24,14 +24,15 @@ require("modules/libSaveTableToFile") -- lib file
 
 -- Require modules here if is Global needed
 SceneManager = require("modules/SceneManager") -- lua file
-LevelsManager = require("modules/LevelsManager") -- lua file
+BouttonManager = require ("modules/BouttonManager") -- lua file
 SaveManager = require("modules/SaveManager") -- lua file
 AudioManager = require("modules/audioManager") -- lua file
 QuadManager = require("modules/QuadManager") -- lua file
 ImgManager = require("modules/ImgManager") -- lua file
-GridManager = require("modules/GridManager") -- lua file
-BouttonManager = require ("modules/BouttonManager") -- lua file
-SaveMahJongManager = require("modules/SaveMahJongManager") -- lua file
+-- for Mahjong
+LevelsManager = require("scenes/MahJong/modules/LevelsManager") -- lua file
+GridManager = require("scenes/MahJong/modules/GridManager") -- lua file
+SaveMahJongManager = require("scenes/MahJong/modules/SaveMahJongManager") -- lua file
 
 
 

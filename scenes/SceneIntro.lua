@@ -543,6 +543,7 @@ end
 
 
 function SceneIntro.load() -- love.load()
+  --
   view25D:init()
   map:init()
   title:init()
@@ -558,6 +559,8 @@ end
 --
 
 function SceneIntro.draw()-- love.draw()-- love.draw()
+  love.graphics.setBackgroundColor(0.439,0.502,0.565,1)
+  --
   view25D:camDraw()
   map:draw()
   title:draw()
