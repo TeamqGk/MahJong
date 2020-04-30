@@ -9,29 +9,6 @@ local pressStart = {}
 local lg = love.graphics
 
 
---------------------------------------------------
-local AM = AudioManager.newAM()
-local Sounds = {}
-Sounds.volume = 0.5
-Sounds.one = AM:addSound("sounds/one.ogg", false, Sounds.volume)
-Sounds.two = AM:addSound("sounds/two.ogg", false, Sounds.volume)
-Sounds.three = AM:addSound("sounds/three.ogg", false, Sounds.volume)
-Sounds.congratulations = AM:addSound("sounds/congratulations.ogg", false, Sounds.volume)
-Sounds.final_round = AM:addSound("sounds/final_round.ogg", false, Sounds.volume)
-Sounds.game_over = AM:addSound("sounds/game_over.ogg", false, Sounds.volume)
-Sounds.go = AM:addSound("sounds/go.ogg", false, Sounds.volume)
-Sounds.level = AM:addSound("sounds/level.ogg", false, Sounds.volume)
-Sounds.level_up = AM:addSound("sounds/level_up.ogg", false, Sounds.volume)
-Sounds.new_highscore = AM:addSound("sounds/new_highscore.ogg", false, Sounds.volume)
-Sounds.power_up = AM:addSound("sounds/power_up.ogg", false, Sounds.volume)
-Sounds.ready = AM:addSound("sounds/ready.ogg", false, Sounds.volume)
-Sounds.you_lose = AM:addSound("sounds/you_lose.ogg", false, Sounds.volume)
-Sounds.you_win = AM:addSound("sounds/you_win.ogg", false, Sounds.volume)
-Sounds.LogoIntro = AM:addMusic("sounds/LogoIntro.mp3", false, 1, true) -- addMusic(pFile, pLoop, pVolume, pPlay)
-Sounds.Digital_Number_FX = AM:addMusic("sounds/Digital_Number_FX.mp3", false, 1, true) -- addMusic(pFile, pLoop, pVolume, pPlay)
---------------------------------------------------
-
-
 function pressStart:init()
   self.run = true
   self.font = Font
@@ -110,7 +87,6 @@ function title:init()
   self.size = (screen.h / 600) * 100 --  800 * 600 == size a 100
   if self.size > #self.font then self.size = #self.font end
   self.sizeReel = self.size
---  self.string = "The Grid Project".."\n\n".."Presented By".."\n\n".."Crypto Logiq".."\n".."MasK".."\n".."Hydrogene"
   self.string = "THE GRID PROJECT".."\n\n".."PRESENTED BY".."\n\n".."CRYPTO LOGIQ".."\n".."MASK".."\n".."HYDROGENE"
   self.print = love.graphics.newText(self.font[self.size],self.string)
   self.w, self.h = self.print:getDimensions()
@@ -125,7 +101,6 @@ function title:init()
   self.color[1] = {0,1,0,self.alpha}
   self.color[2] = {1,1,1,self.alpha}
   self.color[3] = {1,1,1,self.alpha}
---  self.string = {self.color[1],"The Grid Project","\n\n",self.color[2],"Presented By","\n\n",self.color[3],"Crypto Logiq","\n","MasK","\n","Hydrogene"}
   self.string = {self.color[1],"THE GRID PROJECT","\n\n",self.color[2],"PRESENTED BY","\n\n",self.color[3],"CRYPTO LOGIQ","\n","MASK","\n","HYDROGENE"}
   self.print:setf(self.string, self.w,'center')
   --
@@ -562,12 +537,10 @@ function SceneIntro.load() -- love.load()
   map:init()
   title:init()
   --
-  if not Sounds.LogoIntro:isPlaying() then Sounds.LogoIntro:play() end
 end
 --
 
 function SceneIntro.update(dt) -- love.updadte(dt)
-  AM:update(dt)
   --
   if not Sounds.LogoIntro:isPlaying() and not Sounds.Digital_Number_FX:isPlaying() then 
     Sounds.Digital_Number_FX:play()

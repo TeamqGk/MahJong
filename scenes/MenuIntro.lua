@@ -61,9 +61,6 @@ function SceneMenuIntro.keypressed(key, scancode, isrepeat)
       BM:setPos("X")
     end
   end
-  if key == "escape" then
-    --SceneManager:setScene("") --> TODO: go to old scene (implement this if any time)
-  end
 end
 --
 

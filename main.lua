@@ -89,13 +89,41 @@ SceneManager:setScene("SceneIntro")
 
 
 
+--------------------------------------------------
+local AMmain = AudioManager.newAM()
+Sounds = {}
+Sounds.volume = 0.5
+--
+Sounds.one = AMmain:addSound("sounds/one.ogg", false, Sounds.volume)
+Sounds.two = AMmain:addSound("sounds/two.ogg", false, Sounds.volume)
+Sounds.three = AMmain:addSound("sounds/three.ogg", false, Sounds.volume)
+Sounds.congratulations = AMmain:addSound("sounds/congratulations.ogg", false, Sounds.volume)
+Sounds.final_round = AMmain:addSound("sounds/final_round.ogg", false, Sounds.volume)
+Sounds.game_over = AMmain:addSound("sounds/game_over.ogg", false, Sounds.volume)
+Sounds.go = AMmain:addSound("sounds/go.ogg", false, Sounds.volume)
+Sounds.level = AMmain:addSound("sounds/level.ogg", false, Sounds.volume)
+Sounds.level_up = AMmain:addSound("sounds/level_up.ogg", false, Sounds.volume)
+Sounds.new_highscore = AMmain:addSound("sounds/new_highscore.ogg", false, Sounds.volume)
+Sounds.power_up = AMmain:addSound("sounds/power_up.ogg", false, Sounds.volume)
+Sounds.ready = AMmain:addSound("sounds/ready.ogg", false, Sounds.volume)
+Sounds.you_lose = AMmain:addSound("sounds/you_lose.ogg", false, Sounds.volume)
+Sounds.you_win = AMmain:addSound("sounds/you_win.ogg", false, Sounds.volume)
+--
+Sounds.LogoIntro = AMmain:addMusic("sounds/LogoIntro.mp3", false, 1, true) -- addMusic(pFile, pLoop, pVolume, pPlay)
+Sounds.Digital_Number_FX = AMmain:addMusic("sounds/Digital_Number_FX.mp3", false, 1, false) -- addMusic(pFile, pLoop, pVolume, pPlay)
+--------------------------------------------------
+
+
+
 function love.load()
   SceneManager:load()
 end
 --
 function love.update(dt)
-  mouse.update(dt)
-  screen.update(dt)
+  AMmain:update(dt)
+  --
+  mouse:update(dt)
+  screen:update(dt)
   --
   SceneManager:update(dt)
 end
@@ -110,15 +138,10 @@ function love.keypressed(key, scancode)
     controls.lctrl = true
   end
   if controls.lctrl then
-    if key == "return" then
-      if love.window.getFullscreen() then
-        love.window.setFullscreen(false)
-      else
-        love.window.setFullscreen(true)
-      end
-    end
     if key == "f12" then
       love.event.quit()
+    elseif key == "d" then
+      debug = not debug
     end
   end
   SceneManager:keypressed(key, scancode)

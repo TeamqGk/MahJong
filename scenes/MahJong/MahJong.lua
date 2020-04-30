@@ -264,13 +264,14 @@ end
 
 function SceneMahJong.testVictory()
   if Grid.mahjongTotal == 0 and Grid.impaire == false or Grid.mahjongTotal == 1 and Grid.impaire == true then
-    if debug then print("NIVEAU SUIVANT : "..(Grid.level + 1).."/"..#Levels) end
+
+    -- WIN !
+    mouse.selectInit() -- reset
     --
-    mouse.selectInit()
+    SceneMahJong.saveVictory() -- save and update
     --
-    SceneMahJong.saveVictory()
+    GridManager.setGrid(SaveMahJong.currentLevel) -- load next Grid
     --
-    GridManager.setGrid(SaveMahJong.currentLevel)
   end
 end
 --
@@ -281,11 +282,19 @@ function SceneMahJong.saveVictory()
   local current = SaveMahJong.level[SaveMahJong.currentLevel]
   current.currentTime = timer.diff
   if current.currentTime < current.bestTime or  current.bestTimeText == "level not clear" then
+    if current.bestTimeText == "level not clear"  then
+      Sounds.congratulations:stop() ; Sounds.congratulations:play()
+    else
+      Sounds.new_highscore:stop();Sounds.new_highscore:play()
+    end
+    --
     current.bestTime = current.currentTime 
     current.bestTimeText = timer.text
-  end -- TODO: RECORD !
+  else
+    Sounds.congratulations:stop() ; Sounds.congratulations:play()
+  end
   timer.reset()
-
+  --
   SaveMahJong.currentLevel = SaveMahJong.currentLevel + 1
   if SaveMahJong.currentLevel > #Levels then
     SaveMahJong.currentLevel = #Levels
