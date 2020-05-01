@@ -1,6 +1,7 @@
 local GridManager = {}
 
 local tableMahjong = {}
+local tableMahjongIsMove = {}
 
 
 function GridManager.resetLevel(pLevel)
@@ -259,6 +260,10 @@ function GridManager.setRandMahjong(pLevel)
 
   GridManager.testMoveMahjong()
 
+  if Grid.Move == 0 then
+    return false
+  end
+
 -- Ouf on a  reussi !
   return true
 --
@@ -318,7 +323,6 @@ function GridManager.testMohJang(pRand, pLig, pCol, pEtag)
             if e == pEtag then
               if pCol -1 == c or pCol + 1 == c then
                 ready = false
-                print("ICI")
               end
             end
           end
@@ -459,21 +463,51 @@ end
 function GridManager.testMoveMahjong()
   GridManager.resetIsMove() -- reset le tableau a false avant les test
   --
+  tableMahjongIsMove = {}
+  --
   for etages = 1, Grid.etages do-- etage
     for lignes = 1,  Grid.lignes do-- lignes
       local caseleft, caseright = false, false
       caseleft, caseright = GridManager.testIsMove(etages, lignes)
---      if debug then
-      if  caseleft then
-        print("pion trouvé en etage : Grid["..caseleft.etage.."]["..caseleft.ligne.."]["..caseleft.colonne.."]")
-      elseif caseright then
-        print("pion trouvé en etage : Grid["..caseleft.etage.."]["..caseleft.ligne.."]["..caseleft.colonne.."]")
-      else
-        print("pas de pion trouvé en etage : "..etages.." et ligne : "..lignes)
+      if caseleft then 
+        caseleft.find = false
+        table.insert(tableMahjongIsMove, caseleft) 
       end
---      end
+      if caseright then
+        caseright.find = false
+        table.insert(tableMahjongIsMove, caseright) 
+      end
     end
   end
+  --
+  for i = #tableMahjongIsMove, 1, -1 do
+    local case = tableMahjongIsMove[i]
+    if not case.find then
+      for i = #tableMahjongIsMove, 1, -1 do
+        local test = tableMahjongIsMove[i]
+        if case ~= test then
+          if not test.find then
+            if case.mahjong == test.mahjong then
+              case.find = true
+              test.find = true
+            end
+          end
+        end
+      end
+    end
+  end
+  --
+  for i = #tableMahjongIsMove, 1, -1 do
+    local case = tableMahjongIsMove[i]
+    if not case.find then
+      table.remove(tableMahjongIsMove, i)
+    end
+  end
+  --
+  Grid.Move = #tableMahjongIsMove * 0.5
+
+  --
+
 end
 --
 
