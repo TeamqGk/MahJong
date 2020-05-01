@@ -32,6 +32,11 @@ function GridManager.setGrid(pLevel, pReset)
   Img.BG = ImgManager.new("scenes/MahJong/levels/img/"..Grid.image)-- pFile
   Img.BG:scaleToScreen()
 
+  if Grid.personnage then
+    Img.pics = ImgManager.new("scenes/MahJong/levels/img/"..Grid.pics)-- pFile
+    Img.pics:setPos(screen.w - Img.Manga.w, screen.h - Img.Manga.h)
+  end
+  --
 
 
   -- Settings of Scales
@@ -278,6 +283,9 @@ function GridManager.draw()
   -- BackGround :
   love.graphics.setColor(1,1,1,0.55) -- reset color
   love.graphics.draw(Img.BG.img, 0, 0, 0, Img.BG.sx, Img.BG.sy)
+  if Grid.pics then
+    love.graphics.draw(Img.pics.img, Img.pics.x, Img.pics.y)
+  end
   love.graphics.setColor(1,1,1,1) -- reset color
   --
   local indexTotal = Grid.etages * (Grid.lignes * Grid.colonnes)
@@ -294,13 +302,13 @@ function GridManager.draw()
           love.graphics.draw(Img.MahJong.img, Img.MahJong.quad[case.mahjong], case.x, case.y, 0, case.sx, case.sy)
           love.graphics.setColor(1,1,1,1) -- reset color
         end
-
+        --
         if case.select and case.isActive then
           love.graphics.setColor(1,1,0,1) -- reset color
           love.graphics.rectangle("line", case.x, case.y, case.w, case.h)
           love.graphics.setColor(1,1,1,1) -- reset color
         end
-
+        --
 
         -- draw chaque etage d'une couleur diff pour le debug
         if case.isActive then
