@@ -33,7 +33,7 @@ function GridManager.setGrid(pLevel, pReset)
   Img.BG:scaleToScreen()
 
   if Grid.pics then
-    Img.pics = ImgManager.new("scenes/MahJong/img/"..Grid.pics)-- pFile
+    Img.pics = ImgManager.new("scenes/MahJong/pics/"..Grid.pics)-- pFile
     local scaleScreenMax = 0.5
     if Img.pics.h > screen.h * scaleScreenMax then
       local scale = (screen.h * scaleScreenMax) / Img.pics.h
