@@ -453,13 +453,24 @@ function GridManager.testIsMove(pEtage, pLig)
     end
     return false
   end
+  local function scanLastOnCol()
+    for c = Grid.colonnes, 1, -1 do
+      local case = Grid[pEtage][pLig][c]
+      if case.isActive then
+        case.isMove = true
+        return case, case
+      end
+    end
+    return false
+  end
   --
   caseleft = scanColLeftToRight()
   caseright = scanColRightToLeft()
   --
   if not caseleft and not caseright then
-    print("error")
+    caseleft , caseright = scanLastOnCol()
   end
+
   return caseleft, caseright
 end
 --
@@ -508,7 +519,7 @@ function GridManager.testMoveMahjong()
     end
   end
   --
-  Grid.Move = #tableMahjongIsMove * 0.5
+  Grid.Move = math.floor(#tableMahjongIsMove * 0.5)
 
   --
 
