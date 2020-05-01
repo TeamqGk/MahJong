@@ -156,13 +156,14 @@ function mouse.selectMahjong()
   for i = Grid.etages, 1, -1 do
     if e == 0 then
       local case = Grid[i][l][c]
-      if case.isActive then
+      if case.isActive and case.isMove then
         e = i
       end
     end
   end
   if e == 0 then return end  -- pas de mahjong ici !
   --
+
 
   -- on a l'etage , la ligne et la colonne, il nous faut mémoriser cette selection :
   local add = false
@@ -221,6 +222,8 @@ function mouse.selectMahjong()
         sound_mahjongFind:play()
         --
         if debug then print("un Double de Mahjong a été trouvé, il reste "..Grid.mahjongTotal.." mahjong(s) en jeu") end
+        --
+        GridManager.testMoveMahjong()
         --
         return true
       end
