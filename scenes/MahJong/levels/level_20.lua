@@ -47,7 +47,7 @@ map = { etages = 3, lignes = 11, colonnes = 11,  image = "level_10.jpg", load = 
 {    1, "", "", "", "",  1, "", "", "", "",  1 },-- Ligne 3 - 12 colonnes
 {    1, "", "", "", "",  1, "", "", "", "",  1 },-- Ligne 3 - 12 colonnes
 {    1, "", "", "", "",  1, "", "", "", "",  1 },-- Ligne 3 - 12 colonnes
-{    1,  1,  1,  1,  1, "",  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
+{    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
 {    1, "", "", "", "",  1, "", "", "", "",  1 },-- Ligne 3 - 12 colonnes
 {    1, "", "", "", "",  1, "", "", "", "",  1 },-- Ligne 3 - 12 colonnes
 {    1, "", "", "", "",  1, "", "", "", "",  1 },-- Ligne 3 - 12 colonnes
