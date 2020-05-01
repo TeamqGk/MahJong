@@ -21,6 +21,16 @@ resetMahjongs:scaleToScreen()
 
 local ChangeLevel = require("scenes/MahJong/ChangeLevel")
 
+local Loosetimer = {}
+function Loosetimer.init()
+  Loosetimer.load = true
+  Loosetimer.start = 0
+  Loosetimer.finish = 30
+  Loosetimer.speed = 60
+  Loosetimer.ready = false
+end
+--
+
 function Boutton.init()
   BM:setDimensions(screen.w * 0.15, screen.h * 0.05)
   BM:setColor(0,1,0,0.15)
@@ -43,7 +53,7 @@ function Boutton.init()
   Boutton[3]:addText(Font, 22, "Oui")
   Boutton[3]:setPos(screen.w * 0.5 - (Boutton[3].w+10), screen.oy)
   Boutton[3]:setVisible(false)
-  Boutton[3]:setAction(function() SceneMahJong.resetWait = false ; SceneMahJong.pause = false ; Boutton[3]:setVisible(false) ; Boutton[4]:setVisible(false) ; GridManager.resetLevel(Grid.level) end)
+  Boutton[3]:setAction(function() SceneMahJong.resetWait = false ; SceneMahJong.pause = false ; Boutton[3]:setVisible(false) ; Boutton[4]:setVisible(false) ; GridManager.resetLevel(Grid.level) ; Loosetimer.init() end)
   --
   Boutton[4] = BM.newBox ()
   Boutton[4]:addText(Font, 22, "Non")
@@ -271,7 +281,7 @@ function mouse.selectMahjong()
 end
 --
 
-function SceneMahJong.testVictory()
+function SceneMahJong.testVictory(dt)
   if Grid.mahjongTotal == 0 and Grid.impaire == false or Grid.mahjongTotal == 1 and Grid.impaire == true then
 
     -- WIN !
@@ -281,8 +291,10 @@ function SceneMahJong.testVictory()
     --
     GridManager.setGrid(SaveMahJong.currentLevel) -- load next Grid
     --
-  elseif Grid.Move == 0 then -- Loose
-    
+  elseif Grid.Move == 0 then -- Loose =(
+    --
+    Loosetimer.init()
+    --
   end
 end
 --
@@ -338,6 +350,22 @@ end
 function SceneMahJong.timer(dt)
   timer.update(dt)
   Boutton[1]:setText(timer.text )
+  if Grid.Move == 0 then
+    if not Loosetimer.load then Loosetimer.init() end
+    if not Loosetimer.ready then
+      Loosetimer.start = Loosetimer.start + Loosetimer.speed * dt
+      if Loosetimer.start >= Loosetimer.finish then
+        Loosetimer.ready = true
+        --
+        Sounds.you_lose:stop();Sounds.you_lose:play()
+        --
+        SceneMahJong.resetWait = true
+        Boutton[3]:setVisible(true)
+        Boutton[4]:setVisible(true)
+        --
+      end
+    end
+  end
 end
 --
 
