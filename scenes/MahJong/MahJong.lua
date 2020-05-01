@@ -56,7 +56,7 @@ function Boutton.init()
   Boutton[5]:addText(Font, 22, "Level : 0")
   Boutton[5]:setPos(Boutton[2].x + Boutton[2].w + 10,10)
   Boutton[5]:setEffect(false)
-  Boutton[5]:setAction(function() end)
+--  Boutton[5]:setAction(function() end)
   --
   Boutton[6] = BM.newBox ()
   Boutton[6]:addText(Font, 22, "Options")
@@ -65,9 +65,15 @@ function Boutton.init()
   Boutton[6]:setAction(function() SceneMahJong.pause = not SceneMahJong.pause; ChangeLevel.show = not ChangeLevel.show; ChangeLevel.current = SaveMahJong.currentLevel  end)
   --
   Boutton[7] = BM.newBox ()
-  Boutton[7]:addText(Font, 22, "Menu")
-  Boutton[7]:setPos(screen.w - (Boutton[1].w+10),10)
-  Boutton[7]:setAction(function() SceneManager:setScene("MenuIntro"); music_loop:pause() end)
+  Boutton[7]:addText(Font, 22, "Move : ")
+  Boutton[7]:setPos(Boutton[6].x + Boutton[2].w + 10,10)
+  Boutton[7]:setEffect(false)
+--  Boutton[6]:setAction(function() end)
+  --
+  Boutton[8] = BM.newBox ()
+  Boutton[8]:addText(Font, 22, "Menu")
+  Boutton[8]:setPos(screen.w - (Boutton[1].w+10),10)
+  Boutton[8]:setAction(function() SceneManager:setScene("MenuIntro"); music_loop:pause() end)
 end
 --
 
@@ -374,8 +380,12 @@ function SceneMahJong.update(dt)
     SceneMahJong.mouseUpdate(dt)
     SceneMahJong.timer(dt)
   end
+  --
+  Boutton[5]:setText("Level : "..SaveMahJong.currentLevel)
+  Boutton[7]:setText("Move : "..Grid.Move)
+  --
   BM:update(dt)
-  Boutton[5]:addText(Font, 22, "Level : "..SaveMahJong.currentLevel)
+  --
   ChangeLevel.update(dt)
 end
 --
