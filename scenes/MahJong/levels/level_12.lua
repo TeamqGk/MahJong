@@ -10,7 +10,7 @@ map = { etages = 3, lignes = 9, colonnes = 11,  image = "level_10.jpg", load = f
 {-- etage 1
 {   "", "",  1,  1, "", "", "",  1,  1, "", ""  },-- Ligne 1 - 12 colonnes
 {   "",  1,  1,  1,  1, "",  1,  1,  1,  1, ""  },-- Ligne 2 - 12 colonnes
-{    1,  1,  1,  1,  1, "",  1,  1,  1,  1,  1  },-- Ligne 3 - 12 colonnes
+{    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1  },-- Ligne 3 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1  },-- Ligne 4 - 12 colonnes
 {   "",  1,  1,  1,  1,  1,  1,  1,  1,  1, ""  },-- Ligne 5 - 12 colonnes
 {   "", "",  1,  1,  1,  1,  1,  1,  1, "", ""  },-- Ligne 6 - 12 colonnes
