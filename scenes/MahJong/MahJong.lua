@@ -281,6 +281,8 @@ function SceneMahJong.testVictory()
     --
     GridManager.setGrid(SaveMahJong.currentLevel) -- load next Grid
     --
+  elseif Grid.Move == 0 then -- Loose
+    
   end
 end
 --
@@ -421,14 +423,13 @@ function SceneMahJong:keypressed(key, scancode)
         level = level - 1
       end
       --
---      if level > #Levels then level = 1 elseif level < 1 then level = #Levels end
-      --
       GridManager.setGrid(level)
     end
     if key == "delete" then -- suppr
       GridManager.resetLevel(Grid.level)
     end
   end
+  --
   if key == "escape" then
     if SceneMahJong.pause or SceneMahJong.resetWait or ChangeLevel.show then
       SceneMahJong.pause = false

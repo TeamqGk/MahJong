@@ -456,6 +456,10 @@ function GridManager.testIsMove(pEtage, pLig)
   --
   caseleft = scanColLeftToRight()
   caseright = scanColRightToLeft()
+  --
+  if not caseleft and not caseright then
+    print("error")
+  end
   return caseleft, caseright
 end
 --

@@ -12,6 +12,8 @@ function SaveMahJongManager.init(pReset)
     --
     SaveMahJong.currentLevel = 1
     SaveMahJong.levelMax = 1
+    SaveMahJong.currentMove = 0
+    SaveMahJong.name = ""
     --
     SaveMahJong.level = {}
     --
