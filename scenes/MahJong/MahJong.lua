@@ -283,7 +283,14 @@ function SceneMahJong.saveVictory()
   current.currentTime = timer.diff
   if current.currentTime < current.bestTime or  current.bestTimeText == "level not clear" then
     if current.bestTimeText == "level not clear"  then
-      Sounds.congratulations:stop() ; Sounds.congratulations:play()
+      if Grid.soundClear then
+        if Sounds[Grid.soundClear] then
+          Sounds[Grid.soundClear]:stop()
+          Sounds[Grid.soundClear]:play()
+        end
+      else
+        Sounds.congratulations:stop() ; Sounds.congratulations:play()
+      end
     else
       Sounds.new_highscore:stop();Sounds.new_highscore:play()
     end
@@ -291,7 +298,14 @@ function SceneMahJong.saveVictory()
     current.bestTime = current.currentTime 
     current.bestTimeText = timer.text
   else
-    Sounds.congratulations:stop() ; Sounds.congratulations:play()
+    if Grid.soundClear then
+      if Sounds[Grid.soundClear] then
+        Sounds[Grid.soundClear]:stop()
+        Sounds[Grid.soundClear]:play()
+      end
+    else
+      Sounds.congratulations:stop() ; Sounds.congratulations:play()
+    end
   end
   timer.reset()
   --

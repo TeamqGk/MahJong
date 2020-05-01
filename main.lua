@@ -93,7 +93,7 @@ SceneManager:setScene("SceneIntro")
 local AMmain = AudioManager.newAM()
 Sounds = {}
 Sounds.volume = 0.5
---
+-- Kenney sounds
 Sounds.one = AMmain:addSound("sounds/one.ogg", false, Sounds.volume)
 Sounds.two = AMmain:addSound("sounds/two.ogg", false, Sounds.volume)
 Sounds.three = AMmain:addSound("sounds/three.ogg", false, Sounds.volume)
@@ -108,6 +108,9 @@ Sounds.power_up = AMmain:addSound("sounds/power_up.ogg", false, Sounds.volume)
 Sounds.ready = AMmain:addSound("sounds/ready.ogg", false, Sounds.volume)
 Sounds.you_lose = AMmain:addSound("sounds/you_lose.ogg", false, Sounds.volume)
 Sounds.you_win = AMmain:addSound("sounds/you_win.ogg", false, Sounds.volume)
+-- Sample Focus sounds (https://samplefocus.com/samples?utf8=%E2%9C%93&search=girl+japanese#)
+Sounds.japanese_hello = AMmain:addSound("sounds/japanese_hello.wav", false, Sounds.volume)
+Sounds.japanese_yes = AMmain:addSound("sounds/japanese_yes.wav", false, Sounds.volume)
 --
 Sounds.LogoIntro = AMmain:addMusic("sounds/LogoIntro.mp3", false, 1, true) -- addMusic(pFile, pLoop, pVolume, pPlay)
 Sounds.Digital_Number_FX = AMmain:addMusic("sounds/Digital_Number_FX.mp3", false, 1, false) -- addMusic(pFile, pLoop, pVolume, pPlay)

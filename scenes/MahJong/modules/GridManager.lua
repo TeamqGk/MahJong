@@ -32,11 +32,23 @@ function GridManager.setGrid(pLevel, pReset)
   Img.BG = ImgManager.new("scenes/MahJong/levels/img/"..Grid.image)-- pFile
   Img.BG:scaleToScreen()
 
-  if Grid.personnage then
-    Img.pics = ImgManager.new("scenes/MahJong/levels/img/"..Grid.pics)-- pFile
-    Img.pics:setPos(screen.w - Img.Manga.w, screen.h - Img.Manga.h)
+  if Grid.pics then
+    Img.pics = ImgManager.new("scenes/MahJong/img/"..Grid.pics)-- pFile
+    local scaleScreenMax = 0.5
+    if Img.pics.h > screen.h * scaleScreenMax then
+      local scale = (screen.h * scaleScreenMax) / Img.pics.h
+      local w, h = Img.pics.w * scale, Img.pics.h * scale
+      Img.pics:setSizes(w,h)
+    end
+--    Img.pics:scaleToScreen()
+    Img.pics:setPos(screen.w - Img.pics.w, screen.h - Img.pics.h)
   end
   --
+
+  if Grid.sound then
+    Sounds[Grid.sound]:stop()
+    Sounds[Grid.sound]:play()
+  end
 
 
   -- Settings of Scales
@@ -282,9 +294,10 @@ function GridManager.draw()
 
   -- BackGround :
   love.graphics.setColor(1,1,1,0.55) -- reset color
-  love.graphics.draw(Img.BG.img, 0, 0, 0, Img.BG.sx, Img.BG.sy)
+  love.graphics.draw(Img.BG.img, Img.BG.x, Img.BG.y, 0, Img.BG.sx, Img.BG.sy)
   if Grid.pics then
-    love.graphics.draw(Img.pics.img, Img.pics.x, Img.pics.y)
+    love.graphics.setColor(1,1,1,1) -- reset color
+    love.graphics.draw(Img.pics.img, Img.pics.x, Img.pics.y, 0, Img.pics.sx, Img.pics.sy)
   end
   love.graphics.setColor(1,1,1,1) -- reset color
   --
