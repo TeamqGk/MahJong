@@ -34,13 +34,16 @@ function GridManager.setGrid(pLevel, pReset)
 
   if Grid.pics then
     Img.pics = ImgManager.new("scenes/MahJong/pics/"..Grid.pics)-- pFile
-    local scaleScreenMax = 0.5
-    if Img.pics.h > screen.h * scaleScreenMax then
-      local scale = (screen.h * scaleScreenMax) / Img.pics.h
-      local w, h = Img.pics.w * scale, Img.pics.h * scale
-      Img.pics:setSizes(w,h)
+    if Grid.pics ~= "teach_warning.png" then
+      local scaleScreenMax = 0.5
+      if Img.pics.h > screen.h * scaleScreenMax then
+        local scale = (screen.h * scaleScreenMax) / Img.pics.h
+        local w, h = Img.pics.w * scale, Img.pics.h * scale
+        Img.pics:setSizes(w,h)
+      end
+    else
+      Img.pics:scaleToScreen()
     end
---    Img.pics:scaleToScreen()
     Img.pics:setPos(screen.w - Img.pics.w, screen.h - Img.pics.h)
   end
   --

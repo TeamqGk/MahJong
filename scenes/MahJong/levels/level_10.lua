@@ -1,7 +1,6 @@
 local map = {}
 
-map = { etages = 2, lignes = 6, colonnes = 11,  image = "tutorial_end.png", load = false, sound = final_round.ogg, -- pics, sound, soundClear
-
+map = { etages = 2, lignes = 6, colonnes = 11,  image = "tutorial_end.png", load = false, pics = "cropped-logo-game-codeur.png", sound = "ready", soundClear = "ready" ,
 
 
 
