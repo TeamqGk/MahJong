@@ -16,19 +16,19 @@ function SceneMenuIntro.load() -- love.load()
   BM:setSpace("x", 40) -- def 30
   --
   Boutton[1] = BM.newBox ()
-  Boutton[1]:addText(Font[22], "Jouer !")
+  Boutton[1]:addText(Font, 22, "Jouer !")
   Boutton[1]:setAction(function() SceneManager:setScene("SelectGame") end)
   --
   Boutton[2] = BM.newBox ()
-  Boutton[2]:addText(Font[22], "Options")
+  Boutton[2]:addText(Font, 22, "Options")
   Boutton[2]:setAction(function() SceneManager:setScene("Options") end)
   --
   Boutton[3] = BM.newBox ()
-  Boutton[3]:addText(Font[22], "Credits")
+  Boutton[3]:addText(Font, 22, "Credits")
   Boutton[3]:setAction(function() SceneManager:setScene("Credits") end)
   --
   Boutton[4] = BM.newBox ()
-  Boutton[4]:addText(Font[22], "Quitter")
+  Boutton[4]:addText(Font, 22, "Quitter")
   Boutton[4]:setAction(function() love.event.quit() end)
   BM:setPos("Y") -- align alls button to axe Y or X
   --
@@ -41,10 +41,13 @@ end
 
 function SceneMenuIntro.update(dt) -- love.load()
   BM:update(dt)
+  if not Sounds.GPR_Beat_Katana:isPlaying() then Sounds.GPR_Beat_Katana:play() end
 end
 --
 
 function SceneMenuIntro.draw()-- love.draw()
+  love.graphics.setBackgroundColor(0,0,0,1)
+  --
   BackGround:draw()
   --
   BM:draw()
@@ -58,9 +61,6 @@ function SceneMenuIntro.keypressed(key, scancode, isrepeat)
     elseif key == "kp-" then      
       BM:setPos("X")
     end
-  end
-  if key == "escape" then
-    --SceneManager:setScene("") --> TODO: go to old scene (implement this if any time)
   end
 end
 --

@@ -1,11 +1,20 @@
 local globals = {}
 
 
--- Police par defaut
-Font = {}
+
+
+Font_Title = {}
+Font_Title.font = "fonts/Retronoid.ttf"
 for i=1, 100 do
-  Font[i] = love.graphics.newFont(i)
+  Font_Title[i] = love.graphics.newFont(Font_Title.font,i)
 end
+--
+
+-- Police par defaut
+Font = Font_Title
+--for i=1, 100 do
+--  Font[i] = love.graphics.newFont(i)
+--end
 --
 
 

@@ -16,7 +16,26 @@ function ImgManager.new(pFile)
     self.color = {r,g,b,a}
   end
   --
-  function new:setPos(x,y)
+  function new:setSizes(w, h)
+    self.w = w
+    self.h = h
+    --
+    if self.w < self.w_def then
+      self.sx = w / self.w_def
+    else
+      self.sx = self.w_def / w 
+    end
+    --
+    if h < self.h_def then
+      self.sy = h / self.h_def
+    else
+      self.sy = self.h_def / h 
+    end
+    --
+    print(self.sx, self.sy)
+  end
+  --
+  function new:setPos(x, y)
     self.x, self.y = x, y
   end
   --
@@ -44,6 +63,8 @@ function ImgManager.new(pFile)
     love.graphics.setColor(self.color)
     --
     love.graphics.draw(self.img,self.x,self.y,0,self.sx,self.sy)
+    love.graphics.setColor(0,1,0,1)
+    love.graphics.rectangle("line",self.x,self.y,self.w,self.h)
     --
     love.graphics.setColor(1,1,1,1)
   end

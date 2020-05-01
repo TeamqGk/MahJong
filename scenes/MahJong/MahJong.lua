@@ -28,44 +28,44 @@ function Boutton.init()
   BM:setColorMouseOver(0,0,1,0.15)
   --
   Boutton[1] = BM.newBox ()
-  Boutton[1]:addText(Font[22], "Timer")
+  Boutton[1]:addText(Font, 22, "Timer")
   Boutton[1]:setPos(10, 10)
   Boutton[1]:setEffect(false)
   Boutton[1]:setAction(function() SceneMahJong.pause = not SceneMahJong.pause; music_loop:pause() end)
   --
   Boutton[2] = BM.newBox ()
-  Boutton[2]:addText(Font[22], "Reset Level")
+  Boutton[2]:addText(Font, 22, "Reset Level")
   Boutton[2]:setPos(Boutton[1].x + Boutton[1].w + 10, 10)
   Boutton[2]:setEffect(false)
   Boutton[2]:setAction(function() SceneMahJong.resetWait = true ; Boutton[3]:setVisible(true) ; Boutton[4]:setVisible(true) end)
   --
   Boutton[3] = BM.newBox ()
-  Boutton[3]:addText(Font[22], "Oui")
+  Boutton[3]:addText(Font, 22, "Oui")
   Boutton[3]:setPos(screen.w * 0.5 - (Boutton[3].w+10), screen.oy)
   Boutton[3]:setVisible(false)
   Boutton[3]:setAction(function() SceneMahJong.resetWait = false ; SceneMahJong.pause = false ; Boutton[3]:setVisible(false) ; Boutton[4]:setVisible(false) ; GridManager.resetLevel(Grid.level) end)
   --
   Boutton[4] = BM.newBox ()
-  Boutton[4]:addText(Font[22], "Non")
+  Boutton[4]:addText(Font, 22, "Non")
   Boutton[4]:setPos(screen.w * 0.5 + 10, screen.oy)
   Boutton[4]:setVisible(false)
   Boutton[4]:setAction(function() SceneMahJong.resetWait = false ; Boutton[3]:setVisible(false) ; Boutton[4]:setVisible(false)  end)
   --  
   --
   Boutton[5] = BM.newBox ()
-  Boutton[5]:addText(Font[22], "Level : 0")
+  Boutton[5]:addText(Font, 22, "Level : 0")
   Boutton[5]:setPos(Boutton[2].x + Boutton[2].w + 10,10)
   Boutton[5]:setEffect(false)
   Boutton[5]:setAction(function() end)
   --
   Boutton[6] = BM.newBox ()
-  Boutton[6]:addText(Font[22], "Options")
+  Boutton[6]:addText(Font, 22, "Options")
   Boutton[6]:setPos(Boutton[5].x + Boutton[2].w + 10,10)
   Boutton[6]:setEffect(false)
-  Boutton[6]:setAction(function() SceneMahJong.pause = not SceneMahJong.pause; ChangeLevel.show = not ChangeLevel.show end)
+  Boutton[6]:setAction(function() SceneMahJong.pause = not SceneMahJong.pause; ChangeLevel.show = not ChangeLevel.show; ChangeLevel.current = SaveMahJong.currentLevel  end)
   --
   Boutton[7] = BM.newBox ()
-  Boutton[7]:addText(Font[22], "Menu")
+  Boutton[7]:addText(Font, 22, "Menu")
   Boutton[7]:setPos(screen.w - (Boutton[1].w+10),10)
   Boutton[7]:setAction(function() SceneManager:setScene("MenuIntro"); music_loop:pause() end)
 end
@@ -264,13 +264,14 @@ end
 
 function SceneMahJong.testVictory()
   if Grid.mahjongTotal == 0 and Grid.impaire == false or Grid.mahjongTotal == 1 and Grid.impaire == true then
-    if debug then print("NIVEAU SUIVANT : "..(Grid.level + 1).."/"..#Levels) end
+
+    -- WIN !
+    mouse.selectInit() -- reset
     --
-    mouse.selectInit()
+    SceneMahJong.saveVictory() -- save and update
     --
-    SceneMahJong.saveVictory()
+    GridManager.setGrid(SaveMahJong.currentLevel) -- load next Grid
     --
-    GridManager.setGrid(SaveMahJong.currentLevel)
   end
 end
 --
@@ -279,14 +280,39 @@ function SceneMahJong.saveVictory()
   timer.run = false
   --
   local current = SaveMahJong.level[SaveMahJong.currentLevel]
-  for k, v in pairs(current) do
-    print(k.." : "..tostring(v))
-  end
   current.currentTime = timer.diff
-  if current.currentTime < current.bestTime then current.bestTime = current.currentTime end -- TODO: RECORD !
+  if current.currentTime < current.bestTime or  current.bestTimeText == "level not clear" then
+    if current.bestTimeText == "level not clear"  then
+      if Grid.soundClear then
+        if Sounds[Grid.soundClear] then
+          Sounds[Grid.soundClear]:stop()
+          Sounds[Grid.soundClear]:play()
+        end
+      else
+        Sounds.congratulations:stop() ; Sounds.congratulations:play()
+      end
+    else
+      Sounds.new_highscore:stop();Sounds.new_highscore:play()
+    end
+    --
+    current.bestTime = current.currentTime 
+    current.bestTimeText = timer.text
+  else
+    if Grid.soundClear then
+      if Sounds[Grid.soundClear] then
+        Sounds[Grid.soundClear]:stop()
+        Sounds[Grid.soundClear]:play()
+      end
+    else
+      Sounds.congratulations:stop() ; Sounds.congratulations:play()
+    end
+  end
   timer.reset()
-
+  --
   SaveMahJong.currentLevel = SaveMahJong.currentLevel + 1
+  if SaveMahJong.currentLevel > #Levels then
+    SaveMahJong.currentLevel = #Levels
+  end
   if SaveMahJong.levelMax < SaveMahJong.currentLevel then SaveMahJong.levelMax = SaveMahJong.currentLevel end
   SaveManager.saveGame("SaveMahJong", SaveMahJong)
   if debug then
@@ -300,7 +326,7 @@ end
 
 function SceneMahJong.timer(dt)
   timer.update(dt)
-  Boutton[1]:addText(Font[22], timer.text )
+  Boutton[1]:setText(timer.text )
 end
 --
 
@@ -314,6 +340,8 @@ end
 --
 
 function SceneMahJong.load() -- love.load()
+  love.graphics.setBackgroundColor(0.412,0.412,0.412,1)
+--
   LevelsManager.autoload()
   --
   SceneMahJong.resetWait = false
@@ -332,8 +360,9 @@ end
 --
 
 function SceneMahJong.update(dt)
+  if Sounds.GPR_Beat_Katana:isPlaying() then Sounds.GPR_Beat_Katana:stop() end
+  --
   if not SceneMahJong.resetWait and not SceneMahJong.pause then
---  if music_loop then
     if not music_loop:isPlaying() then
       music_loop:play()
     end
@@ -343,7 +372,7 @@ function SceneMahJong.update(dt)
     SceneMahJong.timer(dt)
   end
   BM:update(dt)
-  Boutton[5]:addText(Font[22], "Level : "..SaveMahJong.currentLevel)
+  Boutton[5]:addText(Font, 22, "Level : "..SaveMahJong.currentLevel)
   ChangeLevel.update(dt)
 end
 --
@@ -369,7 +398,6 @@ end
 --
 
 function SceneMahJong:keypressed(key, scancode)
-  if debug then print(key) end
   --
   if debug then
     if key == "kp+" or key == "kp-" or key == "up" or key == "down" then
@@ -395,8 +423,10 @@ function SceneMahJong:keypressed(key, scancode)
       SceneMahJong.resetWait = false
       Boutton[3]:setVisible(false)
       Boutton[4]:setVisible(false)
+      music_loop:play()
     else
       SceneManager:setScene("MenuIntro")
+      music_loop:stop()
     end
   end
 end

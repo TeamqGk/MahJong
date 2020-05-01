@@ -1,5 +1,9 @@
 local BouttonManager = {}
 --
+local AudioManager = require("modules/AudioManager")
+local AM = AudioManager.newAM()
+local blip = AM:addSound("sounds/blip.wav", false, 0.20)
+local clic = AM:addSound("sounds/clic.wav", false, 0.55)
 
 function BouttonManager:newBM()
   local f = {}
@@ -16,7 +20,8 @@ function BouttonManager:newBM()
   f.effect = 0
   f.effectMax = -15
   f.effectSpeed = 10
-
+--
+  f.playSound = false
 --
   f.current = {ready = false}
   --
@@ -120,6 +125,20 @@ function BouttonManager:newBM()
   end
 --
 
+  function f:collide()
+    if #self >= 1 then
+      for i = #self, 1, -1 do
+        local b = self[i]
+        b:update(dt)
+        if b.ready and b.isVisible then
+          self.current = b
+          return true
+        end
+      end
+      self.playSound = false
+    end
+  end
+
   function f:update(dt)
     self.effect =  self.effect + self.effectSpeed * dt
     if self.effect <=  self.effectMax then
@@ -129,16 +148,15 @@ function BouttonManager:newBM()
       self.effect = 0
       self.effectSpeed = 0 - self.effectSpeed
     end
-
-    if #self >= 1 then
-      for i = #self, 1, -1 do
-        local b = self[i]
-        b:update(dt)
-        if b.ready and b.isVisible then
-          self.current = b
-        end
+    --
+    if f:collide() then
+      if not f.playSound then
+        f.playSound = true
+        blip:stop()
+        blip:play() 
       end
     end
+    --
   end
 --
 
@@ -173,6 +191,7 @@ function BouttonManager:newBM()
     --
     Boutton.isVisible = true
     Boutton.isEffect = true
+    Boutton.action = function() end
     --
     function Boutton:setEffect(pBool)
       if not pBool then self.isEffect = true end
@@ -234,9 +253,12 @@ function BouttonManager:newBM()
       self.color = self.colorFixe
     end
     --
-    function Boutton:addText(pFont, pString, r, g, b, a)
+    function Boutton:addText(pTableFont, pSize, pString, r, g, b, a)
       self.text = {}
-      self.text.print = love.graphics.newText(pFont, pString)
+      self.text.size = pSize
+      self.text.font = pTableFont
+      self.text.string = pString
+      self.text.print = love.graphics.newText(pTableFont[pSize], pString)
       --
       self:updateText()
       --
@@ -247,11 +269,28 @@ function BouttonManager:newBM()
       end
     end
     --
+    function Boutton:setText(pString)
+      self.text.print:set(pString)
+      self.text.string = pString
+      --
+      self:updateText()
+    end
+    --
+    function Boutton:setFontSize(pTableFont, pSize)
+      self.text.font = pTableFont
+      self.text.size = pSize
+      self.text.print:setFont(self.text.font[self.text.size])
+      self.text.ox, self.text.oy = self.text.w*0.5, self.text.h*0.5
+      self.text.x, self.text.y = self.x + self.ox, self.y + self.oy
+      --
+      self:updateText()
+    end
+    --
     --
     function Boutton:setAction(pAction)
       --function_name = function( arguments ) corps end
       if type(pAction) == "function" then
-        self.action = function() pAction () end
+        self.action = function() pAction() ; clic:stop() ; clic:play() end
       end
     end
     --
@@ -262,8 +301,15 @@ function BouttonManager:newBM()
       --
       if self.text then
         self.text.w, self.text.h = self.text.print:getDimensions()
+        if self.text.w >= self.w - 2  or self.text.w >= self.w - 2 then
+--          print("Oups ! tentative echouée de resize du boutton : "..self.text.string)
+          self.text.size = self.text.size - 1
+--          self.text.print:setFont(self.text.font[self.text.size])
+          self:setFontSize(self.text.font,self.text.size)
+        end
         self.text.ox, self.text.oy = self.text.w*0.5, self.text.h*0.5
         self.text.x, self.text.y = self.x + self.ox, self.y + self.oy
+
       end
     end
     --
