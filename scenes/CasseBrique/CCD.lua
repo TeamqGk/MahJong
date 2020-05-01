@@ -1,7 +1,7 @@
 local CCD = {}
 
 
--- TODO: faut le faire si on a le temps :'(
+-- TODO: Fucntion CCD a faire si on a le temps :'(
 
 
 

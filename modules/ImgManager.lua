@@ -64,7 +64,6 @@ function ImgManager.new(pFile)
     --
     love.graphics.draw(self.img,self.x,self.y,0,self.sx,self.sy)
     love.graphics.setColor(0,1,0,1)
-    love.graphics.rectangle("line",self.x,self.y,self.w,self.h)
     --
     love.graphics.setColor(1,1,1,1)
   end

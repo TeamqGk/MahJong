@@ -109,9 +109,9 @@ function globals.math.circleRect(Circle_x, Circle_y, Circle_radius,             
 
 -- if the distance is less than the radius, collision!
   if (distance <= Circle_radius) then
-    return {true, testX, testY}
+    return {collision = true, x = testX, y = testY}
   else
-    return false
+    return {collision = false, x = testX, y = testY}
   end
 end
 --
