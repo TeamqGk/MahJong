@@ -63,6 +63,7 @@ local sonLifeUp = AM:addSound("scenes/CasseBrique/sons/lifeup.wav", false, 1)
 local sonLaunch = AM:addSound("scenes/CasseBrique/sons/launch.wav", false, 1)
 local sonPowerUp = AM:addSound("scenes/CasseBrique/sons/powerup.wav", false, 1)
 local sonShoot = AM:addSound("scenes/CasseBrique/sons/shoot.wav", false, 1)
+local sonBonusLoose = AM:addSound("scenes/CasseBrique/sons/bonus_loose.wav", false, 1)
 local playlist = {}
 playlist.time = 0
 playlist.play = 1
@@ -439,6 +440,17 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
       self:timerUpdate(dt)
       --
       self.y = self.y + (self.speed * self.type * dt)
+      if self.y + self.rayon > pad.y then
+        for i = #lst_Bonus, 1, -1 do
+          local search = lst_Bonus[i]
+          if search == self then
+            sonBonusLoose:stop()
+            sonBonusLoose:play()
+            table.remove(lst_Bonus, i)
+            return false
+          end
+        end
+      end
       --
       if self:collidePad() then
         Sounds.power_up:stop()
