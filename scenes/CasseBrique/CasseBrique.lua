@@ -130,6 +130,11 @@ function playerManager.resetBall()
   Ball[1].x = pad.x + pad.ox
   Ball[1].y = pad.y - Ball[1].rayon
   --
+  padManager.setToMap(map.caseW ,map.caseH)
+  Ball[1]:setToMap(map.caseW ,map.caseH)
+
+
+  -- on reset les multiballs
   for i = #Ball, 1, -1 do
     local ball = Ball[i]
     if i == 1 then
@@ -138,10 +143,12 @@ function playerManager.resetBall()
       table.remove(Ball, i)
     end
   end
-  --
+
+  -- on enleve les bonus a l'ecran'
   for i = #lst_Bonus, 1, -1 do
     table.remove(lst_Bonus, i)
   end
+  --
 end
 --
 
@@ -458,7 +465,11 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
         local MinMax = pad.ox * 0.5
         local vx = love.math.random(-MinMax, MinMax)
         local ball = Ball[1]
-        BallManager.newBall(ball.x, ball.y, ball.rayon, ball.speed, false, ball.vx+vx ,ball.vy)
+        local vy = ball.vy
+        if ball.vy > 0 then
+          vy = 0 - vy
+        end
+        BallManager.newBall(ball.x, ball.y, ball.rayon, ball.speed, false, 0 - ball.vx , vy)
       end
     end
     --
@@ -795,6 +806,9 @@ function padManager.draw()
   -- pad Contour
   lg.setColor(0,0,0,0.75)  
   lg.rectangle("line", pad.x, pad.y, pad.w, pad.h, bordsArrondi)
+
+  lg.setColor(1,0,0,0.25)
+  lg.circle("fill",pad.x + pad.ox,pad.y + pad.oy, 3)
 
   -- reset Color
   lg.setColor(1,1,1,1)
