@@ -45,6 +45,11 @@ MiniWaal:scaleToWidth()
 MiniWaal:setColor(0,1,1,0.75)
 
 --
+local Vie = ImgManager.new("scenes/CasseBrique/img/vie.png")
+--Vie:scaleToWitdth()
+--Vie:setColor(0,1,1,0,75)
+
+--
 local BM = BouttonManager.newBM()
 BM.show = false
 local Boutton = {}
@@ -122,7 +127,7 @@ function playerManager.nextBall()
     -- TODO: Screen GAME OVER
     BestScore.showMenu()
     -- TODO: Save Casse Brique
-    
+
     SaveCasseBriqueManager.save()
     playerManager.Demarre()
   end
@@ -906,10 +911,15 @@ function SceneCasseBrique.draw()
   BonusManager.draw()
   BallManager.draw()
   --
+  for i = 1, player.nbVie do
+    x = Vie.w * (i - 1)
+    y = screen.h - Vie.h
+    lg.draw(Vie.img, x, y, 0, 1, 1)
+  end
+  --
   BestScore:draw()
   --
   BM:draw()
-  --
 end
 --
 
