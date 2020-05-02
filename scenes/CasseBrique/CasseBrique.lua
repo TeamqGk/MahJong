@@ -33,7 +33,6 @@ color[7] = {1,0,1,1}
 color[8] = {1,0,0,0.8}
 color[9] = {1,0,0,0.9}
 color[10] = {1,0,0,1}
-
 --
 local BackGround = ImgManager.new("scenes/CasseBrique/img/wall.jpg")
 BackGround:scaleToScreen()
@@ -124,9 +123,25 @@ end
 function playerManager.resetBall()
   pad.x = (screen.w * 0.5) - pad.ox
   --
+  if #Ball == 0 then
+    BallManager.newBall(0, 0, 15, 400, true, 0, 0)
+  end
   Ball[1].colle = true
   Ball[1].x = pad.x + pad.ox
   Ball[1].y = pad.y - Ball[1].rayon
+  --
+  for i = #Ball, 1, -1 do
+    local ball = Ball[i]
+    if i == 1 then
+      ball.power = 1
+    else
+      table.remove(Ball, i)
+    end
+  end
+  --
+  for i = #lst_Bonus, 1, -1 do
+    table.remove(lst_Bonus, i)
+  end
 end
 --
 
@@ -275,6 +290,9 @@ function mapManager.finish(dt)
     playlist.played = false
     map.clear = false
     mapManager.setLevel(map.level+1)
+    --
+    Sounds.level_up:stop()
+    Sounds.level_up:play()
   end
   --
 end
@@ -309,11 +327,11 @@ function BonusManager.init() -- TODO: Bonus init a finir
     return new
   end
   --
-  Bonus[1] = new(1, "Speed") -- speed
-  Bonus[2] = new(2, "Pup") -- Power Up
-  Bonus[3] = new(3, "")
-  Bonus[4] = new(4, "")
-  Bonus[5] = new(5, "")
+  Bonus[1] = new(1, "SPEED") -- speed
+  Bonus[2] = new(2, "POWER") -- Power Up
+  Bonus[3] = new(3, "Ball +1")
+  Bonus[4] = new(4, "Ball +3")
+  Bonus[5] = new(5, "VIE +1")
   Bonus[6] = new(6, "")
   Bonus[7] = new(7, "")
   Bonus[8] = new(8, "")
@@ -341,6 +359,10 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
     new.y = pY
     --
     new.timer = {}
+    new.timer.start = 0
+    new.timer.finish = 10
+    new.timer.speed = 60
+    new.timer.ready = false
     --
     new.speed = 100
     new.vx = 0
@@ -348,6 +370,7 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
     new.rayon = pCase.rayon * 1.10
     --
     new.color = color[pCase.type]
+    new.colorBonus = color[love.math.random(1,10)]
     --
     function new:sizeText()
       if self.w > (self.rayon * 2) - 4 then
@@ -366,10 +389,13 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
     function new:addTimer(pType, pID)
       local t = {}
       t.type= pType
-      t.id = pID
+      --
+      if pID then
+        t.id = pID
+      end
       --
       t.start = 0
-      t.finish = 60
+      t.finish = 30
       t.speed = 60
       --
       t.isActive = true
@@ -420,6 +446,22 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
       end
     end
     --
+    function new:BonusLifeUp()
+      sonLifeUp:stop()
+      sonLifeUp:play()
+      player.nbVie = player.nbVie + 1
+    end
+    --
+    function new:BonusNewBall(pNumber)
+      if not pNumber then pNumber = 1 end
+      for i = 1, pNumber do
+        local MinMax = pad.ox * 0.5
+        local vx = love.math.random(-MinMax, MinMax)
+        local ball = Ball[1]
+        BallManager.newBall(ball.x, ball.y, ball.rayon, ball.speed, false, ball.vx+vx ,ball.vy)
+      end
+    end
+    --
     function new:timerUpdate(dt)
       for i = #self.timer, 1 , -1 do
         local t = self.timer[i]
@@ -432,6 +474,14 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
         end
         table.remove(self.timer, i)
       end
+      --
+      if not self.timer.ready then
+        self.timer.start = self.timer.start + self.timer.speed * dt
+        if self.timer.start >= self.timer.finish then
+          self.timer.ready = true
+          self.timer.start = 0
+        end
+      end
     end
     --
     function new:update(dt)
@@ -440,7 +490,7 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
       self:timerUpdate(dt)
       --
       self.y = self.y + (self.speed * self.type * dt)
-      if self.y + self.rayon > pad.y then
+      if self.y + (self.rayon * 0.5) > pad.y then
         for i = #lst_Bonus, 1, -1 do
           local search = lst_Bonus[i]
           if search == self then
@@ -465,12 +515,20 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
       lg.circle("fill",self.x,self.y,self.rayon)
       lg.setColor(self.color)      
       lg.circle("line",self.x,self.y,self.rayon)
+
+      -- Bonus
+      if self.timer.ready then
+        self.colorBonus = color[love.math.random(1,10)]
+        self.timer.ready = false
+      end
+      --
       for i = 1 , 3 do
-        lg.setColor(color[love.math.random(1,10)])
+        lg.setColor(self.colorBonus)
         lg.circle("line",self.x,self.y,self.rayon+i)
       end
       lg.draw(self.text, self.x, self.y ,0,1,1, self.w*0.5, self.h*0.5)
-      lg.setColor(1,1,1,1)
+      --
+      lg.setColor(1,1,1,1) -- reset Color
       --
     end
     --
@@ -480,8 +538,11 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
       elseif pType == 2 then
         self:BonusPowerUp()
       elseif pType == 3 then
+        self:BonusNewBall(1)
       elseif pType == 4 then
+        self:BonusNewBall(3)
       elseif pType == 5 then
+        self:BonusLifeUp()
       elseif pType == 6 then
       elseif pType == 7 then
       elseif pType == 8 then
@@ -648,7 +709,13 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
 
       -- Ball Loose :
       if self.y - self.rayon * 3 >= screen.h then-- >= bas (w)  == PERDU !
-        playerManager.nextBall()
+        for i = #Ball, 1, -1 do
+          if Ball[i] == self then
+            table.remove(Ball, i)
+            playerManager.nextBall()
+            return false
+          end
+        end
       end
     end
   end
@@ -792,7 +859,7 @@ function SceneCasseBrique.update(dt)
     if not music_loop:isPlaying() then
       music_loop:play()
     end
-    --
+    --    
     padManager.update(dt)
     BallManager.update(dt)
     BonusManager.update(dt)
