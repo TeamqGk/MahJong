@@ -11,6 +11,7 @@ local BallManager = {} -- the ball's
 local Ball = {} -- the ball's
 local BonusManager = {}  -- 10 bonus !
 local Bonus = {}  -- 10 bonus !
+local lst_Bonus = {}  -- all's' bonus in level !
 local playerManager = {}
 local player = {}
 
@@ -99,15 +100,15 @@ function playerManager.Demarre()
 
   -- BALL
   BallManager.newBall(0, 0, 15, 400, true, 0, 0) --BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx, pVy)
-  playerManager.resetBall()
 
   -- init level 1
   mapManager.setLevel(1)
 
   --
-  padManager.setToMap(map.caseW ,map.caseH)
   Ball[1]:setToMap(map.caseW ,map.caseH)
+  padManager.setToMap(map.caseW ,map.caseH)
   --  
+  playerManager.resetBall()
 end
 --
 function playerManager.nextBall()
@@ -224,7 +225,7 @@ end
 function mapManager.draw()
   for i = #lst_briques, 1, - 1 do
     local case = lst_briques[i]
-    lg.setColor(color[case.vie])
+    lg.setColor(color[case.type])
     --
     lg.rectangle("fill",case.x,case.y,case.w,case.h,5)
     --
@@ -292,9 +293,216 @@ function mapManager.playSource()
 end
 --
 
-function BonusManager.init() -- TODO: Bonus Init a faire
-  for i =1, 10 do
-    Bonus[i] = {}
+function BonusManager.init() -- TODO: Bonus init a finir
+  local function new(pType,pString)
+    local new = {}
+    new.type = pType
+    new.font = Font
+    new.size = 16
+    new.string = pString
+    new.text = love.graphics.newText(new.font[new.size],new.string)
+    new.w = new.text:getWidth()
+    new.h = new.text:getHeight()
+    new.ox = new.text:getWidth() * 0.5
+    new.oy = new.text:getHeight() * 0.5
+    return new
+  end
+  --
+  Bonus[1] = new(1, "Speed") -- speed
+  Bonus[2] = new(2, "Pup") -- Power Up
+  Bonus[3] = new(3, "")
+  Bonus[4] = new(4, "")
+  Bonus[5] = new(5, "")
+  Bonus[6] = new(6, "")
+  Bonus[7] = new(7, "")
+  Bonus[8] = new(8, "")
+  Bonus[9] = new(9, "")
+  Bonus[10] = new(10, "")
+end
+--
+
+function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
+  local lucky = (pCase.type * 10) - 100
+  local rand = love.math.random(1, 100)
+  --
+  if rand >= lucky then
+    --
+    if debug then print("Bonus["..pCase.type.."] creer ! avec un jet de"..rand.." sur "..lucky..".") end
+    --
+    local new = {}
+    --
+    local bonus = Bonus[pCase.type]
+    for k, v in pairs(bonus) do
+      new[k] = v
+    end
+    --
+    new.x = pX
+    new.y = pY
+    --
+    new.timer = {}
+    --
+    new.speed = 100
+    new.vx = 0
+    new.vy = 1
+    new.rayon = pCase.rayon * 1.10
+    --
+    new.color = color[pCase.type]
+    --
+    function new:sizeText()
+      if self.w > (self.rayon * 2) - 4 then
+        if self.size > 1 then
+          self.size = self.size - 1
+          self.text:setFont(self.font[self.size])
+          self.text:set(self.string)
+          self.w = self.text:getWidth()
+          self.h = self.text:getHeight()
+          self.ox = self.w * 0.5
+          self.oy = self.h * 0.5
+        end
+      end
+    end
+    --
+    function new:addTimer(pType, pID)
+      local t = {}
+      t.type= pType
+      t.id = pID
+      --
+      t.start = 0
+      t.finish = 60
+      t.speed = 60
+      --
+      t.isActive = true
+      t.type = pType
+      --
+      table.insert(self.timer, t)
+    end
+    --
+    function new:collidePad()
+      -- Collision avec le PAD
+      if self.x + self.rayon >= pad.x and self.x - self.rayon <= pad.x + pad.w then -- Contact possible !! en largeur
+        if self.y + self.rayon >= pad.y and self.y <= pad.y then -- rebond ! (Hauteur)
+          return true
+        else
+          return false
+        end
+      end
+    end
+    --
+    function new:deleteBonus(pType,pID)
+      if pType == "PowerUp" then
+        for i = #Ball, 1, -1 do
+          local b = Ball[i]
+          --
+          if b[pID] then
+            b.power = b.power - 1
+            table.remove(b, pID)
+          end
+        end
+      end
+    end
+    --
+    function new:BonusSpeedBall()
+      for i = #Ball, 1, -1 do
+        local b = Ball[i]
+        b.speed = b.speed + 100
+      end
+    end
+    --
+    function new:BonusPowerUp()
+      local id = love.timer.getTime()
+      self:addTimer("PowerUp", id)
+      --
+      for i = #Ball, 1, -1 do
+        local b = Ball[i]
+        b.power = b.power + 1
+        table.insert(b, id)
+      end
+    end
+    --
+    function new:timerUpdate(dt)
+      for i = #self.timer, 1 , -1 do
+        local t = self.timer[i]
+        t.start = t.start + t.speed * dt
+        if t.start >= t.finish then
+          t.isActive = false
+        end
+        if not t.isActive then
+          self:deleteBonus(t.id)
+        end
+        table.remove(self.timer, i)
+      end
+    end
+    --
+    function new:update(dt)
+      self:sizeText()
+      --
+      self:timerUpdate(dt)
+      --
+      self.y = self.y + (self.speed * self.type * dt)
+      --
+      if self:collidePad() then
+        self:addBonus(self.type)
+      end
+    end
+    --
+    function new:draw()
+      --
+      lg.setColor(0,0,0,1)
+      lg.circle("fill",self.x,self.y,self.rayon)
+      lg.setColor(self.color)      
+      lg.circle("line",self.x,self.y,self.rayon)
+      for i = 1 , 3 do
+        lg.setColor(color[love.math.random(1,10)])
+        lg.circle("line",self.x,self.y,self.rayon+i)
+      end
+      lg.draw(self.text, self.x, self.y ,0,1,1, self.w*0.5, self.h*0.5)
+      lg.setColor(1,1,1,1)
+      --
+    end
+    --
+    function new:addBonus(pType)
+      if  pType == 1 then
+        self:BonusSpeedBall()
+      elseif pType == 2 then
+        self:BonusPowerUp()
+      elseif pType == 3 then
+      elseif pType == 4 then
+      elseif pType == 5 then
+      elseif pType == 6 then
+      elseif pType == 7 then
+      elseif pType == 8 then
+      elseif pType == 9 then
+      elseif pType == 10 then  
+      end
+      --
+      for i = #lst_Bonus, 1, -1 do
+        local search = lst_Bonus[i]
+        if search == self then
+          table.remove(lst_Bonus, i)
+          return true
+        end
+      end
+    end -- end addBonus()
+    --
+    --##############################################
+    table.insert(lst_Bonus, new) -- Ajoute le Bonus
+    --##############################################
+  end -- end lucky
+end
+--
+
+function BonusManager.update(dt)
+  for i = #lst_Bonus, 1, -1 do
+    local bonus = lst_Bonus[i]
+    bonus:update(dt)
+  end
+end
+--
+
+function BonusManager.draw()
+  for i = #lst_Bonus, 1, -1 do
+    local bonus = lst_Bonus[i]
+    bonus:draw()
   end
 end
 --
@@ -311,6 +519,8 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
   b.vx = pVx
   b.vy = pVy
   --
+  b.power = 1
+  --
   function b:setToMap(pCaseW ,pCaseH)
     self.rayon = (pCaseH * 0.5) * 0.5
   end
@@ -320,11 +530,6 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
     for i = #lst_briques, 1, - 1 do
       local case = lst_briques[i]
       local collide = globals.math.circleRect(self.x, self.y, self.rayon,              case.x, case.y, case.w, case.h)
-      --
-      print("test sur brique["..i.."]")
-      for k , v in pairs(collide) do
-        print(k.." : "..tostring(v))
-      end
       --
       if collide.collision then -- si y a eu collision..
         --
@@ -347,9 +552,9 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
         --
 
         -- decrementation de la vie
-        case.vie = case.vie - 1
-        if case.vie == 0 then
-          -- TODO: Take Bonus Here !
+        case.vie = case.vie - self.power
+        if case.vie <= 0 then
+          BonusManager.newBonus(case.ox,case.oy,case)
           table.remove(lst_briques, i)
           sonExplo:play()
         else
@@ -570,6 +775,7 @@ function SceneCasseBrique.update(dt)
     --
     padManager.update(dt)
     BallManager.update(dt)
+    BonusManager.update(dt)
 
     mapManager.finish(dt)
   end
@@ -582,6 +788,7 @@ function SceneCasseBrique.draw()
   padManager.draw()
   BallManager.draw()
   mapManager.draw()
+  BonusManager.draw()
   --
   BM:draw()
   --
