@@ -441,6 +441,8 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
       self.y = self.y + (self.speed * self.type * dt)
       --
       if self:collidePad() then
+        Sounds.power_up:stop()
+        Sounds.power_up:play()
         self:addBonus(self.type)
       end
     end
@@ -645,9 +647,15 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
     --
     lg.circle("fill", self.x, self.y, self.rayon)
     --
-    lg.setColor(1,0,0,0.25)
     --
-    lg.circle("fill", self.x, self.y, 2)
+    for i = 1, self.power do
+      if i == 1 then
+        lg.setColor(1,0,0,0.25)
+      else
+        lg.setColor(color[love.math.random(1,10)])
+      end
+      lg.circle("fill", self.x, self.y, 1 + i)
+    end
     --
     lg.setColor(1,1,1,1)
   end
