@@ -40,7 +40,7 @@ function Boutton.init()
   Boutton[4] = ChangeLevelBM.newBox ()
   Boutton[4]:addText(Font, 22, "Aller a ce Niveau")
   Boutton[4]:setPos(Boutton[3].x + Boutton[3].w + 10, fenetre.y + 10)
-  Boutton[4]:setAction(function()  sound_clic:stop(); sound_clic:play(); GridManager.setGrid(ChangeLevel.current, true) ; ChangeLevel.show = false ; SceneMahJong.pause = false ; SaveMahJong.currentLevel = ChangeLevel.current end)
+  Boutton[4]:setAction(function()  sound_clic:stop(); sound_clic:play(); if ChangeLevel.current ~= SaveMahJong.currentLevel then  GridManager.setGrid(ChangeLevel.current, true) end ; ChangeLevel.show = false ; SceneMahJong.pause = false ; SaveMahJong.currentLevel = ChangeLevel.current end)
   --  
 end
 --

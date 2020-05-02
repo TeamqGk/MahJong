@@ -1,10 +1,20 @@
 {
     "Lua.diagnostics.globals": [
         "love",
+        "dt",
+        "_",
         "loadstring",
+        "unpack",
+        "globals",
+        "lume",
+        "mouse",
+        "screen",
+        "timer",
         "tables",
         "err",
-        "_",
-        "unpack"
+        "copyToTable"
+    ],
+    "Lua.diagnostics.disable": [
+        "lowercase-global"
     ]
 }

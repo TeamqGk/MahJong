@@ -19,7 +19,7 @@ function Boutton.init()
   Boutton[1]:setAction(function() SceneManager:setScene("MahJong") end)
   --
   Boutton[2] = BM_Games.newBox ()
-  Boutton[2]:addText(Font, 22, "Casse Brique")
+  Boutton[2]:addText(Font, 22, "Casse Brique [Bonus]")
   Boutton[2]:setAction(function() SceneManager:setScene("CasseBrique") end)
   --
   Boutton[3] = BM_Games.newBox ()

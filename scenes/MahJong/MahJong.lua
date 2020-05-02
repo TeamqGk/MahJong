@@ -21,6 +21,16 @@ resetMahjongs:scaleToScreen()
 
 local ChangeLevel = require("scenes/MahJong/ChangeLevel")
 
+local Loosetimer = {}
+function Loosetimer.init()
+  Loosetimer.load = true
+  Loosetimer.start = 0
+  Loosetimer.finish = 30
+  Loosetimer.speed = 60
+  Loosetimer.ready = false
+end
+--
+
 function Boutton.init()
   BM:setDimensions(screen.w * 0.15, screen.h * 0.05)
   BM:setColor(0,1,0,0.15)
@@ -43,7 +53,7 @@ function Boutton.init()
   Boutton[3]:addText(Font, 22, "Oui")
   Boutton[3]:setPos(screen.w * 0.5 - (Boutton[3].w+10), screen.oy)
   Boutton[3]:setVisible(false)
-  Boutton[3]:setAction(function() SceneMahJong.resetWait = false ; SceneMahJong.pause = false ; Boutton[3]:setVisible(false) ; Boutton[4]:setVisible(false) ; GridManager.resetLevel(Grid.level) end)
+  Boutton[3]:setAction(function() SceneMahJong.resetWait = false ; SceneMahJong.pause = false ; Boutton[3]:setVisible(false) ; Boutton[4]:setVisible(false) ; GridManager.resetLevel(Grid.level) ; Loosetimer.init() end)
   --
   Boutton[4] = BM.newBox ()
   Boutton[4]:addText(Font, 22, "Non")
@@ -56,7 +66,7 @@ function Boutton.init()
   Boutton[5]:addText(Font, 22, "Level : 0")
   Boutton[5]:setPos(Boutton[2].x + Boutton[2].w + 10,10)
   Boutton[5]:setEffect(false)
-  Boutton[5]:setAction(function() end)
+--  Boutton[5]:setAction(function() end)
   --
   Boutton[6] = BM.newBox ()
   Boutton[6]:addText(Font, 22, "Options")
@@ -65,9 +75,15 @@ function Boutton.init()
   Boutton[6]:setAction(function() SceneMahJong.pause = not SceneMahJong.pause; ChangeLevel.show = not ChangeLevel.show; ChangeLevel.current = SaveMahJong.currentLevel  end)
   --
   Boutton[7] = BM.newBox ()
-  Boutton[7]:addText(Font, 22, "Menu")
-  Boutton[7]:setPos(screen.w - (Boutton[1].w+10),10)
-  Boutton[7]:setAction(function() SceneManager:setScene("MenuIntro"); music_loop:pause() end)
+  Boutton[7]:addText(Font, 22, "Move : ")
+  Boutton[7]:setPos(Boutton[6].x + Boutton[2].w + 10,10)
+  Boutton[7]:setEffect(false)
+--  Boutton[6]:setAction(function() end)
+  --
+  Boutton[8] = BM.newBox ()
+  Boutton[8]:addText(Font, 22, "Menu")
+  Boutton[8]:setPos(screen.w - (Boutton[1].w+10),10)
+  Boutton[8]:setAction(function() SceneManager:setScene("MenuIntro"); music_loop:pause() end)
 end
 --
 
@@ -156,13 +172,14 @@ function mouse.selectMahjong()
   for i = Grid.etages, 1, -1 do
     if e == 0 then
       local case = Grid[i][l][c]
-      if case.isActive then
+      if case.isActive and case.isMove then
         e = i
       end
     end
   end
   if e == 0 then return end  -- pas de mahjong ici !
   --
+
 
   -- on a l'etage , la ligne et la colonne, il nous faut mémoriser cette selection :
   local add = false
@@ -222,6 +239,8 @@ function mouse.selectMahjong()
         --
         if debug then print("un Double de Mahjong a été trouvé, il reste "..Grid.mahjongTotal.." mahjong(s) en jeu") end
         --
+        GridManager.testMoveMahjong()
+        --
         return true
       end
     end
@@ -262,7 +281,7 @@ function mouse.selectMahjong()
 end
 --
 
-function SceneMahJong.testVictory()
+function SceneMahJong.testVictory(dt)
   if Grid.mahjongTotal == 0 and Grid.impaire == false or Grid.mahjongTotal == 1 and Grid.impaire == true then
 
     -- WIN !
@@ -271,6 +290,10 @@ function SceneMahJong.testVictory()
     SceneMahJong.saveVictory() -- save and update
     --
     GridManager.setGrid(SaveMahJong.currentLevel) -- load next Grid
+    --
+  elseif Grid.Move == 0 then -- Loose =(
+    --
+    Loosetimer.init()
     --
   end
 end
@@ -327,6 +350,22 @@ end
 function SceneMahJong.timer(dt)
   timer.update(dt)
   Boutton[1]:setText(timer.text )
+  if Grid.Move == 0 then
+    if not Loosetimer.load then Loosetimer.init() end
+    if not Loosetimer.ready then
+      Loosetimer.start = Loosetimer.start + Loosetimer.speed * dt
+      if Loosetimer.start >= Loosetimer.finish then
+        Loosetimer.ready = true
+        --
+        Sounds.you_lose:stop();Sounds.you_lose:play()
+        --
+        SceneMahJong.resetWait = true
+        Boutton[3]:setVisible(true)
+        Boutton[4]:setVisible(true)
+        --
+      end
+    end
+  end
 end
 --
 
@@ -371,8 +410,12 @@ function SceneMahJong.update(dt)
     SceneMahJong.mouseUpdate(dt)
     SceneMahJong.timer(dt)
   end
+  --
+  Boutton[5]:setText("Level : "..SaveMahJong.currentLevel)
+  Boutton[7]:setText("Move : "..Grid.Move)
+  --
   BM:update(dt)
-  Boutton[5]:addText(Font, 22, "Level : "..SaveMahJong.currentLevel)
+  --
   ChangeLevel.update(dt)
 end
 --
@@ -408,14 +451,13 @@ function SceneMahJong:keypressed(key, scancode)
         level = level - 1
       end
       --
---      if level > #Levels then level = 1 elseif level < 1 then level = #Levels end
-      --
       GridManager.setGrid(level)
     end
     if key == "delete" then -- suppr
       GridManager.resetLevel(Grid.level)
     end
   end
+  --
   if key == "escape" then
     if SceneMahJong.pause or SceneMahJong.resetWait or ChangeLevel.show then
       SceneMahJong.pause = false

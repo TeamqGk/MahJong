@@ -7,10 +7,11 @@ local CCD = require("scenes/CasseBrique/CCD")
 
 local padManager = {} -- the pad
 local pad = {} -- the pad
-local ballManager = {} -- the ball's
-local ball = {} -- the ball's
-local bonusManager = {}  -- 10 bonus !
-local bonus = {}  -- 10 bonus !
+local BallManager = {} -- the ball's
+local Ball = {} -- the ball's
+local BonusManager = {}  -- 10 bonus !
+local Bonus = {}  -- 10 bonus !
+local lst_Bonus = {}  -- all's' bonus in level !
 local playerManager = {}
 local player = {}
 
@@ -21,7 +22,17 @@ local map = {} -- table of current map generated (Infos etc...)
 local lst_briques = {} -- The map generated breack's in table with all elements (list)
 
 local color = {}
-
+-- COLORS
+color[1] = {1,1,1,1}
+color[2] = {0,1,0,1}
+color[3] = {0,0,1,1}
+color[4] = {0.25,0,0.75,1}
+color[5] = {1,1,0,1}
+color[6] = {0,1,1,1}
+color[7] = {1,0,1,1}
+color[8] = {1,0,0,0.8}
+color[9] = {1,0,0,0.9}
+color[10] = {1,0,0,1}
 --
 local BackGround = ImgManager.new("scenes/CasseBrique/img/wall.jpg")
 BackGround:scaleToScreen()
@@ -51,6 +62,7 @@ local sonLifeUp = AM:addSound("scenes/CasseBrique/sons/lifeup.wav", false, 1)
 local sonLaunch = AM:addSound("scenes/CasseBrique/sons/launch.wav", false, 1)
 local sonPowerUp = AM:addSound("scenes/CasseBrique/sons/powerup.wav", false, 1)
 local sonShoot = AM:addSound("scenes/CasseBrique/sons/shoot.wav", false, 1)
+local sonBonusLoose = AM:addSound("scenes/CasseBrique/sons/bonus_loose.wav", false, 1)
 local playlist = {}
 playlist.time = 0
 playlist.play = 1
@@ -63,6 +75,16 @@ local music_loop = AM:addMusic("scenes/CasseBrique/sons/Casse_Brique_By_Hydrogen
 
 
 function playerManager.Demarre()
+
+  BonusManager.init()
+
+  -- Player
+  player.nbVie = 3
+  player.score = 0
+  player.bestScore = 0
+  player.maxLevel = 0
+
+
   -- PAD
   pad.w = 150
   pad.h = 30
@@ -76,52 +98,57 @@ function playerManager.Demarre()
   pad.pointX = pad.x + pad.ox
   pad.pointY = pad.y + pad.distPointY
 
--- BALL
-  ball.x = 0
-  ball.y = 0
-  ball.rayon = 15
---
-  ball.colle = true
---
-  ball.speed = 600
-  ball.vx = 0
-  ball.vy = 0
+  -- BALL
+  BallManager.newBall(0, 0, 15, 400, true, 0, 0) --BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx, pVy)
 
--- Player
-  player.nbVie = 3
-  player.score = 0
-  player.bestScore = 0
-  player.maxLevel = 0
-
--- COLORS
-  color[1] = {1,1,1,1}
-  color[2] = {0,1,0,1}
-  color[3] = {0,0,1,1}
-  color[4] = {0.25,0,0.75,1}
-  color[5] = {1,1,0,1}
-  color[6] = {0,1,1,1}
-  color[7] = {1,0,1,1}
-  color[8] = {1,0,0,0.8}
-  color[9] = {1,0,0,0.9}
-  color[10] = {1,0,0,1}
---
+  -- init level 1
   mapManager.setLevel(1)
+
+  --
+  Ball[1]:setToMap(map.caseW ,map.caseH)
+  padManager.setToMap(map.caseW ,map.caseH)
+  --  
   playerManager.resetBall()
 end
 --
-function playerManager.nextBall()--
-  player.nbVie = player.nbVie - 1
-  if player.nbVie >= 1 then
-    playerManager.resetBall()
+function playerManager.nextBall()
+  if #Ball == 0 then
+    player.nbVie = player.nbVie - 1
+    if player.nbVie >= 1 then
+      playerManager.resetBall()
+    end
   end
 end
 --
 function playerManager.resetBall()
   pad.x = (screen.w * 0.5) - pad.ox
   --
-  ball.colle = true
-  ball.x = pad.x + pad.ox
-  ball.y = pad.y - ball.rayon
+  if #Ball == 0 then
+    BallManager.newBall(0, 0, 15, 400, true, 0, 0)
+  end
+  Ball[1].colle = true
+  Ball[1].x = pad.x + pad.ox
+  Ball[1].y = pad.y - Ball[1].rayon
+  --
+  padManager.setToMap(map.caseW ,map.caseH)
+  Ball[1]:setToMap(map.caseW ,map.caseH)
+
+
+  -- on reset les multiballs
+  for i = #Ball, 1, -1 do
+    local ball = Ball[i]
+    if i == 1 then
+      ball.power = 1
+    else
+      table.remove(Ball, i)
+    end
+  end
+
+  -- on enleve les bonus a l'ecran'
+  for i = #lst_Bonus, 1, -1 do
+    table.remove(lst_Bonus, i)
+  end
+  --
 end
 --
 
@@ -184,6 +211,8 @@ function mapManager.setLevel(pLevel)
   --
   local caseW = w / pCol
   local caseH = h / 15 -- hauteur fixe !
+  map.caseW = caseW
+  map.caseH = caseH
   --
   for l = 1, map.lig  do
     map[l] = {}
@@ -213,22 +242,13 @@ function mapManager.setLevel(pLevel)
     --
   end
   --
-  padManager.setToMap(caseW ,caseH)
-end
---
-
-function mapManager.update(dt)
-  for i = #lst_briques, 1, - 1 do
-    local case = lst_briques[i]
-    -- Here ?!
-  end
 end
 --
 
 function mapManager.draw()
   for i = #lst_briques, 1, - 1 do
     local case = lst_briques[i]
-    lg.setColor(color[case.vie])
+    lg.setColor(color[case.type])
     --
     lg.rectangle("fill",case.x,case.y,case.w,case.h,5)
     --
@@ -277,6 +297,9 @@ function mapManager.finish(dt)
     playlist.played = false
     map.clear = false
     mapManager.setLevel(map.level+1)
+    --
+    Sounds.level_up:stop()
+    Sounds.level_up:play()
   end
   --
 end
@@ -296,159 +319,458 @@ function mapManager.playSource()
 end
 --
 
-
-function ballManager.setToMap(pCaseW ,pCaseH)
-  ball.rayon = (pCaseH * 0.5) * 0.5
+function BonusManager.init() -- TODO: Bonus init a finir
+  local function new(pType,pString)
+    local new = {}
+    new.type = pType
+    new.font = Font
+    new.size = 16
+    new.string = pString
+    new.text = love.graphics.newText(new.font[new.size],new.string)
+    new.w = new.text:getWidth()
+    new.h = new.text:getHeight()
+    new.ox = new.text:getWidth() * 0.5
+    new.oy = new.text:getHeight() * 0.5
+    return new
+  end
+  --
+  Bonus[1] = new(1, "SPEED") -- speed
+  Bonus[2] = new(2, "POWER") -- Power Up
+  Bonus[3] = new(3, "Ball +1")
+  Bonus[4] = new(4, "Ball +3")
+  Bonus[5] = new(5, "VIE +1")
+  Bonus[6] = new(6, "")
+  Bonus[7] = new(7, "")
+  Bonus[8] = new(8, "")
+  Bonus[9] = new(9, "")
+  Bonus[10] = new(10, "")
 end
 --
 
-function ballManager.collideBriques()
-  --TEST Collision witch Breack's :
-  for i = #lst_briques, 1, - 1 do
-    local case = lst_briques[i]
-    local collide = {}
-    collide = globals.math.circleRect(ball.x, ball.y, ball.rayon,              case.x, case.y, case.w, case.h)
-    -- return true/false, et si c'est true ca retourne uen table ou je recupere ainsi la position x et y de la collision exacte =D'
+function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
+  local lucky = (pCase.type * 10) - 100
+  local rand = love.math.random(1, 100)
+  --
+  if rand >= lucky then
     --
-    if collide then -- si y a eu collision..
+    if debug then print("Bonus["..pCase.type.."] creer ! avec un jet de"..rand.." sur "..lucky..".") end
+    --
+    local new = {}
+    --
+    local bonus = Bonus[pCase.type]
+    for k, v in pairs(bonus) do
+      new[k] = v
+    end
+    --
+    new.x = pX
+    new.y = pY
+    --
+    new.timer = {}
+    new.timer.start = 0
+    new.timer.finish = 10
+    new.timer.speed = 60
+    new.timer.ready = false
+    --
+    new.speed = 100
+    new.vx = 0
+    new.vy = 1
+    new.rayon = pCase.rayon * 1.10
+    --
+    new.color = color[pCase.type]
+    new.colorBonus = color[love.math.random(1,10)]
+    --
+    function new:sizeText()
+      if self.w > (self.rayon * 2) - 4 then
+        if self.size > 1 then
+          self.size = self.size - 1
+          self.text:setFont(self.font[self.size])
+          self.text:set(self.string)
+          self.w = self.text:getWidth()
+          self.h = self.text:getHeight()
+          self.ox = self.w * 0.5
+          self.oy = self.h * 0.5
+        end
+      end
+    end
+    --
+    function new:addTimer(pType, pID)
+      local t = {}
+      t.type= pType
       --
-      collide.x = collide[2] -- mon return X
-      collide.y = collide[3] -- mon return Y
-      --
-      if collide.x == case.x then -- gauche
-        ball.x = case.x - ball.rayon
-        ball.vx = 0 - ball.vx
-      end
-      if collide.x == case.x + case.w then -- droite
-        ball.x = (case.x + case.w) + ball.rayon
-        ball.vx = 0 - ball.vx
-      end
-      if collide.y == case.y + case.h then -- bas
-        ball.y = (case.y + case.h) + ball.rayon
-        ball.vy = 0 - ball.vy
-      end
-      if collide.y == case.y then -- haut
-        ball.y = case.y - ball.rayon
-        ball.vy = 0 - ball.vy
+      if pID then
+        t.id = pID
       end
       --
+      t.start = 0
+      t.finish = 30
+      t.speed = 60
+      --
+      t.isActive = true
+      t.type = pType
+      --
+      table.insert(self.timer, t)
+    end
+    --
+    function new:collidePad()
+      -- Collision avec le PAD
+      if self.x + self.rayon >= pad.x and self.x - self.rayon <= pad.x + pad.w then -- Contact possible !! en largeur
+        if self.y + self.rayon >= pad.y and self.y <= pad.y then -- rebond ! (Hauteur)
+          return true
+        else
+          return false
+        end
+      end
+    end
+    --
+    function new:deleteBonus(pType,pID)
+      if pType == "PowerUp" then
+        for i = #Ball, 1, -1 do
+          local b = Ball[i]
+          --
+          if b[pID] then
+            b.power = b.power - 1
+            table.remove(b, pID)
+          end
+        end
+      end
+    end
+    --
+    function new:BonusSpeedBall()
+      for i = #Ball, 1, -1 do
+        local b = Ball[i]
+        b.speed = b.speed + 100
+      end
+    end
+    --
+    function new:BonusPowerUp()
+      local id = love.timer.getTime()
+      self:addTimer("PowerUp", id)
+      --
+      for i = #Ball, 1, -1 do
+        local b = Ball[i]
+        b.power = b.power + 1
+        table.insert(b, id)
+      end
+    end
+    --
+    function new:BonusLifeUp()
+      sonLifeUp:stop()
+      sonLifeUp:play()
+      player.nbVie = player.nbVie + 1
+    end
+    --
+    function new:BonusNewBall(pNumber)
+      if not pNumber then pNumber = 1 end
+      for i = 1, pNumber do
+        local MinMax = pad.ox * 0.5
+        local vx = love.math.random(-MinMax, MinMax)
+        local ball = Ball[1]
+        local vy = ball.vy
+        if ball.vy > 0 then
+          vy = 0 - vy
+        end
+        BallManager.newBall(ball.x, ball.y, ball.rayon, ball.speed, false, 0 - ball.vx , vy)
+      end
+    end
+    --
+    function new:timerUpdate(dt)
+      for i = #self.timer, 1 , -1 do
+        local t = self.timer[i]
+        t.start = t.start + t.speed * dt
+        if t.start >= t.finish then
+          t.isActive = false
+        end
+        if not t.isActive then
+          self:deleteBonus(t.id)
+        end
+        table.remove(self.timer, i)
+      end
+      --
+      if not self.timer.ready then
+        self.timer.start = self.timer.start + self.timer.speed * dt
+        if self.timer.start >= self.timer.finish then
+          self.timer.ready = true
+          self.timer.start = 0
+        end
+      end
+    end
+    --
+    function new:update(dt)
+      self:sizeText()
+      --
+      self:timerUpdate(dt)
+      --
+      self.y = self.y + (self.speed * self.type * dt)
+      if self.y + (self.rayon * 0.5) > pad.y then
+        for i = #lst_Bonus, 1, -1 do
+          local search = lst_Bonus[i]
+          if search == self then
+            sonBonusLoose:stop()
+            sonBonusLoose:play()
+            table.remove(lst_Bonus, i)
+            return false
+          end
+        end
+      end
+      --
+      if self:collidePad() then
+        Sounds.power_up:stop()
+        Sounds.power_up:play()
+        self:addBonus(self.type)
+      end
+    end
+    --
+    function new:draw()
+      --
+      lg.setColor(0,0,0,1)
+      lg.circle("fill",self.x,self.y,self.rayon)
+      lg.setColor(self.color)      
+      lg.circle("line",self.x,self.y,self.rayon)
 
-      -- decrementation de la vie
-      case.vie = case.vie - 1
-      if case.vie == 0 then
-        table.remove(lst_briques, i)
-        sonExplo:play()
+      -- Bonus
+      if self.timer.ready then
+        self.colorBonus = color[love.math.random(1,10)]
+        self.timer.ready = false
+      end
+      --
+      for i = 1 , 3 do
+        lg.setColor(self.colorBonus)
+        lg.circle("line",self.x,self.y,self.rayon+i)
+      end
+      lg.draw(self.text, self.x, self.y ,0,1,1, self.w*0.5, self.h*0.5)
+      --
+      lg.setColor(1,1,1,1) -- reset Color
+      --
+    end
+    --
+    function new:addBonus(pType)
+      if  pType == 1 then
+        self:BonusSpeedBall()
+      elseif pType == 2 then
+        self:BonusPowerUp()
+      elseif pType == 3 then
+        self:BonusNewBall(1)
+      elseif pType == 4 then
+        self:BonusNewBall(3)
+      elseif pType == 5 then
+        self:BonusLifeUp()
+      elseif pType == 6 then
+      elseif pType == 7 then
+      elseif pType == 8 then
+      elseif pType == 9 then
+      elseif pType == 10 then  
+      end
+      --
+      for i = #lst_Bonus, 1, -1 do
+        local search = lst_Bonus[i]
+        if search == self then
+          table.remove(lst_Bonus, i)
+          return true
+        end
+      end
+    end -- end addBonus()
+    --
+    --##############################################
+    table.insert(lst_Bonus, new) -- Ajoute le Bonus
+    --##############################################
+  end -- end lucky
+end
+--
+
+function BonusManager.update(dt)
+  for i = #lst_Bonus, 1, -1 do
+    local bonus = lst_Bonus[i]
+    bonus:update(dt)
+  end
+end
+--
+
+function BonusManager.draw()
+  for i = #lst_Bonus, 1, -1 do
+    local bonus = lst_Bonus[i]
+    bonus:draw()
+  end
+end
+--
+
+function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
+  local b = {}
+  b.x = pX
+  b.y = pY
+  b.rayon = pRayon
+--
+  b.colle = pColle
+--
+  b.speed = pSpeed
+  b.vx = pVx
+  b.vy = pVy
+  --
+  b.power = 1
+  --
+  function b:setToMap(pCaseW ,pCaseH)
+    self.rayon = (pCaseH * 0.5) * 0.5
+  end
+--
+  function b:collideBriques()
+    --TEST Collision Ball self witch Brick's :
+    for i = #lst_briques, 1, - 1 do
+      local case = lst_briques[i]
+      local collide = globals.math.circleRect(self.x, self.y, self.rayon,              case.x, case.y, case.w, case.h)
+      --
+      if collide.collision then -- si y a eu collision..
+        --
+        if collide.x == case.x then -- gauche
+          self.x = case.x - self.rayon
+          self.vx = 0 - self.vx
+        end
+        if collide.x == case.x + case.w then -- droite
+          self.x = (case.x + case.w) + self.rayon
+          self.vx = 0 - self.vx
+        end
+        if collide.y == case.y + case.h then -- bas
+          self.y = (case.y + case.h) + self.rayon
+          self.vy = 0 - self.vy
+        end
+        if collide.y == case.y then -- haut
+          self.y = case.y - self.rayon
+          self.vy = 0 - self.vy
+        end
+        --
+
+        -- decrementation de la vie
+        case.vie = case.vie - self.power
+        if case.vie <= 0 then
+          BonusManager.newBonus(case.ox,case.oy,case)
+          table.remove(lst_briques, i)
+          sonExplo:play()
+        else
+          sonHit:play()
+        end
+        --
+        return true
+        --
+      end
+      --
+    end
+    return false
+  end
+--
+
+  function b:collideWaals()
+    -- Collide Walls :
+    local hit = false
+    --
+    if self.x + self.rayon >= screen.w then-- >= droite (w)
+      self.vx = 0 - self.vx
+      self.x = screen.w - self.rayon
+      hit = true
+    elseif self.x - self.rayon <= 0 then -- <= gauche (0)
+      self.vx = 0 - self.vx
+      self.x = 0 + self.rayon
+      hit = true
+    end
+    --
+    if self.y - self.rayon <= map.y then -- <= haut (0)
+      self.y = map.y + self.rayon
+      self.vy = 0 - self.vy
+      hit = true
+    end
+
+    if hit then return true end
+    return false
+  end
+--
+
+  function b:collidePad()
+    -- REBOND PAD
+    if self.x + self.rayon >= pad.x and self.x - self.rayon <= pad.x + pad.w then -- Contact possible !! en largeur
+      if self.y + self.rayon >= pad.y and self.y <= pad.y then -- rebond ! (Hauteur)
+        self.y  = pad.y - ( 1 + self.rayon )-- MDR Je suis con xD ce soir oO
+        --
+        -- old school : self.vy = 0 - self.vy... but witch angle this is it :
+        local rad = globals.math.angle(pad.pointX, pad.pointY,       self.x, self.y)
+        self.vx = math.cos(rad)
+        self.vy = math.sin(rad)
+        --      oO        --
+        return true
+      end
+    else
+    end
+    return false
+  end
+--
+
+  function  b:update(dt)
+    if self.colle then 
+      self.x = pad.x + pad.ox  
+    elseif not self.colle then
+
+      -- Move : TODO: CCD here !
+      self.x = self.x + ( (self.vx * self.speed) * dt )
+      self.y = self.y + ( (self.vy * self.speed) * dt )
+
+
+      --TEST Collision witch Breack's :
+      self:collideBriques()
+
+      if self:collideWaals() then sonHitWaals:stop() ; sonHitWaals:play() end
+
+      if self:collidePad() then sonHitPad:stop() ; sonHitPad:play() end
+
+
+      -- Ball Loose :
+      if self.y - self.rayon * 3 >= screen.h then-- >= bas (w)  == PERDU !
+        for i = #Ball, 1, -1 do
+          if Ball[i] == self then
+            table.remove(Ball, i)
+            playerManager.nextBall()
+            return false
+          end
+        end
+      end
+    end
+  end
+--
+
+  function b:draw()
+    lg.setColor(1,1,1,1)
+    --
+    lg.circle("fill", self.x, self.y, self.rayon)
+    --
+    --
+    for i = 1, self.power do
+      if i == 1 then
+        lg.setColor(1,0,0,0.25)
       else
-        sonHit:play()
+        lg.setColor(color[love.math.random(1,10)])
       end
-      --
-      return true
-      --
+      lg.circle("fill", self.x, self.y, 1 + i)
     end
+    --
+    lg.setColor(1,1,1,1)
   end
-  --
-  return false
---------- END ---------
+--
+
+  table.insert(Ball, b)
 end
 --
 
-function ballManager.collideWaals()
-  -- Collide Walls :
-  local hit = false
-  --
-  if ball.x + ball.rayon >= screen.w then-- >= droite (w)
-    ball.vx = 0 - ball.vx
-    ball.x = screen.w - ball.rayon
-    hit = true
-  elseif ball.x - ball.rayon <= 0 then -- <= gauche (0)
-    ball.vx = 0 - ball.vx
-    ball.x = 0 + ball.rayon
-    hit = true
-  end
-  --
-  if ball.y - ball.rayon <= map.y then -- <= haut (0)
-    ball.y = map.y + ball.rayon
-    ball.vy = 0 - ball.vy
-    hit = true
-  end
-
-  if hit then return true end
-  return false
-  --------- END ---------
-end
---
-
-function ballManager.collidePad()
-  -- REBOND PAD
-  if ball.x + ball.rayon >= pad.x and ball.x - ball.rayon <= pad.x + pad.w then -- Contact possible !! en largeur
-    if ball.y + ball.rayon >= pad.y and ball.y <= pad.y then -- rebond ! (Hauteur)
-      ball.y  = pad.y - ( 1 + ball.rayon )-- MDR Je suis con xD ce soir oO
-      --
-      -- old school : ball.vy = 0 - ball.vy... but witch angle this is it :
-      local rad = globals.math.angle(pad.pointX, pad.pointY,       ball.x, ball.y)
-      ball.vx = math.cos(rad)
-      ball.vy = math.sin(rad)
-      --      oO        --
-      return true
-    end
-  else
-  end
-  return false
-  --------- END ---------
-end
---
-
-function  ballManager.update(dt)
-  if ball.colle then 
-    ball.x = pad.x + pad.ox  
-  elseif not ball.colle then
-
-    -- Move :
-    ball.x = ball.x + ( (ball.vx * ball.speed) * dt )
-    ball.y = ball.y + ( (ball.vy * ball.speed) * dt )
-    --------- END ---------
-
-
-    --TEST Collision witch Breack's :
-    ballManager.collideBriques()
-
-    if ballManager.collideWaals() then sonHitWaals:stop() ; sonHitWaals:play() end
-
-    if ballManager.collidePad() then sonHitPad:stop() ; sonHitPad:play() end
-
-
-    -- Ball Loose :
-    if ball.y - ball.rayon * 3 >= screen.h then-- >= bas (w)  == PERDU !
-      playerManager.nextBall()
-    end
-    --------- END ---------
+function BallManager.update(dt)
+  for i = #Ball, 1, -1 do
+    local ball = Ball[i]
+    ball:update(dt)
   end
 end
 --
 
-function ballManager.draw()
-  lg.setColor(1,1,1,1)
-  --
-  lg.circle("fill", ball.x, ball.y, ball.rayon)
-  --
-  lg.setColor(1,0,0,0.25)
-  --
-  lg.circle("fill", ball.x, ball.y, 2)
-  --
-  lg.setColor(1,1,1,1)
-  if debug then
-    if ball.colorY or ball.colorX then
-      if ball.colorY then
-        lg.setColor(1,0,0,1) -- prio 1
-      elseif  ball.colorX then
-        lg.setColor(0,0,1,0.5) -- prio  2
-      end
-      lg.circle("fill", ball.x, ball.y, ball.rayon)
-    end
+function BallManager.draw()
+  for i = #Ball, 1, -1 do
+    local ball = Ball[i]
+    ball:draw()
   end
-  lg.setColor(1,1,1,1)
 end
 --
+
 
 function padManager.setToMap(pCaseW ,pCaseH)
   pad.w = pCaseW * 1.5
@@ -457,8 +779,6 @@ function padManager.setToMap(pCaseW ,pCaseH)
   --
   pad.ox = pad.w * 0.5
   pad.oy = pad.h * 0.5
-  --
-  ballManager.setToMap(pCaseW ,pCaseH)
 end
 --
 
@@ -486,6 +806,9 @@ function padManager.draw()
   -- pad Contour
   lg.setColor(0,0,0,0.75)  
   lg.rectangle("line", pad.x, pad.y, pad.w, pad.h, bordsArrondi)
+
+  lg.setColor(1,0,0,0.25)
+  lg.circle("fill",pad.x + pad.ox,pad.y + pad.oy, 3)
 
   -- reset Color
   lg.setColor(1,1,1,1)
@@ -550,9 +873,10 @@ function SceneCasseBrique.update(dt)
     if not music_loop:isPlaying() then
       music_loop:play()
     end
-    --
+    --    
     padManager.update(dt)
-    ballManager.update(dt)
+    BallManager.update(dt)
+    BonusManager.update(dt)
 
     mapManager.finish(dt)
   end
@@ -563,8 +887,9 @@ function SceneCasseBrique.draw()
   BackGround:draw()
   --
   padManager.draw()
-  ballManager.draw()
+  BallManager.draw()
   mapManager.draw()
+  BonusManager.draw()
   --
   BM:draw()
   --
@@ -589,17 +914,22 @@ end
 
 function SceneCasseBrique.mousepressed(x,y,button)
   if not BM.show then
-    if ball.colle then
-      if button == 1 then
-        sonLaunch:play()
-        --
-        ball.colle = false
-        --
-        local vx = love.math.random(-pad.ox, pad.ox) -- aleatoire varie a droite droite ou a gauche...
-        local rad = globals.math.angle(pad.pointX + vx, pad.pointY,       ball.x, ball.y) -- MDR
-        ball.vx = math.cos(rad)
-        ball.vy = math.sin(rad)
-        -- oO
+    for i=#Ball, 1, -1 do
+      local ball = Ball[i]
+      if ball.colle then
+        if button == 1 then
+          sonLaunch:play()
+          --
+          ball.colle = false
+          --
+          local MinMax = pad.ox * 0.5
+          local vx = love.math.random(-MinMax, MinMax) -- aleatoire varie a droite droite ou a gauche...
+          local rad = globals.math.angle(pad.pointX + vx, pad.pointY,       ball.x, ball.y) -- MDR
+          ball.vx = math.cos(rad)
+          ball.vy = math.sin(rad)
+          -- oO
+          return true
+        end
       end
     end
   end
