@@ -553,10 +553,13 @@ function GridManager.draw()
           if case.isMove then
             love.graphics.setColor(1,1,1,1)
           else
---            love.graphics.setColor(1,0,0,1)
             love.graphics.setColor(1,1,1,0.25)
           end
           love.graphics.draw(Img.MahJong.img, Img.MahJong.quad[case.mahjong], case.x, case.y, 0, case.sx, case.sy)
+          if case.etage > 1 and case.isMove then
+            love.graphics.setColor(0,0,1,0.075)
+            love.graphics.rectangle("fill", case.x+2, case.y+2, case.w-4, case.h-4)
+          end
           love.graphics.setColor(1,1,1,1) -- reset color
         end
         --
