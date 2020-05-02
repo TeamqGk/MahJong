@@ -4,6 +4,7 @@ local lg = love.graphics
 --
 
 local CCD = require("scenes/CasseBrique/CCD")
+local BestScore = require("scenes/CasseBrique/BestScore")
 
 local padManager = {} -- the pad
 local pad = {} -- the pad
@@ -76,6 +77,8 @@ local music_loop = AM:addMusic("scenes/CasseBrique/sons/Casse_Brique_By_Hydrogen
 
 function playerManager.Demarre()
 
+  SaveCasseBriqueManager.load()  
+
   BonusManager.init()
 
   -- Player
@@ -112,11 +115,14 @@ function playerManager.Demarre()
 end
 --
 function playerManager.nextBall()
-  if #Ball == 0 then
-    player.nbVie = player.nbVie - 1
-    if player.nbVie >= 1 then
-      playerManager.resetBall()
-    end
+  player.nbVie = player.nbVie - 1
+  if player.nbVie >= 1 then
+    playerManager.resetBall()
+  else
+    -- TODO: Screen GAME OVER
+    BestScore.showMenu()
+    -- TODO: Save Casse Brique
+    playerManager.Demarre()
   end
 end
 --
@@ -165,7 +171,7 @@ function Boutton.init()
   Boutton[1]:setAction(function() SceneManager:setScene("MenuIntro") ; love.mouse.setVisible(true) ; music_loop:stop() end)
   --
   Boutton[2] = BM.newBox ()
-  Boutton[2]:addText(Font, 22, "Pause/Quit")
+  Boutton[2]:addText(Font, 22, "Press Escape")
   Boutton[2]:setPos(10, 10)
   Boutton[2]:setVisible(true)
   Boutton[2]:setEffect(false)
@@ -177,6 +183,13 @@ function Boutton.init()
   Boutton[3]:setVisible(false)
   Boutton[3]:setEffect(false)
   Boutton[3]:setAction(function() BM.switchShow() end)
+  --
+  Boutton[4] = BM.newBox ()
+  Boutton[4]:addText(Font, 22, "Score : ")
+  Boutton[4]:setPos(Boutton[3].x + Boutton[3].w + 10, 10)
+  Boutton[4]:setVisible(true)
+  Boutton[4]:setEffect(false)
+  Boutton[4]:setAction(function() BestScore.showMenu() end)
 end
 --
 
@@ -339,7 +352,7 @@ function BonusManager.init() -- TODO: Bonus init a finir
   Bonus[3] = new(3, "Ball +1")
   Bonus[4] = new(4, "Ball +3")
   Bonus[5] = new(5, "VIE +1")
-  Bonus[6] = new(6, "")
+  Bonus[6] = new(6, "Pad XL")
   Bonus[7] = new(7, "")
   Bonus[8] = new(8, "")
   Bonus[9] = new(9, "")
@@ -427,9 +440,11 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
         for i = #Ball, 1, -1 do
           local b = Ball[i]
           --
-          if b[pID] then
-            b.power = b.power - 1
-            table.remove(b, pID)
+          for i = #b, 1, -1 do
+            if b[i] == pID then
+              b.power = b.power - 1
+              table.remove(b, i)
+            end
           end
         end
       end
@@ -723,7 +738,9 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
         for i = #Ball, 1, -1 do
           if Ball[i] == self then
             table.remove(Ball, i)
-            playerManager.nextBall()
+            if #Ball == 0 then
+              playerManager.nextBall()
+            end
             return false
           end
         end
@@ -818,22 +835,13 @@ end
 
 
 local function mouseIsVisible()
-  if mouse.y <= map.y then
-    mouse.onCasseBrique = false
-  else
-    mouse.onCasseBrique = true
-  end
-  --
   if BM.show then -- Show Menu Intro
     love.mouse.setGrabbed(false)
     love.mouse.setVisible(true)
   else -- In Game progress !
-    if mouse.onCasseBrique then
-      love.mouse.setVisible(false)
-      love.mouse.setGrabbed(true)
-    else
-      love.mouse.setVisible(true)
-    end
+    love.mouse.setVisible(false)
+    love.mouse.setGrabbed(true)
+    love.mouse.setY(map.y)
   end
 end
 --
@@ -869,6 +877,8 @@ function SceneCasseBrique.update(dt)
   BM:update(dt)
   BM.showUpdate()
   --
+  BestScore:update(dt)
+  --
   if not BM.show then
     if not music_loop:isPlaying() then
       music_loop:play()
@@ -877,29 +887,34 @@ function SceneCasseBrique.update(dt)
     padManager.update(dt)
     BallManager.update(dt)
     BonusManager.update(dt)
-
     mapManager.finish(dt)
+
   end
 end
 --
 
 function SceneCasseBrique.draw()
+  --
   BackGround:draw()
+  MiniWaal:draw()
   --
   padManager.draw()
-  BallManager.draw()
   mapManager.draw()
   BonusManager.draw()
+  BallManager.draw()
+  --
+  BestScore:draw()
   --
   BM:draw()
   --
-  MiniWaal:draw()
 end
 --
 
 function SceneCasseBrique.keypressed(key)
   if key == "escape" then
+    love.mouse.setX(pad.x)
     BM.show = not BM.show
+    BestScore.show = false
   end
 
   if debug then
@@ -907,6 +922,8 @@ function SceneCasseBrique.keypressed(key)
       for i = #lst_briques , 1 , - 1 do
         table.remove(lst_briques, i)
       end
+    elseif key == "backspace" then
+      playerManager.nextBall()
     end
   end
 end
