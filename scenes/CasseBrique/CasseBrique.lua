@@ -122,6 +122,8 @@ function playerManager.nextBall()
     -- TODO: Screen GAME OVER
     BestScore.showMenu()
     -- TODO: Save Casse Brique
+    
+    SaveCasseBriqueManager.save()
     playerManager.Demarre()
   end
 end
@@ -310,6 +312,7 @@ function mapManager.finish(dt)
     playlist.played = false
     map.clear = false
     mapManager.setLevel(map.level+1)
+    SaveCasseBrique.currentLevel = map.level+1
     --
     Sounds.level_up:stop()
     Sounds.level_up:play()
