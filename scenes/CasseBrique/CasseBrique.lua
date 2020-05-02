@@ -164,6 +164,13 @@ function playerManager.resetBall()
   --
 end
 --
+function playerManager.draw()
+  for i = 1, player.nbVie do
+    local x = Vie.w * (i - 1)
+    local y = screen.h - Vie.h
+    lg.draw(Vie.img, x, y, 0, 1, 1)
+  end
+end
 
 function Boutton.init()
   BM:setDimensions(screen.w * 0.2, screen.h * 0.05)
@@ -910,12 +917,7 @@ function SceneCasseBrique.draw()
   mapManager.draw()
   BonusManager.draw()
   BallManager.draw()
-  --
-  for i = 1, player.nbVie do
-    x = Vie.w * (i - 1)
-    y = screen.h - Vie.h
-    lg.draw(Vie.img, x, y, 0, 1, 1)
-  end
+  playerManager.draw()
   --
   BestScore:draw()
   --
