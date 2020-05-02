@@ -1,6 +1,6 @@
 local map = {}
 
-map = { etages = 4, lignes = 9, colonnes = 11, image = "level_11.jpg", load = false,-- pics, sound, soundClear
+map = { image = "level_11.jpg", load = false,-- pics, sound, soundClear
 
 
   {-- etage 1

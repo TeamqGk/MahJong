@@ -53,7 +53,7 @@ function Boutton.init()
   Boutton[3]:addText(Font, 22, "Oui")
   Boutton[3]:setPos(screen.w * 0.5 - (Boutton[3].w+10), screen.oy)
   Boutton[3]:setVisible(false)
-  Boutton[3]:setAction(function() SceneMahJong.resetWait = false ; SceneMahJong.pause = false ; Boutton[3]:setVisible(false) ; Boutton[4]:setVisible(false) ; GridManager.resetLevel(Grid.level) ; Loosetimer.init() end)
+  Boutton[3]:setAction(function() SceneMahJong.resetWait = false ; SceneMahJong.pause = false ; Boutton[3]:setVisible(false) ; Boutton[4]:setVisible(false) ; GridManager.resetLevel(Grid.level) end)
   --
   Boutton[4] = BM.newBox ()
   Boutton[4]:addText(Font, 22, "Non")
@@ -348,7 +348,6 @@ end
 --
 
 function SceneMahJong.timer(dt)
-  timer.update(dt)
   Boutton[1]:setText(timer.text )
   if Grid.Move == 0 then
     if not Loosetimer.load then Loosetimer.init() end
@@ -408,8 +407,9 @@ function SceneMahJong.update(dt)
 --  end
     AM:update(dt)
     SceneMahJong.mouseUpdate(dt)
-    SceneMahJong.timer(dt)
+    timer.update(dt)
   end
+  SceneMahJong.timer(dt)
   --
   Boutton[5]:setText("Level : "..SaveMahJong.currentLevel)
   Boutton[7]:setText("Move : "..Grid.Move)
@@ -452,10 +452,18 @@ function SceneMahJong:keypressed(key, scancode)
       end
       --
       GridManager.setGrid(level)
+
     end
-    if key == "delete" then -- suppr
-      GridManager.resetLevel(Grid.level)
+  end
+  if key == "delete" then -- suppr
+    GridManager.resetLevel(Grid.level)
+  end
+  if key == "f1" then
+    for i = 1, #Levels do
+    SaveMahJong.currentLevel = i
+    SceneMahJong.saveVictory()
     end
+    GridManager.setGrid(1)
   end
   --
   if key == "escape" then
