@@ -26,11 +26,9 @@ function GridManager.setGrid(pLevel, pReset)
 --  if debug then print("Grid.load : "..tostring(Grid.load)) end
 
 --
-
-  --[[ return :
-  Grid.etages, Grid.lignes, Grid.colonnes
-  & all etages Tables
-  ]]--
+  Grid.etages = #Grid
+  Grid.lignes = #Grid[1]
+  Grid.colonnes = #Grid[1][1]
 
   -- Load image BackGround ( info is on map level_x.lua)
   Img.BG = ImgManager.new("scenes/MahJong/levels/img/"..Grid.image)-- pFile
@@ -49,6 +47,17 @@ function GridManager.setGrid(pLevel, pReset)
       Img.pics:scaleToScreen()
     end
     Img.pics:setPos(screen.w - Img.pics.w, screen.h - Img.pics.h)
+  end
+
+  if Grid.regleImg then
+    Img.regleImg = ImgManager.new("scenes/MahJong/pics/"..Grid.regleImg)-- pFile
+    local scaleScreenMax = 0.5
+    if Img.regleImg.h > screen.h * scaleScreenMax then
+      local scale = (screen.h * scaleScreenMax) / Img.regleImg.h
+      local w, h = Img.regleImg.w * scale, Img.regleImg.h * scale
+      Img.regleImg:setSizes(w,h)
+    end
+    Img.regleImg:setPos(screen.w - Img.regleImg.w, screen.h - Img.regleImg.h)
   end
   --
 
@@ -164,7 +173,7 @@ function GridManager.setGrid(pLevel, pReset)
     y = StartY
     --
   end
-  print ("\n".."Nouvelle Grid of "..#Grid.." etages, "..#Grid[1].." lines and "..#Grid[1][1].." cols !".."\n")
+  print ("\n".."Nouvelle Grid of "..#Grid.." etages, "..#Grid[1].." lines and "..#Grid[1][1].." cols, avec "..Grid.mahjongTotal.." mahjongs !".."\n")
 
   -- randomise mahjong in grid
   if not Grid.load or pReset  then
@@ -302,10 +311,13 @@ function GridManager.testMohJang(pRand, pLig, pCol, pEtag)
   local loop = 0
   while loopTest do
     loop = loop + 1
+    --
     local superposed = false
     local glue = false
+    --
     l = love.math.random(1, Grid.lignes)
     c = love.math.random(1, Grid.colonnes)
+    --
     if pLig and pCol and pEtag then
       if l == pLig and c == pCol then
         superposed = true -- supersposé on recommence !
@@ -385,11 +397,29 @@ function GridManager.testGlueMohJang(pEtage, pLig, pCol)
     end
   end
   --
+
+  local function lastPion()
+    local last = 0
+    for c = 1 , Grid.colonnes do
+      local case = Grid[pEtage][pLig][c]
+      if case.isActive then
+        last = last + 1
+      end    
+    end
+    if last == 1 then
+      return true
+    end
+  end
+
   if left() or right() then
     return true 
   else
-    return false
+    if lastPion() then 
+      return true
+    end
   end
+
+  return false
 end
 --
 
@@ -427,14 +457,28 @@ function GridManager.testIsMove(pEtage, pLig)
       return false
     end
   end
-  --
+  -- ########################################### parcours des listes du tableaux :
+  local function scanIsActiveStageUp(pE, pL, pC)
+    if Grid.etages > 1 then
+      if pE < Grid.etages then
+        if Grid[pE+1][pL][pC].isActive then
+          return true
+        end
+      end
+    end
+    return false
+  end
+--
+
   local function scanColLeftToRight()
     for c = 1 , Grid.colonnes do
-      if right(pEtage, pLig, c) then
-        local case = Grid[pEtage][pLig][c]
-        if case.isActive then
-          case.isMove = true
-          return case
+      if not scanIsActiveStageUp(pEtage, pLig, c) then
+        if right(pEtage, pLig, c) then
+          local case = Grid[pEtage][pLig][c]
+          if case.isActive then
+            case.isMove = true
+            return case
+          end
         end
       end
     end
@@ -443,11 +487,13 @@ function GridManager.testIsMove(pEtage, pLig)
   --
   local function scanColRightToLeft()
     for c = Grid.colonnes, 1, -1 do
-      if left(pEtage, pLig, c) then
-        local case = Grid[pEtage][pLig][c]
-        if case.isActive then
-          case.isMove = true
-          return case
+      if not scanIsActiveStageUp(pEtage, pLig, c) then
+        if left(pEtage, pLig, c) then
+          local case = Grid[pEtage][pLig][c]
+          if case.isActive then
+            case.isMove = true
+            return case
+          end
         end
       end
     end
@@ -455,10 +501,12 @@ function GridManager.testIsMove(pEtage, pLig)
   end
   local function scanLastOnCol()
     for c = Grid.colonnes, 1, -1 do
-      local case = Grid[pEtage][pLig][c]
-      if case.isActive then
-        case.isMove = true
-        return case, case
+      if not scanIsActiveStageUp(pEtage, pLig, c) then
+        local case = Grid[pEtage][pLig][c]
+        if case.isActive then
+          case.isMove = true
+          return case, case
+        end
       end
     end
     return false
@@ -536,6 +584,10 @@ function GridManager.draw()
     love.graphics.setColor(1,1,1,1) -- reset color
     love.graphics.draw(Img.pics.img, Img.pics.x, Img.pics.y, 0, Img.pics.sx, Img.pics.sy)
   end
+  if Grid.regleImg then
+    love.graphics.setColor(1,1,1,1) -- reset color
+    love.graphics.draw(Img.regleImg.img, Img.regleImg.x, Img.regleImg.y, 0, Img.regleImg.sx, Img.regleImg.sy)
+  end
   love.graphics.setColor(1,1,1,1) -- reset color
   --
   local indexTotal = Grid.etages * (Grid.lignes * Grid.colonnes)
@@ -553,10 +605,13 @@ function GridManager.draw()
           if case.isMove then
             love.graphics.setColor(1,1,1,1)
           else
---            love.graphics.setColor(1,0,0,1)
             love.graphics.setColor(1,1,1,0.25)
           end
           love.graphics.draw(Img.MahJong.img, Img.MahJong.quad[case.mahjong], case.x, case.y, 0, case.sx, case.sy)
+          if case.etage > 1 and case.isMove then
+            love.graphics.setColor(0,0,1,0.075)
+            love.graphics.rectangle("fill", case.x+2, case.y+2, case.w-4, case.h-4)
+          end
           love.graphics.setColor(1,1,1,1) -- reset color
         end
         --
@@ -584,6 +639,15 @@ function GridManager.draw()
     love.graphics.setColor(1,0,0,1) -- reset color
     love.graphics.rectangle("line", Grid.x, Grid.y, Grid.w, Grid.h)
     love.graphics.setColor(1,1,1,1) -- reset color
+    --
+    for i = 1, #tableMahjongIsMove do
+      local case = tableMahjongIsMove[i]
+      love.graphics.setColor(1,0,0,0.25)
+      love.graphics.rectangle("fill", case.x+2, case.y+2, case.w-4, case.h-4)
+      love.graphics.setColor(1,1,1,1)
+    end
+    --
+
   end
 
 --reset color

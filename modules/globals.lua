@@ -9,12 +9,13 @@ for i=1, 100 do
   Font_Title[i] = love.graphics.newFont(Font_Title.font,i)
 end
 --
+Font = Font_Title
 
 -- Police par defaut
-Font = Font_Title
---for i=1, 100 do
---  Font[i] = love.graphics.newFont(i)
---end
+FontVerdana = {}
+for i=1, 100 do
+  FontVerdana[i] = love.graphics.newFont(i)
+end
 --
 
 

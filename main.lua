@@ -33,6 +33,7 @@ ImgManager = require("modules/ImgManager") -- lua file
 LevelsManager = require("scenes/MahJong/modules/LevelsManager") -- lua file
 GridManager = require("scenes/MahJong/modules/GridManager") -- lua file
 SaveMahJongManager = require("scenes/MahJong/modules/SaveMahJongManager") -- lua file
+SaveCasseBriqueManager = require("scenes/CasseBrique/SaveCasseBriqueManager") -- lua file
 
 
 

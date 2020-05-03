@@ -1,6 +1,6 @@
 local map = {}
 
-map = { etages = 3, lignes = 12, colonnes = 11,  image = "level_19.jpg", load = false,-- pics, sound, soundClear
+map = { image = "level_19.jpg", load = false,-- pics, sound, soundClear
 
 
 
@@ -9,16 +9,15 @@ map = { etages = 3, lignes = 12, colonnes = 11,  image = "level_19.jpg", load = 
 
 {-- etage 1
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
-{    1, "", "", "", "", "", "", "", "", "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1,  1,  1,  1,  1,  1,  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1, "", "", "", "", "",  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1, "",  1,  1,  1, "",  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1, "",  1, "",  1, "",  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1, "",  1, "",  1, "",  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1, "",  1,  1,  1, "",  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1, "", "", "", "", "",  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1,  1,  1,  1,  1,  1,  1, "",  1 }, -- Ligne 9 - 12 colonnes
-{    1, "", "", "", "", "", "", "", "", "",  1 },-- Ligne 9 - 12 colonnes
+{    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
+{   "", "",  1,  1,  1,  1,  1,  1,  1, "", "" },-- Ligne 3 - 12 colonnes
+{   "", "",  1,  1,  1,  1,  1,  1,  1, "", "" },-- Ligne 3 - 12 colonnes
+{   "", "",  "", 1,  1,  1,  1,  1, "", "", "" },-- Ligne 3 - 12 colonnes
+{   "", "", "",  1,  1,  1,  1,  1, "", "", "" },-- Ligne 3 - 12 colonnes
+{   "", "", "", "", 1,  1,  1, "", "",  "", "" },-- Ligne 3 - 12 colonnes
+{   "", "", "", "", "", "", "", "", "", "", "" },-- Ligne 3 - 12 colonnes
+{    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 }, -- Ligne 9 - 12 colonnes
+{    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 9 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 }-- Ligne 3 - 12 colonnes
 }
 
@@ -27,16 +26,15 @@ map = { etages = 3, lignes = 12, colonnes = 11,  image = "level_19.jpg", load = 
 
 {-- etage 2
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
-{    1, "", "", "", "", "", "", "", "", "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1,  1,  1,  1,  1,  1,  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1, "", "", "", "", "",  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1, "",  1,  1,  1, "",  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1, "",  1, "",  1, "",  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1, "",  1, "",  1, "",  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1, "",  1,  1,  1, "",  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1, "", "", "", "", "",  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1,  1,  1,  1,  1,  1,  1, "",  1 }, -- Ligne 9 - 12 colonnes
-{    1, "", "", "", "", "", "", "", "", "",  1 },-- Ligne 9 - 12 colonnes
+{    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
+{   "", "",  1,  1,  1,  1,  1,  1,  1, "", "" },-- Ligne 3 - 12 colonnes
+{   "", "",  1,  1,  1,  1,  1,  1,  1, "", "" },-- Ligne 3 - 12 colonnes
+{   "", "",  "", 1,  1,  1,  1,  1, "", "", "" },-- Ligne 3 - 12 colonnes
+{   "", "", "",  1,  1,  1,  1,  1, "", "", "" },-- Ligne 3 - 12 colonnes
+{   "", "", "", "", 1,  1,  1, "", "",  "", "" },-- Ligne 3 - 12 colonnes
+{   "", "", "", "", "", "", "", "", "", "", "" },-- Ligne 3 - 12 colonnes
+{    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 }, -- Ligne 9 - 12 colonnes
+{    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 9 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 }-- Ligne 3 - 12 colonnes
 }
 
@@ -45,16 +43,15 @@ map = { etages = 3, lignes = 12, colonnes = 11,  image = "level_19.jpg", load = 
 
 {-- etage 3
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
-{    1, "", "", "", "", "", "", "", "", "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1,  1,  1,  1,  1,  1,  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1, "", "", "", "", "",  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1, "",  1,  1,  1, "",  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1, "",  1, "",  1, "",  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1, "",  1, "",  1, "",  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1, "",  1,  1,  1, "",  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1, "", "", "", "", "",  1, "",  1 },-- Ligne 3 - 12 colonnes
-{    1, "",  1,  1,  1,  1,  1,  1,  1, "",  1 }, -- Ligne 9 - 12 colonnes
-{    1, "", "", "", "", "", "", "", "", "",  1 },-- Ligne 9 - 12 colonnes
+{    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
+{   "", "",  1,  1,  1,  1,  1,  1,  1, "", "" },-- Ligne 3 - 12 colonnes
+{   "", "",  1,  1,  1,  1,  1,  1,  1, "", "" },-- Ligne 3 - 12 colonnes
+{   "", "",  "", 1,  1,  1,  1,  1, "", "", "" },-- Ligne 3 - 12 colonnes
+{   "", "", "",  1,  1,  1,  1,  1, "", "", "" },-- Ligne 3 - 12 colonnes
+{   "", "", "", "", 1,  1,  1, "", "",  "", "" },-- Ligne 3 - 12 colonnes
+{   "", "", "", "", "", "", "", "", "", "", "" },-- Ligne 3 - 12 colonnes
+{    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 }, -- Ligne 9 - 12 colonnes
+{    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 9 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 }-- Ligne 3 - 12 colonnes
 }
 

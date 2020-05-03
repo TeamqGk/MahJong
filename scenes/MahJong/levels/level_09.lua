@@ -1,6 +1,6 @@
 local map = {}
 
-map = { etages = 4, lignes = 6, colonnes = 8,  image = "tutorial_3.png", load = false, pics = "beauty_adventure_by_Willian_Yuki_Memmo.png",
+map = {  image = "tutorial_3.png", load = false, pics = "beauty_adventure_by_Willian_Yuki_Memmo.png",
 
 
 
@@ -8,6 +8,7 @@ map = { etages = 4, lignes = 6, colonnes = 8,  image = "tutorial_3.png", load = 
 
 
   {-- etage 1
+    { 1,    1,     1,     1,    1,    1,    1,    1  },
     { 1,    1,     1,     1,    1,    1,    1,    1  },
     { 1,    1,     1,     1,    1,    1,    1,    1  },
     { 1,    1,     1,     1,    1,    1,    1,    1  },
@@ -23,12 +24,14 @@ map = { etages = 4, lignes = 6, colonnes = 8,  image = "tutorial_3.png", load = 
     { "",     1,      1,      1,     1,      1,      1,    "" },
     { "",     1,      1,      1,     1,      1,      1,    "" },
     { "",     1,      1,      1,     1,      1,      1,    "" },
+    { "",     1,      1,      1,     1,      1,      1,    "" },
     { "",    "",     "",    "" ,    "",     "",     "",    "" }
 
   },
 
   {-- etage 3
     { "",    "",     "",     "",    "",     "",    "",    "" },
+    { "",    "",      1,      1,     1,      1,    "",    "" },
     { "",    "",      1,      1,     1,      1,    "",    "" },
     { "",    "",      1,      1,     1,      1,    "",    "" },
     { "",    "",      1,      1,     1,      1,    "",    "" },
@@ -41,6 +44,7 @@ map = { etages = 4, lignes = 6, colonnes = 8,  image = "tutorial_3.png", load = 
   {-- etage 4
     { "",    "",     "",     "",    "",     "",    "",    "" },
     { "",    "",      "",      "",     "",      "",    "",    "" },
+    { "",    "",      "",      1,     1,      "",    "",    "" },
     { "",    "",      "",      1,     1,      "",    "",    "" },
     { "",    "",      "",      1,     1,      "",    "",    "" },
     { "",    "",      "",      "",     "",      "",    "",    "" },

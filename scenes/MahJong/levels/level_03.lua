@@ -1,15 +1,14 @@
 local map = {}
 
-map = { etages = 1, lignes = 5, colonnes = 6,  image = "tutorial_2.png", load = false, pics = "teach_timidity.png", soundClear = "japanese_yes",
+map = {  image = "tutorial_2.png", load = false, pics = "teach_say.png", soundClear = "japanese_yes", regleImg = "regle_move.png",
 
 
   {-- etage 1
-    { 1,    1,     1,     1,    1,    1  },
-    { "",   1,     1,     1,    1,   ""  },
-    { "",   1,     1,     1,    1,   ""  },
-    { "",   1,     1,     1,    1,   ""  },
-    { 1,    1,     1,     1,    1,    1  }
-
+    { 1,    1,     1,    1,    1  },
+    { "",   1,     1,    1,   ""  },
+    { 1,    1,     1,    1,    1  },
+    { "",   1,     1,    1,   ""  },
+    { 1,    1,     1,    1,    1  }
   }
 
 }

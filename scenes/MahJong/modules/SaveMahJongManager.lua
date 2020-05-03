@@ -6,14 +6,14 @@ end
 --
 
 function SaveMahJongManager.init(pReset)
-  if pReset or not SaveMahJongManager.LoadSave()then
+  if pReset or not SaveMahJongManager.LoadSave() then
     print("Creation d'un fichier de sauvegarde SaveMahJong.sav...")
     SaveMahJong  = {}
     --
     SaveMahJong.currentLevel = 1
     SaveMahJong.levelMax = 1
     SaveMahJong.currentMove = 0
-    SaveMahJong.name = ""
+    SaveMahJong.name = "---"
     --
     SaveMahJong.level = {}
     --
@@ -23,8 +23,6 @@ function SaveMahJongManager.init(pReset)
     --
     for i = 1 , #Levels do
       SaveMahJong.level[i] = {}
-      SaveMahJong.level[i].currentTime = 0
-      SaveMahJong.level[i].currentTimeText = ""
       SaveMahJong.level[i].bestTime = 0
       SaveMahJong.level[i].bestTimeText = "level not clear"
     end
@@ -43,8 +41,10 @@ function SaveMahJongManager.LoadSave()
     for i = 1 , #Levels do
       if not SaveMahJong.level[i] then
         SaveMahJong.level[i] = {}
-        SaveMahJong.level[i].currentTime = 0
-        SaveMahJong.level[i].bestTime = 0
+      SaveMahJong.level[i].currentTime = 0
+      SaveMahJong.level[i].currentTimeText = ""
+      SaveMahJong.level[i].bestTime = 0
+      SaveMahJong.level[i].bestTimeText = "level not clear"
       end
     end
     return true

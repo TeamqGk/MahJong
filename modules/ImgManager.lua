@@ -32,7 +32,6 @@ function ImgManager.new(pFile)
       self.sy = self.h_def / h 
     end
     --
-    print(self.sx, self.sy)
   end
   --
   function new:setPos(x, y)
