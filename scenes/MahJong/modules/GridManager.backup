@@ -1,6 +1,7 @@
 local GridManager = {}
 
 local tableMahjong = {}
+local tableMahjongIsMove = {}
 
 
 function GridManager.resetLevel(pLevel)
@@ -25,11 +26,9 @@ function GridManager.setGrid(pLevel, pReset)
 --  if debug then print("Grid.load : "..tostring(Grid.load)) end
 
 --
-
-  --[[ return :
-  Grid.etages, Grid.lignes, Grid.colonnes
-  & all etages Tables
-  ]]--
+  Grid.etages = #Grid
+  Grid.lignes = #Grid[1]
+  Grid.colonnes = #Grid[1][1]
 
   -- Load image BackGround ( info is on map level_x.lua)
   Img.BG = ImgManager.new("scenes/MahJong/levels/img/"..Grid.image)-- pFile
@@ -163,7 +162,7 @@ function GridManager.setGrid(pLevel, pReset)
     y = StartY
     --
   end
-  print ("\n".."Nouvelle Grid of "..#Grid.." etages, "..#Grid[1].." lines and "..#Grid[1][1].." cols !".."\n")
+  print ("\n".."Nouvelle Grid of "..#Grid.." etages, "..#Grid[1].." lines and "..#Grid[1][1].." cols, avec "..Grid.mahjongTotal.." mahjongs !".."\n")
 
   -- randomise mahjong in grid
   if not Grid.load or pReset  then
@@ -236,9 +235,9 @@ function GridManager.setRandMahjong(pLevel)
   -- on scan les grilles :
   while #tableMahjong > 0  do
     -- on selectione un mahjong au hasard
-    local onGrid, l, c 
+    local onGrid, l, c, e
     local NewMahjong = tableMahjong[#tableMahjong]
-    onGrid, l, c = GridManager.testMohJang(NewMahjong)
+    onGrid, l, c, e = GridManager.testMohJang(NewMahjong)
 
     if onGrid then -- placement du premier pion
       table.remove(tableMahjong, #tableMahjong)
@@ -248,7 +247,7 @@ function GridManager.setRandMahjong(pLevel)
     --
     if #tableMahjong >= 1 then
       NewMahjong = tableMahjong[#tableMahjong]
-      onGrid, l, c = GridManager.testMohJang(NewMahjong, l, c) -- placement du second pion
+      onGrid, l, c, e = GridManager.testMohJang(NewMahjong, l, c, e) -- placement du second pion
       if onGrid then
         table.remove(tableMahjong, #tableMahjong)
       else
@@ -259,13 +258,41 @@ function GridManager.setRandMahjong(pLevel)
 
   GridManager.testMoveMahjong()
 
+  if Grid.Move == 0 then
+    return false
+  end
+
 -- Ouf on a  reussi !
   return true
 --
 end
 --
 
-function GridManager.testMohJang(pRand, pLig, pCol)
+function GridManager.testFirstSecond(pEtage,pLig)
+  local first = true
+  local second = true
+  --
+  local total = 0
+  for col = 1 , Grid.colonnes do
+    local case = Grid[pEtage][pLig][col]
+    if case.isActive then
+      total = total + 1
+    end
+  end
+  --
+  if total == 0 then
+    first = true
+  elseif total == 1 then
+    second = true
+  else
+    first = false
+    second = false
+  end
+  return first, second
+end
+--
+
+function GridManager.testMohJang(pRand, pLig, pCol, pEtag)
   --
   local loopTest = true
   local l = 0
@@ -273,11 +300,14 @@ function GridManager.testMohJang(pRand, pLig, pCol)
   local loop = 0
   while loopTest do
     loop = loop + 1
+    --
     local superposed = false
     local glue = false
+    --
     l = love.math.random(1, Grid.lignes)
     c = love.math.random(1, Grid.colonnes)
-    if pLig and pCol then
+    --
+    if pLig and pCol and pEtag then
       if l == pLig and c == pCol then
         superposed = true -- supersposé on recommence !
       end
@@ -285,14 +315,30 @@ function GridManager.testMohJang(pRand, pLig, pCol)
     --
     if not superposed then
       for e = 1, Grid.etages do
-        local case = Grid[e][l][c]
-        if case.add then
-          if GridManager.testGlueMohJang(e, l, c) then
-            case.add = false
-            case.mahjong = pRand
-            case.isActive = true
-            --
-            return true, l, c  
+        --
+        local first, second = GridManager.testFirstSecond(e,l,c)
+        local ready = true
+        --
+        if not first or not second then
+          if pEtag then
+            if e == pEtag then
+              if pCol -1 == c or pCol + 1 == c then
+                ready = false
+              end
+            end
+          end
+        end
+        --
+        if ready then
+          local case = Grid[e][l][c]
+          if case.add then
+            if GridManager.testGlueMohJang(e, l, c) then
+              case.add = false
+              case.mahjong = pRand
+              case.isActive = true
+              --
+              return true, l, c, e
+            end
           end
         end
       end
@@ -340,11 +386,29 @@ function GridManager.testGlueMohJang(pEtage, pLig, pCol)
     end
   end
   --
+
+  local function lastPion()
+    local last = 0
+    for c = 1 , Grid.colonnes do
+      local case = Grid[pEtage][pLig][c]
+      if case.isActive then
+        last = last + 1
+      end    
+    end
+    if last == 1 then
+      return true
+    end
+  end
+
   if left() or right() then
     return true 
   else
-    return false
+    if lastPion() then 
+      return true
+    end
   end
+
+  return false
 end
 --
 
@@ -382,14 +446,28 @@ function GridManager.testIsMove(pEtage, pLig)
       return false
     end
   end
-  --
+  -- ########################################### parcours des listes du tableaux :
+  local function scanIsActiveStageUp(pE, pL, pC)
+    if Grid.etages > 1 then
+      if pE < Grid.etages then
+        if Grid[pE+1][pL][pC].isActive then
+          return true
+        end
+      end
+    end
+    return false
+  end
+--
+
   local function scanColLeftToRight()
     for c = 1 , Grid.colonnes do
-      if right(pEtage, pLig, c) then
-        local case = Grid[pEtage][pLig][c]
-        if case.isActive then
-          case.isMove = true
-          return case
+      if not scanIsActiveStageUp(pEtage, pLig, c) then
+        if right(pEtage, pLig, c) then
+          local case = Grid[pEtage][pLig][c]
+          if case.isActive then
+            case.isMove = true
+            return case
+          end
         end
       end
     end
@@ -398,11 +476,25 @@ function GridManager.testIsMove(pEtage, pLig)
   --
   local function scanColRightToLeft()
     for c = Grid.colonnes, 1, -1 do
-      if left(pEtage, pLig, c) then
+      if not scanIsActiveStageUp(pEtage, pLig, c) then
+        if left(pEtage, pLig, c) then
+          local case = Grid[pEtage][pLig][c]
+          if case.isActive then
+            case.isMove = true
+            return case
+          end
+        end
+      end
+    end
+    return false
+  end
+  local function scanLastOnCol()
+    for c = Grid.colonnes, 1, -1 do
+      if not scanIsActiveStageUp(pEtage, pLig, c) then
         local case = Grid[pEtage][pLig][c]
         if case.isActive then
           case.isMove = true
-          return case
+          return case, case
         end
       end
     end
@@ -411,6 +503,11 @@ function GridManager.testIsMove(pEtage, pLig)
   --
   caseleft = scanColLeftToRight()
   caseright = scanColRightToLeft()
+  --
+  if not caseleft and not caseright then
+    caseleft , caseright = scanLastOnCol()
+  end
+
   return caseleft, caseright
 end
 --
@@ -418,21 +515,51 @@ end
 function GridManager.testMoveMahjong()
   GridManager.resetIsMove() -- reset le tableau a false avant les test
   --
+  tableMahjongIsMove = {}
+  --
   for etages = 1, Grid.etages do-- etage
     for lignes = 1,  Grid.lignes do-- lignes
       local caseleft, caseright = false, false
       caseleft, caseright = GridManager.testIsMove(etages, lignes)
---      if debug then
-      if  caseleft then
-        print("pion trouvé en etage : Grid["..caseleft.etage.."]["..caseleft.ligne.."]["..caseleft.colonne.."]")
-      elseif caseright then
-        print("pion trouvé en etage : Grid["..caseleft.etage.."]["..caseleft.ligne.."]["..caseleft.colonne.."]")
-      else
-        print("pas de pion trouvé en etage : "..etages.." et ligne : "..lignes)
+      if caseleft then 
+        caseleft.find = false
+        table.insert(tableMahjongIsMove, caseleft) 
       end
---      end
+      if caseright then
+        caseright.find = false
+        table.insert(tableMahjongIsMove, caseright) 
+      end
     end
   end
+  --
+  for i = #tableMahjongIsMove, 1, -1 do
+    local case = tableMahjongIsMove[i]
+    if not case.find then
+      for i = #tableMahjongIsMove, 1, -1 do
+        local test = tableMahjongIsMove[i]
+        if case ~= test then
+          if not test.find then
+            if case.mahjong == test.mahjong then
+              case.find = true
+              test.find = true
+            end
+          end
+        end
+      end
+    end
+  end
+  --
+  for i = #tableMahjongIsMove, 1, -1 do
+    local case = tableMahjongIsMove[i]
+    if not case.find then
+      table.remove(tableMahjongIsMove, i)
+    end
+  end
+  --
+  Grid.Move = math.floor(#tableMahjongIsMove * 0.5)
+
+  --
+
 end
 --
 
@@ -463,10 +590,13 @@ function GridManager.draw()
           if case.isMove then
             love.graphics.setColor(1,1,1,1)
           else
---            love.graphics.setColor(1,0,0,1)
             love.graphics.setColor(1,1,1,0.25)
           end
           love.graphics.draw(Img.MahJong.img, Img.MahJong.quad[case.mahjong], case.x, case.y, 0, case.sx, case.sy)
+          if case.etage > 1 and case.isMove then
+            love.graphics.setColor(0,0,1,0.075)
+            love.graphics.rectangle("fill", case.x+2, case.y+2, case.w-4, case.h-4)
+          end
           love.graphics.setColor(1,1,1,1) -- reset color
         end
         --
@@ -494,6 +624,15 @@ function GridManager.draw()
     love.graphics.setColor(1,0,0,1) -- reset color
     love.graphics.rectangle("line", Grid.x, Grid.y, Grid.w, Grid.h)
     love.graphics.setColor(1,1,1,1) -- reset color
+    --
+    for i = 1, #tableMahjongIsMove do
+      local case = tableMahjongIsMove[i]
+      love.graphics.setColor(1,0,0,0.25)
+      love.graphics.rectangle("fill", case.x+2, case.y+2, case.w-4, case.h-4)
+      love.graphics.setColor(1,1,1,1)
+    end
+    --
+
   end
 
 --reset color

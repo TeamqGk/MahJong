@@ -106,7 +106,7 @@ function playerManager.Demarre()
   pad.pointY = pad.y + pad.distPointY
 
   -- BALL
-  BallManager.newBall(0, 0, 15, 400, true, 0, 0) --BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx, pVy)
+  BallManager.newBall(0, 0, 15, 600, true, 0, 0) --BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx, pVy)
 
   -- init level 1
   mapManager.setLevel(1)
@@ -136,7 +136,7 @@ function playerManager.resetBall()
   pad.x = (screen.w * 0.5) - pad.ox
   --
   if #Ball == 0 then
-    BallManager.newBall(0, 0, 15, 400, true, 0, 0)
+    BallManager.newBall(0, 0, 15, 600, true, 0, 0)
   end
   Ball[1].colle = true
   Ball[1].x = pad.x + pad.ox
@@ -170,6 +170,7 @@ function playerManager.draw()
     lg.draw(Vie.img, x, y, 0, 1, 1)
   end
 end
+--
 
 function Boutton.init()
   BM:setDimensions(screen.w * 0.2, screen.h * 0.05)
@@ -380,8 +381,6 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
   --
   if rand >= lucky then
     --
-    if debug then print("Bonus["..pCase.type.."] creer ! avec un jet de"..rand.." sur "..lucky..".") end
-    --
     local new = {}
     --
     local bonus = Bonus[pCase.type]
@@ -420,7 +419,7 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
       end
     end
     --
-    function new:addTimer(pType, pID)
+    function new:addTimer(pType, pID) -- TODO: Parcourir les balles et mettre le timer dans les balles : Pas dans le bonux qui s'efface apres l'avoir pris !!!!
       local t = {}
       t.type= pType
       --
@@ -433,7 +432,6 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
       t.speed = 60
       --
       t.isActive = true
-      t.type = pType
       --
       table.insert(self.timer, t)
     end
@@ -473,12 +471,12 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
     --
     function new:BonusPowerUp()
       local id = love.timer.getTime()
-      self:addTimer("PowerUp", id)
       --
       for i = #Ball, 1, -1 do
         local b = Ball[i]
+        b:addTimer("PowerUp", id)
         b.power = b.power + 1
-        table.insert(b, id)
+        table.insert(b, id) -- Ball[i][#index] = id
       end
     end
     --
