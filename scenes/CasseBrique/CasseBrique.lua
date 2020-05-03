@@ -88,8 +88,8 @@ function playerManager.Demarre()
   -- Player
   player.nbVie = 3
   player.score = 0
-  player.bestScore = 0
-  player.maxLevel = 0
+  player.bonusMultiplicateur = 1
+  player.level = 1
 
 
   -- PAD
@@ -123,12 +123,13 @@ function playerManager.nextBall()
   if player.nbVie >= 1 then
     playerManager.resetBall()
   else
-    -- TODO: Screen GAME OVER
+    --
+    mapManager.SaveScore()
+    --
     BestScore.showMenu()
-    -- TODO: Save Casse Brique
-
-    SaveCasseBriqueManager.save()
+    --
     playerManager.Demarre()
+    --
   end
 end
 --
@@ -199,11 +200,26 @@ function Boutton.init()
   Boutton[3]:setAction(function() BM.switchShow() end)
   --
   Boutton[4] = BM.newBox ()
-  Boutton[4]:addText(Font, 22, "Score : ")
+  Boutton[4]:addText(Font, 22, "Bricks : ")
   Boutton[4]:setPos(Boutton[3].x + Boutton[3].w + 10, 10)
   Boutton[4]:setVisible(true)
   Boutton[4]:setEffect(false)
   Boutton[4]:setAction(function() BestScore.showMenu() end)
+  --
+  Boutton[5] = BM.newBox ()
+  Boutton[5]:addText(Font, 22, "X ")
+  Boutton[5]:setPos(Boutton[4].x + Boutton[3].w + 10, 10)
+  Boutton[5]:setVisible(true)
+  Boutton[5]:setEffect(false)
+  Boutton[5]:setAction(function() BestScore.showMenu() end)
+  --
+  Boutton[6] = BM.newBox ()
+  Boutton[6]:addText(Font, 22, "Score : ")
+  Boutton[6]:setPos(Boutton[5].x + Boutton[3].w + 10, 10)
+  Boutton[6]:setVisible(true)
+  Boutton[6]:setEffect(false)
+  Boutton[6]:setAction(function() BestScore.showMenu() end)
+  --
 end
 --
 
@@ -299,8 +315,6 @@ function mapManager.finish(dt)
       end
       playlist.queue = 0
       map.clear = true
-      playerManager.resetBall()
-
     end
   end
   --
@@ -320,15 +334,81 @@ function mapManager.finish(dt)
   end
   --
   if map.clear and playlist.played then
-    -- TODO : level Down, go next !
-    playlist.played = false
-    map.clear = false
-    mapManager.setLevel(map.level+1)
-    SaveCasseBrique.currentLevel = map.level+1
     --
-    Sounds.level_up:stop()
-    Sounds.level_up:play()
+    mapManager.levelUp()-- LEVEL Up !!!
+    --
   end
+end
+--
+
+function mapManager.SaveScore()
+  --
+  local date = tostring(os.date())
+  local pos = nil
+  --
+  local function scanScore()
+    for i = 1, 10 do
+      local search = SaveCasseBrique[i]
+      if type(search.BestScore) == "string" then
+        pos = i
+        return true
+      elseif player.score > search.BestScore then
+        pos = i
+        return true
+      end
+    end
+    return false
+  end
+  --
+  local function updateScore()
+    for i = #BestScore, pos, -1 do
+      local down = SaveCasseBrique[i+1]
+      local maj = SaveCasseBrique[i]
+      --
+      if i == pos then
+        maj.BestScore = player.score
+        maj.Date = date
+        maj.Level = player.level
+      else
+        for k , v in pairs(down) do
+          maj[k] = v
+        end
+      end
+      --
+    end
+  end
+  --
+
+  -- Verification si on a fait mioeux qu'un bestScore du score board ! si vrai alors on mets a jour :
+  if scanScore() then
+    updateScore()
+  end
+  --
+
+  -- save to file :
+  SaveCasseBriqueManager.save()
+  --
+end
+--
+
+function mapManager.levelUp()
+
+  -- reset Bool :
+  playlist.played = false
+  map.clear = false
+
+  -- Maj Level :
+  player.level = player.level + 1
+
+  -- Maj Score :
+  player.score =   player.score * player.bonusMultiplicateur
+
+  -- on change le niveau actuel
+  mapManager.setLevel(player.level)
+  Sounds.level_up:stop()
+  Sounds.level_up:play()
+
+  playerManager.resetBall()
   --
 end
 --
@@ -440,6 +520,7 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
       -- Collision avec le PAD
       if self.x + self.rayon >= pad.x and self.x - self.rayon <= pad.x + pad.w then -- Contact possible !! en largeur
         if self.y + self.rayon >= pad.y and self.y <= pad.y then -- rebond ! (Hauteur)
+          player.bonusMultiplicateur = player.bonusMultiplicateur + 1
           return true
         else
           return false
@@ -675,6 +756,7 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
         -- decrementation de la vie
         case.vie = case.vie - self.power
         if case.vie <= 0 then
+          player.score = player.score + case.type -- Update Score
           BonusManager.newBonus(case.ox,case.oy,case)
           table.remove(lst_briques, i)
           sonExplo:play()
@@ -893,7 +975,7 @@ end
 
 function BM.switchShow() BM.show = not BM.show end
 
-function BM.showUpdate()
+function BM.showMenu()
   if BM.show then -- Show Menu Intro
     Boutton[1]:setVisible(true) -- MenuIntro
     Boutton[2]:setVisible(false) -- pause/quit
@@ -920,9 +1002,12 @@ function SceneCasseBrique.update(dt)
   mouseIsVisible()
   --
   BM:update(dt)
-  BM.showUpdate()
+  BM.showMenu()
   --
   BestScore:update(dt)
+  Boutton[4]:setText("Bricks : "..player.score)
+  Boutton[5]:setText("Bonus X "..player.bonusMultiplicateur)
+  Boutton[6]:setText("Score : "..(player.score * player.bonusMultiplicateur))
   --
   if not BM.show then
     if not music_loop:isPlaying() then

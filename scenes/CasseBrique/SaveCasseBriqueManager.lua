@@ -41,16 +41,14 @@ end
 function SaveCasseBriqueManager.init(pReset)
   if pReset or not SaveCasseBriqueManager.LoadSave()then
     print("Creation d'un fichier de sauvegarde SaveCasseBrique.sav...")
-    SaveCasseBrique = {}
     --
-    SaveCasseBrique.currentLevel = 1
-    SaveCasseBrique.BestScore = "Play for it!"
-    SaveCasseBrique.Date = ""
+    SaveCasseBrique = {}
     --
     for i = 1 , 10 do
       SaveCasseBrique[i] = {}
       SaveCasseBrique[i].BestScore = " - - - "
       SaveCasseBrique[i].Date = "-- / -- / --"
+      SaveCasseBrique[i].Level = 0
     end
     SaveManager.saveGame("SaveCasseBrique", SaveCasseBrique)
     print("save crée.")
