@@ -13,29 +13,29 @@ end
 --
 
 --
-function SaveCasseBrique.changeList()
-  --
-  local function updateList(pStart)
-    for i = 10, pStart , -1 do
-      local backup = SaveCasseBrique[i+1]
-      local new = SaveCasseBrique[i]
-      --
-      for k , v in pairs(backup) do
-        new[k] = v
-      end
-      --
-    end
-  end
-  --
-  for i = 1, 10 do
-    if SaveCasseBrique.BestScore >= SaveCasseBrique[i].BestScore then
-      updateList(i)
-      return true
-    end
-  end
-  --
-end
---
+--function SaveCasseBrique.changeList()
+--  --
+--  local function updateList(pStart)
+--    for i = 10, pStart , -1 do
+--      local backup = SaveCasseBrique[i+1]
+--      local new = SaveCasseBrique[i]
+--      --
+--      for k , v in pairs(backup) do
+--        new[k] = v
+--      end
+--      --
+--    end
+--  end
+--  --
+--  for i = 1, 10 do
+--    if SaveCasseBrique.BestScore >= SaveCasseBrique[i].BestScore then
+--      updateList(i)
+--      return true
+--    end
+--  end
+--  --
+--end
+----
 
 --
 function SaveCasseBriqueManager.init(pReset)
@@ -48,7 +48,7 @@ function SaveCasseBriqueManager.init(pReset)
       SaveCasseBrique[i] = {}
       SaveCasseBrique[i].BestScore = " - - - "
       SaveCasseBrique[i].Date = "-- / -- / --"
-      SaveCasseBrique[i].Level = 0
+      SaveCasseBrique[i].Level = "--"
     end
     SaveManager.saveGame("SaveCasseBrique", SaveCasseBrique)
     print("save crée.")
@@ -68,6 +68,7 @@ function SaveCasseBriqueManager.LoadSave()
         SaveCasseBrique[i] = {}
         SaveCasseBrique[i].BestScore = " - - - "
         SaveCasseBrique[i].Date = "-- / -- / --"
+        SaveCasseBrique[i].Level = "--"
       end
     end
     return true
