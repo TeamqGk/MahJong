@@ -473,12 +473,6 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
     new.x = pX
     new.y = pY
     --
-    new.timer = {}
-    new.timer.start = 0
-    new.timer.finish = 10
-    new.timer.speed = 60
-    new.timer.ready = false
-    --
     new.speed = 100
     new.vx = 0
     new.vy = 1
@@ -486,6 +480,12 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
     --
     new.color = color[pCase.type]
     new.colorBonus = color[love.math.random(1,10)]
+    --
+    new.timer = {}
+    new.timer.start = 0
+    new.timer.finish = 10
+    new.timer.speed = 60
+    new.timer.ready = false
     --
     function new:sizeText()
       if self.w > (self.rayon * 2) - 4 then
@@ -499,23 +499,6 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
           self.oy = self.h * 0.5
         end
       end
-    end
-    --
-    function new:addTimer(pType, pID) -- TODO: Parcourir les balles et mettre le timer dans les balles : Pas dans le bonux qui s'efface apres l'avoir pris !!!!
-      local t = {}
-      t.type= pType
-      --
-      if pID then
-        t.id = pID
-      end
-      --
-      t.start = 0
-      t.finish = 30
-      t.speed = 60
-      --
-      t.isActive = true
-      --
-      table.insert(self.timer, t)
     end
     --
     function new:collidePad()
@@ -584,17 +567,17 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
     end
     --
     function new:timerUpdate(dt)
-      for i = #self.timer, 1 , -1 do
-        local t = self.timer[i]
-        t.start = t.start + t.speed * dt
-        if t.start >= t.finish then
-          t.isActive = false
-        end
-        if not t.isActive then
-          self:deleteBonus(t.id)
-        end
-        table.remove(self.timer, i)
-      end
+--      for i = #self.timer, 1 , -1 do
+--        local t = self.timer[i]
+--        t.start = t.start + t.speed * dt
+--        if t.start >= t.finish then
+--          t.isActive = false
+--        end
+--        if not t.isActive then
+--          self:deleteBonus(t.id)
+--        end
+--        table.remove(self.timer, i)
+--      end
       --
       if not self.timer.ready then
         self.timer.start = self.timer.start + self.timer.speed * dt
@@ -604,7 +587,6 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
         end
       end
     end
-    --
     function new:update(dt)
       self:sizeText()
       --
@@ -729,6 +711,45 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
     self.rayon = (pCaseH * 0.5) * 0.5
   end
 --
+  function b:addTimer(pType, pID) -- TODO: Parcourir les balles et mettre le timer dans les balles : Pas dans le bonux qui s'efface apres l'avoir pris !!!!
+    local t = {}
+    t.type= pType
+    --
+    if pID then
+      t.id = pID
+    end
+    --
+    t.start = 0
+    t.finish = 30
+    t.speed = 60
+    --
+    t.isActive = true
+    --
+    table.insert(self.timer, t)
+  end
+  --
+  function b:timerUpdate(dt)
+    for i = #self.timer, 1 , -1 do
+      local t = self.timer[i]
+      t.start = t.start + t.speed * dt
+      if t.start >= t.finish then
+        t.isActive = false
+      end
+      if not t.isActive then
+        self:deleteBonus(t.id)
+      end
+      table.remove(self.timer, i)
+    end
+    --
+    if not self.timer.ready then
+      self.timer.start = self.timer.start + self.timer.speed * dt
+      if self.timer.start >= self.timer.finish then
+        self.timer.ready = true
+        self.timer.start = 0
+      end
+    end
+  end
+  --
   function b:collideBriques()
     --TEST Collision Ball self witch Brick's :
     for i = #lst_briques, 1, - 1 do
@@ -845,6 +866,9 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
       if self.collideEffect then
         self.collideEffect = self:updateColor(dt)
       end
+
+
+      self:timerUpdate(dt) -- Bonus Timer effective !
 
       --TEST Collision witch Breack's :
       if self:collideBriques() then 
