@@ -11,10 +11,10 @@ end
 --
 
 -- Police par defaut
-Font = Font_Title
---for i=1, 100 do
---  Font[i] = love.graphics.newFont(i)
---end
+FontVerdana = {}
+for i=1, 100 do
+  Font[i] = love.graphics.newFont(i)
+end
 --
 
 
