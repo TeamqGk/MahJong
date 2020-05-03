@@ -20,7 +20,7 @@ function SceneMenuIntro.load() -- love.load()
   Boutton[1]:setAction(function() SceneManager:setScene("SelectGame") end)
   --
   Boutton[2] = BM.newBox ()
-  Boutton[2]:addText(Font, 22, "Options")
+  Boutton[2]:addText(Font, 22, "Save Options")
   Boutton[2]:setAction(function() SceneManager:setScene("Options") end)
   --
   Boutton[3] = BM.newBox ()
