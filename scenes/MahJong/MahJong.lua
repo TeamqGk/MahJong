@@ -20,6 +20,7 @@ resetMahjongs:scaleToScreen()
 
 
 local ChangeLevel = require("scenes/MahJong/ChangeLevel")
+local RecapLevel = require("scenes/MahJong/RecapLevel")
 
 local Loosetimer = {}
 function Loosetimer.init()
@@ -66,10 +67,10 @@ function Boutton.init()
   Boutton[5]:addText(Font, 22, "Level : 0")
   Boutton[5]:setPos(Boutton[2].x + Boutton[2].w + 10,10)
   Boutton[5]:setEffect(false)
---  Boutton[5]:setAction(function() end)
+  Boutton[5]:setAction(function() SceneMahJong.pause = not SceneMahJong.pause; RecapLevel.show = not RecapLevel.show; RecapLevel.current = SaveMahJong.currentLevel  end)
   --
   Boutton[6] = BM.newBox ()
-  Boutton[6]:addText(Font, 22, "Options")
+  Boutton[6]:addText(Font, 22, "Change Level")
   Boutton[6]:setPos(Boutton[5].x + Boutton[2].w + 10,10)
   Boutton[6]:setEffect(false)
   Boutton[6]:setAction(function() SceneMahJong.pause = not SceneMahJong.pause; ChangeLevel.show = not ChangeLevel.show; ChangeLevel.current = SaveMahJong.currentLevel  end)
@@ -281,6 +282,14 @@ function mouse.selectMahjong()
 end
 --
 
+function SceneMahJong.showRecap(pLevel)
+  SceneMahJong.pause = true
+  RecapLevel.show = true
+  RecapLevel.Succes = true
+  RecapLevel.current = pLevel or SaveMahJong.currentLevel
+end
+--
+
 function SceneMahJong.testVictory(dt)
   if Grid.mahjongTotal == 0 and Grid.impaire == false or Grid.mahjongTotal == 1 and Grid.impaire == true then
 
@@ -300,6 +309,8 @@ end
 --
 
 function SceneMahJong.saveVictory()
+    local showLevelRecap = SaveMahJong.currentLevel
+  --
   timer.run = false
   --
   local current = SaveMahJong.level[SaveMahJong.currentLevel]
@@ -344,6 +355,8 @@ function SceneMahJong.saveVictory()
       print(k.." : "..tostring(v))
     end
   end
+  --
+  SceneMahJong.showRecap(showLevelRecap)
 end
 --
 
@@ -394,6 +407,8 @@ function SceneMahJong.load() -- love.load()
   GridManager.setGrid(SaveMahJong.currentLevel)
   --
   ChangeLevel.load()
+  --
+  RecapLevel.load()
 end
 --
 
@@ -417,6 +432,8 @@ function SceneMahJong.update(dt)
   BM:update(dt)
   --
   ChangeLevel.update(dt)
+  --
+  RecapLevel.update(dt)
 end
 --
 
@@ -433,7 +450,10 @@ function SceneMahJong.draw()-- love.draw()
   end
   if ChangeLevel.show then
     SceneMahJong.backgroundWaitDraw()
-    ChangeLevel.draw()
+    ChangeLevel.draw()  
+  elseif RecapLevel.show then
+    SceneMahJong.backgroundWaitDraw()
+    RecapLevel.draw()
   end
   --
   BM:draw()
@@ -460,16 +480,17 @@ function SceneMahJong:keypressed(key, scancode)
   end
   if key == "f1" then
     for i = 1, #Levels do
-    SaveMahJong.currentLevel = i
-    SceneMahJong.saveVictory()
+      SaveMahJong.currentLevel = i
+      SceneMahJong.saveVictory()
     end
     GridManager.setGrid(1)
   end
   --
   if key == "escape" then
-    if SceneMahJong.pause or SceneMahJong.resetWait or ChangeLevel.show then
+    if SceneMahJong.pause or SceneMahJong.resetWait or ChangeLevel.show or RecapLevel.show then
       SceneMahJong.pause = false
       ChangeLevel.show = false
+      RecapLevel.show = false
       SceneMahJong.resetWait = false
       Boutton[3]:setVisible(false)
       Boutton[4]:setVisible(false)
@@ -502,6 +523,8 @@ function SceneMahJong.mousepressed(x, y, button, isTouch)
   --
   if ChangeLevel.show then
     ChangeLevel.mousepressed(x, y, button, isTouch)
+  elseif RecapLevel.show then
+    RecapLevel.mousepressed(x, y, button, isTouch)
   end
 end
 --

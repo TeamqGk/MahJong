@@ -29,7 +29,6 @@ function Boutton.init()
   Boutton[2]:addText(Font, 22, tostring("Level : "..ChangeLevel.current))
   Boutton[2]:setEffect(false)
   Boutton[2]:setPos(Boutton[1].x + Boutton[1].w + 10, fenetre.y + 10)
-  Boutton[1]:setAction(function() sound_clic:stop(); sound_clic:play(); ChangeLevel.limit(-1) end)
   --
   Boutton[3] = ChangeLevelBM.newBox ()
   Boutton[3]:addText(Font, 22, "+")
