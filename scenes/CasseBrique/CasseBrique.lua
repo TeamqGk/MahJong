@@ -637,6 +637,14 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
   --
   b.power = 1
   --
+  b.timer = {}
+  b.timer.start = 0
+  b.timer.finish = 10
+  b.timer.speed = 60
+  b.timer.ready = false
+  --
+  collideEffect = false
+  --
   function b:setToMap(pCaseW ,pCaseH)
     self.rayon = (pCaseH * 0.5) * 0.5
   end
@@ -729,7 +737,21 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
     return false
   end
 --
-
+  function b:updateColor(dt)
+--
+    if self.collideEffect then
+      local t = self.timer
+      t.start = t.start + t.speed * dt
+      if t.start >= t.finish then-- durée du timer
+        t.ready = true
+        return false
+      end
+      --
+      return true
+    end
+--
+  end
+  --
   function  b:update(dt)
     if self.colle then 
       self.x = pad.x + pad.ox  
@@ -739,9 +761,14 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
       self.x = self.x + ( (self.vx * self.speed) * dt )
       self.y = self.y + ( (self.vy * self.speed) * dt )
 
+      if self.collideEffect then
+        self.collideEffect = self:updateColor(dt)
+      end
 
       --TEST Collision witch Breack's :
-      self:collideBriques()
+      if self:collideBriques() then 
+        self.collideEffect = true
+      end
 
       if self:collideWaals() then sonHitWaals:stop() ; sonHitWaals:play() end
 
@@ -769,6 +796,12 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
     --
     lg.circle("fill", self.x, self.y, self.rayon)
     --
+    if self.collideEffect == true then
+      for i = 1, 3 do
+        lg.setColor(color[love.math.random(1,10)])
+        lg.circle("line",self.x, self.y, self.rayon + 1 + i, 360)
+      end
+    end
     --
     for i = 1, self.power do
       if i == 1 then
