@@ -22,15 +22,15 @@ resetMahjongs:scaleToScreen()
 local ChangeLevel = require("scenes/MahJong/ChangeLevel")
 local RecapLevel = require("scenes/MahJong/RecapLevel")
 
-local Loosetimer = {}
-function Loosetimer.init()
-  Loosetimer.load = true
-  Loosetimer.start = 0
-  Loosetimer.finish = 30
-  Loosetimer.speed = 60
-  Loosetimer.ready = false
-end
---
+--local Loosetimer = {}
+--function Loosetimer.init()
+--  Loosetimer.load = true
+--  Loosetimer.start = 0
+--  Loosetimer.finish = 30
+--  Loosetimer.speed = 60
+--  Loosetimer.ready = false
+--end
+----
 
 function Boutton.init()
   BM:setDimensions(screen.w * 0.15, screen.h * 0.05)
@@ -282,11 +282,28 @@ function mouse.selectMahjong()
 end
 --
 
-function SceneMahJong.showRecap(pLevel)
+function SceneMahJong.showRecap(pLevel, pSucces)
   SceneMahJong.pause = true
   RecapLevel.show = true
-  RecapLevel.Succes = true
+  RecapLevel.Succes = pSucces
   RecapLevel.current = pLevel or SaveMahJong.currentLevel
+  mouse.selectInit()
+end
+--
+
+function SceneMahJong.showRestart()
+  SceneMahJong.pause = true
+  RecapLevel.show = true
+  RecapLevel.Succes = false
+  RecapLevel.current = Grid.level
+  --
+  GridManager.resetLevel(Grid.level)
+  --
+  Sounds.you_lose:stop()
+  Sounds.you_lose:play()
+  --
+  mouse.selectInit()
+  --
 end
 --
 
@@ -300,16 +317,17 @@ function SceneMahJong.testVictory(dt)
     --
     GridManager.setGrid(SaveMahJong.currentLevel) -- load next Grid
     --
-  elseif Grid.Move == 0 then -- Loose =(
+  end
+  if Grid.Move == 0 then -- TODO: Loose =(
     --
-    Loosetimer.init()
+    SceneMahJong.showRestart(SaveMahJong.currentLevel)
     --
   end
 end
 --
 
 function SceneMahJong.saveVictory()
-    local showLevelRecap = SaveMahJong.currentLevel
+  local showLevelRecap = SaveMahJong.currentLevel
   --
   timer.run = false
   --
@@ -356,28 +374,12 @@ function SceneMahJong.saveVictory()
     end
   end
   --
-  SceneMahJong.showRecap(showLevelRecap)
+  SceneMahJong.showRecap(showLevelRecap, true)
 end
 --
 
 function SceneMahJong.timer(dt)
   Boutton[1]:setText(timer.text )
-  if Grid.Move == 0 then
-    if not Loosetimer.load then Loosetimer.init() end
-    if not Loosetimer.ready then
-      Loosetimer.start = Loosetimer.start + Loosetimer.speed * dt
-      if Loosetimer.start >= Loosetimer.finish then
-        Loosetimer.ready = true
-        --
-        Sounds.you_lose:stop();Sounds.you_lose:play()
-        --
-        SceneMahJong.resetWait = true
-        Boutton[3]:setVisible(true)
-        Boutton[4]:setVisible(true)
-        --
-      end
-    end
-  end
 end
 --
 
@@ -442,8 +444,8 @@ function SceneMahJong.draw()-- love.draw()
     GridManager.draw()
     SceneMahJong.mouseDraw()
   elseif SceneMahJong.resetWait then
-    SceneMahJong.backgroundWaitDraw()
-    resetMahjongs:draw()
+    SceneMahJong.backgroundWaitDraw() -- reduce light screen...
+    resetMahjongs:draw() -- img background
   elseif SceneMahJong.pause then
     SceneMahJong.backgroundWaitDraw()
     love.graphics.print("PAUSE", screen.ox, screen.oy)
@@ -472,18 +474,21 @@ function SceneMahJong:keypressed(key, scancode)
       end
       --
       GridManager.setGrid(level)
-
     end
-  end
-  if key == "delete" then -- suppr
-    GridManager.resetLevel(Grid.level)
-  end
-  if key == "f1" then
-    for i = 1, #Levels do
-      SaveMahJong.currentLevel = i
-      SceneMahJong.saveVictory()
+    --
+    if key == "space" then
+      SceneMahJong.showRestart()
     end
-    GridManager.setGrid(1)
+    if key == "delete" then -- suppr
+      GridManager.resetLevel(Grid.level)
+    end
+    if key == "f1" then
+      for i = 1, #Levels do
+        SaveMahJong.currentLevel = i
+        SceneMahJong.saveVictory()
+      end
+      GridManager.setGrid(1)
+    end
   end
   --
   if key == "escape" then
