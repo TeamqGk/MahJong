@@ -3,7 +3,6 @@ local SceneCasseBrique = {}
 local lg = love.graphics
 --
 
-local CCD = require("scenes/CasseBrique/CCD")
 local BestScore = require("scenes/CasseBrique/BestScore")
 
 local padManager = {} -- the pad
