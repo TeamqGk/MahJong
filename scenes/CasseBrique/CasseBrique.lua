@@ -155,7 +155,7 @@ function playerManager.resetBall()
   for i = #Ball, 1, -1 do
     local ball = Ball[i]
     if i == 1 then
-      ball.power = 1
+      ball.power = math.floor(player.level * 0.5) + 1
     else
       table.remove(Ball, i)
     end
