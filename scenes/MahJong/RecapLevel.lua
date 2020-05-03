@@ -114,7 +114,7 @@ end
 function RecapLevel.update(dt)
   RecapLevelBM:update(dt)
   --
-  Boutton[1]:setText(tostring("Recap Level : "..RecapLevel.current))
+  Boutton[1]:setText(tostring("Recap Level : "..RecapLevel.current.." / "..#Levels))
   --
   fenetreText.update(dt)
 end
