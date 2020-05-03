@@ -48,6 +48,17 @@ function GridManager.setGrid(pLevel, pReset)
     end
     Img.pics:setPos(screen.w - Img.pics.w, screen.h - Img.pics.h)
   end
+
+  if Grid.regleImg then
+    Img.regleImg = ImgManager.new("scenes/MahJong/pics/"..Grid.regleImg)-- pFile
+    local scaleScreenMax = 0.5
+    if Img.regleImg.h > screen.h * scaleScreenMax then
+      local scale = (screen.h * scaleScreenMax) / Img.regleImg.h
+      local w, h = Img.regleImg.w * scale, Img.regleImg.h * scale
+      Img.regleImg:setSizes(w,h)
+    end
+    Img.regleImg:setPos(screen.w - Img.regleImg.w, screen.h - Img.regleImg.h)
+  end
   --
 
   if Grid.sound then
@@ -572,6 +583,10 @@ function GridManager.draw()
   if Grid.pics then
     love.graphics.setColor(1,1,1,1) -- reset color
     love.graphics.draw(Img.pics.img, Img.pics.x, Img.pics.y, 0, Img.pics.sx, Img.pics.sy)
+  end
+  if Grid.regleImg then
+    love.graphics.setColor(1,1,1,1) -- reset color
+    love.graphics.draw(Img.regleImg.img, Img.regleImg.x, Img.regleImg.y, 0, Img.regleImg.sx, Img.regleImg.sy)
   end
   love.graphics.setColor(1,1,1,1) -- reset color
   --
