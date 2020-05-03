@@ -31,7 +31,7 @@ function Boutton.init()
   Boutton[4] = RecapLevelBM.newBox ()
   Boutton[4]:addText(Font, 22, "Ok")
   Boutton[4]:setPos(fenetre.w * 0.5 , fenetre.h - (Boutton[1].h + 10) )
-  Boutton[4]:setAction(function()  sound_clic:stop(); sound_clic:play(); RecapLevel.show = false ; RecapLevel.Succes = false ; SceneMahJong.pause = false end)
+  Boutton[4]:setAction(function()  sound_clic:stop(); sound_clic:play(); RecapLevel.show = false ; RecapLevel.Succes = false ; SceneMahJong.pause = false ; mouse.selectInit() end)
   --
 
 

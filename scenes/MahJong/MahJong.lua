@@ -153,132 +153,137 @@ function mouse.selectMahjong()
   local e = 0
   local s = mouse.select
 
-  -- annulation si col et lig sont identiques
-  for i=1, 2 do
-    if s[i].l == l and s[i].c == c then
-      local cancel = s[i]
-      Grid[cancel.e][cancel.l][cancel.c].select = false
+  if l >= 1 and l <= Grid.lignes and c >=1 and c <= Grid.colonnes then
+
+    -- annulation si col et lig sont identiques
+    for i=1, 2 do
+      if s[i].l == l and s[i].c == c then
+        local cancel = s[i]
+        Grid[cancel.e][cancel.l][cancel.c].select = false
+        --
+        cancel.select = false
+        cancel.l = 0
+        cancel.c = 0
+        cancel.e = 0
+        cancel.mahjong = 0
+        return false -- on arrete la function si on viens d'enlever une selection
+      end
+    end
+    --
+
+    -- on test la case :
+    for i = Grid.etages, 1, -1 do
+      if e == 0 then
+        local case = Grid[i][l][c]
+        if case.isActive and case.isMove then
+          e = i
+        end
+      end
+    end
+    if e == 0 then return end  -- pas de mahjong ici !
+    --
+
+
+    -- on a l'etage , la ligne et la colonne, il nous faut mémoriser cette selection :
+    local add = false
+    for i = 1, 2 do
+      if add == false then
+        local addMe = s[i]
+        if addMe.select == false then
+          local case = Grid[e][l][c]
+          --
+          addMe.select = true
+          addMe.l = l
+          addMe.c = c
+          addMe.e = e
+          addMe.mahjong = case.mahjong
+          --
+          case.select = true
+          --
+          add = true
+          if debug then print("ajout de la selection ".."[e:"..e.."]".."[l:"..l.."]".."[c:"..c.."]".." dans mouse.select["..i.."]") end
+        end
+      end
+    end
+    --
+
+    -- nous avons deux selections on test donc si ils sont identiques :
+    if s[1].select and s[2].select then
+      if s[1].mahjong >= 1 and s[2].mahjong >= 1 then
+        if s[1].mahjong == s[2].mahjong then -- Youhou !
+          local case_1 = Grid[s[1].e][s[1].l][s[1].c]
+          local case_2 = Grid[s[2].e][s[2].l][s[2].c]
+          --
+          case_1.isActive = false
+          case_1.select = false
+          --
+          case_2.isActive = false
+          case_2.select = false
+          --
+          local cancel_1 = s[1]
+          local cancel_2 = s[2]
+          --
+          cancel_1.l = 0
+          cancel_1.c = 0
+          cancel_1.e = 0
+          cancel_1.mahjong = 0
+          cancel_1.select = false
+          --
+          cancel_2.l = 0
+          cancel_2.c = 0
+          cancel_2.e = 0
+          cancel_2.mahjong = 0
+          cancel_2.select = false
+          --
+          Grid.mahjongTotal = Grid.mahjongTotal - 2
+          --
+          sound_mahjongFind:stop()
+          sound_mahjongFind:play()
+          --
+          if debug then print("un Double de Mahjong a été trouvé, il reste "..Grid.mahjongTotal.." mahjong(s) en jeu") end
+          --
+          GridManager.testMoveMahjong()
+          --
+          return true
+        end
+      end
+    end
+
+    -- si on arrive ici c'est que la selection est fausse :
+    if s[1].select and s[2].select then
+      -- dans tous les cas si on a deux selections on les déselectionne
+      local case_1 = Grid[s[1].e][s[1].l][s[1].c]
+      local case_2 = Grid[s[2].e][s[2].l][s[2].c]
       --
-      cancel.select = false
-      cancel.l = 0
-      cancel.c = 0
-      cancel.e = 0
-      cancel.mahjong = 0
-      return false -- on arrete la fucntion si on viens d'enlever une selection
+      case_1.isActive = true
+      case_1.select = false
+      --
+      case_2.isActive = true
+      case_2.select = false
+      --
+      local cancel_1 = s[1]
+      local cancel_2 = s[2]
+      --
+      cancel_1.l = 0
+      cancel_1.c = 0
+      cancel_1.e = 0
+      cancel_1.mahjong = 0
+      cancel_1.select = false
+      --
+      cancel_2.l = 0
+      cancel_2.c = 0
+      cancel_2.e = 0
+      cancel_2.mahjong = 0
+      cancel_2.select = false
+      --
+      sound_mahjongNotFind:stop()
+      sound_mahjongNotFind:play()
+      --
     end
+    return false
+  else
+    mouse.selectInit()
   end
-  --
-
-  -- on test la case :
-  for i = Grid.etages, 1, -1 do
-    if e == 0 then
-      local case = Grid[i][l][c]
-      if case.isActive and case.isMove then
-        e = i
-      end
-    end
-  end
-  if e == 0 then return end  -- pas de mahjong ici !
-  --
-
-
-  -- on a l'etage , la ligne et la colonne, il nous faut mémoriser cette selection :
-  local add = false
-  for i = 1, 2 do
-    if add == false then
-      local addMe = s[i]
-      if addMe.select == false then
-        local case = Grid[e][l][c]
-        --
-        addMe.select = true
-        addMe.l = l
-        addMe.c = c
-        addMe.e = e
-        addMe.mahjong = case.mahjong
-        --
-        case.select = true
-        --
-        add = true
-        if debug then print("ajout de la selection ".."[e:"..e.."]".."[l:"..l.."]".."[c:"..c.."]".." dans mouse.select["..i.."]") end
-      end
-    end
-  end
-  --
-
-  -- nous avons deux selections on test donc si ils sont identiques :
-  if s[1].select and s[2].select then
-    if s[1].mahjong >= 1 and s[2].mahjong >= 1 then
-      if s[1].mahjong == s[2].mahjong then -- Youhou !
-        local case_1 = Grid[s[1].e][s[1].l][s[1].c]
-        local case_2 = Grid[s[2].e][s[2].l][s[2].c]
-        --
-        case_1.isActive = false
-        case_1.select = false
-        --
-        case_2.isActive = false
-        case_2.select = false
-        --
-        local cancel_1 = s[1]
-        local cancel_2 = s[2]
-        --
-        cancel_1.l = 0
-        cancel_1.c = 0
-        cancel_1.e = 0
-        cancel_1.mahjong = 0
-        cancel_1.select = false
-        --
-        cancel_2.l = 0
-        cancel_2.c = 0
-        cancel_2.e = 0
-        cancel_2.mahjong = 0
-        cancel_2.select = false
-        --
-        Grid.mahjongTotal = Grid.mahjongTotal - 2
-        --
-        sound_mahjongFind:stop()
-        sound_mahjongFind:play()
-        --
-        if debug then print("un Double de Mahjong a été trouvé, il reste "..Grid.mahjongTotal.." mahjong(s) en jeu") end
-        --
-        GridManager.testMoveMahjong()
-        --
-        return true
-      end
-    end
-  end
-
-  -- si on arrive ici c'est que la selection est fausse :
-  if s[1].select and s[2].select then
-    -- dans tous les cas si on a deux selections on les déselectionne
-    local case_1 = Grid[s[1].e][s[1].l][s[1].c]
-    local case_2 = Grid[s[2].e][s[2].l][s[2].c]
-    --
-    case_1.isActive = true
-    case_1.select = false
-    --
-    case_2.isActive = true
-    case_2.select = false
-    --
-    local cancel_1 = s[1]
-    local cancel_2 = s[2]
-    --
-    cancel_1.l = 0
-    cancel_1.c = 0
-    cancel_1.e = 0
-    cancel_1.mahjong = 0
-    cancel_1.select = false
-    --
-    cancel_2.l = 0
-    cancel_2.c = 0
-    cancel_2.e = 0
-    cancel_2.mahjong = 0
-    cancel_2.select = false
-    --
-    sound_mahjongNotFind:stop()
-    sound_mahjongNotFind:play()
-    --
-  end
-  return false
 end
 --
 
@@ -287,7 +292,6 @@ function SceneMahJong.showRecap(pLevel, pSucces)
   RecapLevel.show = true
   RecapLevel.Succes = pSucces
   RecapLevel.current = pLevel or SaveMahJong.currentLevel
-  mouse.selectInit()
 end
 --
 
@@ -301,8 +305,6 @@ function SceneMahJong.showRestart()
   --
   Sounds.you_lose:stop()
   Sounds.you_lose:play()
-  --
-  mouse.selectInit()
   --
 end
 --
