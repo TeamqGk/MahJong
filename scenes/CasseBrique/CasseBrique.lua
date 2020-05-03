@@ -361,8 +361,9 @@ function mapManager.SaveScore()
   end
   --
   local function updateScore()
-    for i = #BestScore, pos, -1 do
-      local down = SaveCasseBrique[i+1]
+    for i = #SaveCasseBrique, pos, -1 do
+      print("i : "..tostring(i))
+      local down = SaveCasseBrique[i-1]
       local maj = SaveCasseBrique[i]
       --
       if i == pos then
@@ -382,6 +383,7 @@ function mapManager.SaveScore()
   -- Verification si on a fait mioeux qu'un bestScore du score board ! si vrai alors on mets a jour :
   if scanScore() then
     updateScore()
+  else
   end
   --
 
