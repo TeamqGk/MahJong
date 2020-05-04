@@ -4,6 +4,7 @@ local lg = love.graphics
 --
 
 local BestScore = require("scenes/CasseBrique/BestScore")
+local CCD = require("scenes/CasseBrique/CCD")
 
 local padManager = {} -- the pad
 local pad = {} -- the pad
@@ -750,6 +751,9 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
   b.x = pX
   b.y = pY
   b.rayon = pRayon
+  b.old = {}
+  b.old.x = pX
+  b.old.y = pY
 --
   b.colle = pColle
 --
@@ -810,13 +814,12 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
     end
   end
   --
-  function b:collideBriques()
+  function b:collideBriques(dt)
     --TEST Collision Ball self witch Brick's :
     for i = #lst_briques, 1, - 1 do
       local case = lst_briques[i]
-      local collide = globals.math.circleRect(self.x, self.y, self.rayon,              case.x, case.y, case.w, case.h)
-      --
-      if collide.collision then -- si y a eu collision..
+      local collide = CCD.Ball_vs_Rect(self, case, dt) -- return (collision = true/false, x, y)
+      if collide.collision then
         --
         if collide.x == case.x then -- gauche
           self.x = case.x - self.rayon
@@ -881,22 +884,20 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
   end
 --
 
-  function b:collidePad()
-    -- REBOND PAD
-    if self.x + self.rayon >= pad.x and self.x - self.rayon <= pad.x + pad.w then -- Contact possible !! en largeur
-      if self.y + self.rayon >= pad.y and self.y <= pad.y then -- rebond ! (Hauteur)
-        self.y  = pad.y - ( 1 + self.rayon )-- MDR Je suis con xD ce soir oO
-        --
-        -- old school : self.vy = 0 - self.vy... but witch angle this is it :
-        local rad = globals.math.angle(pad.pointX, pad.pointY,       self.x, self.y)
-        self.vx = math.cos(rad)
-        self.vy = math.sin(rad)
-        --      oO        --
-        return true
-      end
+  function b:collidePad(dt) -- REBOND PAD
+    local collide = CCD.Ball_vs_Rect(self, pad, dt) -- return (collision = true/false, x, y)
+    if collide.collision then
+      self.x = collide.x
+      self.y = collide.y - ( 1 + self.rayon ) 
+      --
+      -- old school : self.vy = 0 - self.vy... but witch angle this is it :
+      local rad = globals.math.angle(pad.pointX, pad.pointY,       self.x, self.y)
+      self.vx = math.cos(rad)
+      self.vy = math.sin(rad)
+      return true
     else
+      return false
     end
-    return false
   end
 --
   function b:updateColor(dt)
@@ -919,25 +920,25 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
       self.x = pad.x + pad.ox  
     elseif not self.colle then
 
-      -- Move : TODO: CCD here !
+      -- Move
+      self.old.x = self.x
+      self.old.y = self.y
       self.x = self.x + ( (self.vx * self.speed) * dt )
       self.y = self.y + ( (self.vy * self.speed) * dt )
-
-      if self.collideEffect then
-        self.collideEffect = self:updateColor(dt)
-      end
-
 
       self:timerUpdate(dt) -- Bonus Timer effective !
 
       --TEST Collision witch Breack's :
-      if self:collideBriques() then 
+      if self:collideBriques(dt) then 
         self.collideEffect = true
+      end
+      if self.collideEffect then
+        self.collideEffect = self:updateColor(dt)
       end
 
       if self:collideWaals() then sonHitWaals:stop() ; sonHitWaals:play() end
 
-      if self:collidePad() then sonHitPad:stop() ; sonHitPad:play() end
+      if self:collidePad(dt) then sonHitPad:stop() ; sonHitPad:play() end
 
 
       -- Ball Loose :
