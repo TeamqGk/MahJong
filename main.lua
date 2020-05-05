@@ -33,6 +33,7 @@ ImgManager = require("modules/ImgManager") -- lua file
 LevelsManager = require("scenes/MahJong/modules/LevelsManager") -- lua file
 GridManager = require("scenes/MahJong/modules/GridManager") -- lua file
 SaveMahJongManager = require("scenes/MahJong/modules/SaveMahJongManager") -- lua file
+-- for CasseBrique
 SaveCasseBriqueManager = require("scenes/CasseBrique/SaveCasseBriqueManager") -- lua file
 
 
@@ -81,7 +82,7 @@ SceneManager:addScene(Scene25D, "Scene25D")
 
 --[[
 Now the first scene loading is "SceneGame"
-Hox to change Scene Later ? simply use this :
+How to change Scene Later ? simply use this :
 SceneManager:setScene(name)]]--
 --
 

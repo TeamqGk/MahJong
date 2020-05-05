@@ -821,21 +821,30 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
       local collide = CCD.Ball_vs_Rect(self, case, dt) -- return (collision = true/false, x, y)
       if collide.collision then
         --
-        if collide.x == case.x then -- gauche
-          self.x = case.x - self.rayon
-          self.vx = 0 - self.vx
+        if collide.oldY >= case.y and collide.oldY <= case.y + case.h then -- DROITE OU GAUCHE
+          if collide.x == case.x then -- gauche
+            self.x = case.x - (self.rayon)
+            self.vx = 0 - self.vx
+          elseif collide.x == case.x + case.w then -- droite
+            self.x = (case.x + case.w) + (self.rayon)
+            self.vx = 0 - self.vx
+          end
+        else -- BAS OU HAUT
+          self.x = collide.x
         end
-        if collide.x == case.x + case.w then -- droite
-          self.x = (case.x + case.w) + self.rayon
-          self.vx = 0 - self.vx
-        end
-        if collide.y == case.y + case.h then -- bas
-          self.y = (case.y + case.h) + self.rayon
-          self.vy = 0 - self.vy
-        end
-        if collide.y == case.y then -- haut
-          self.y = case.y - self.rayon
-          self.vy = 0 - self.vy
+        --
+        --
+        --
+        if collide.oldX >= case.x and collide.oldX <= case.x + case.w then -- BAS OU HAUT
+          if collide.y == case.y + case.h then -- bas
+            self.y = (case.y + case.h) + self.rayon
+            self.vy = 0 - self.vy
+          elseif collide.y == case.y then -- haut
+            self.y = case.y - self.rayon
+            self.vy = 0 - self.vy
+          end
+        else -- DROITE OU GAUCHE
+          self.y = collide.y
         end
         --
 
@@ -914,7 +923,7 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
     end
 --
   end
-  --
+--
   function  b:update(dt)
     if self.colle then 
       self.x = pad.x + pad.ox  
@@ -930,15 +939,27 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
 
       --TEST Collision witch Breack's :
       if self:collideBriques(dt) then 
+        self.old.x = self.x
+        self.old.y = self.y
         self.collideEffect = true
       end
       if self.collideEffect then
         self.collideEffect = self:updateColor(dt)
       end
 
-      if self:collideWaals() then sonHitWaals:stop() ; sonHitWaals:play() end
+      if self:collideWaals() then
+        self.old.x = self.x
+        self.old.y = self.y
+        sonHitWaals:stop()
+        sonHitWaals:play()
+      end
 
-      if self:collidePad(dt) then sonHitPad:stop() ; sonHitPad:play() end
+      if self:collidePad(dt) then
+        self.old.x = self.x
+        self.old.y = self.y
+        sonHitPad:stop()
+        sonHitPad:play()
+      end
 
 
       -- Ball Loose :
@@ -1165,6 +1186,12 @@ function SceneCasseBrique.keypressed(key)
       end
     elseif key == "p" then
       BonusManager.PadXL = true
+    elseif key == "s" then
+      for i = 1, #Ball do
+        local b = Ball[i]
+        b.speed = 1000
+        Sounds.power_up:play()
+      end
     end
   end
 end

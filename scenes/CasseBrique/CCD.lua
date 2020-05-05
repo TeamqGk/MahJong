@@ -7,8 +7,11 @@ function CCD.math.dist(x1,y1, x2,y2) return ((x2-x1)^2+(y2-y1)^2)^0.5 end
 function CCD.LineInRect(pX, pY, pRayon,              rX, rY, rW, rH)
 
   -- temporary variables to set edges for testing
+  local oldX = pX
+  local oldY = pY
   local testX = pX
   local testY = pY
+
 
   -- which edge is closest?
   -- horizontal (x)
@@ -31,9 +34,9 @@ function CCD.LineInRect(pX, pY, pRayon,              rX, rY, rW, rH)
 
 -- if the distance is less than the radius, collision!
   if (distance <= pRayon) then
-    return {collision = true, x = testX, y = testY}
+    return {collision = true, x = testX, y = testY, oldX = oldX, oldY = oldY}
   else
-    return {collision = false, x = testX, y = testY}
+    return {collision = false, x = testX, y = testY, oldX = oldX, oldY = oldY}
   end
 end
 --
@@ -62,11 +65,12 @@ function CCD.getPoints(pBall, pLine, dt)
     if i == nbPoints then
       p.x = pLine.x2
       p.y = pLine.y2
-      p.rayon = 1
+--      p.rayon = 1
+      p.rayon = pBall.rayon
     else
-      p.x = pBall.x + (pBall.vx * pBall.rayon * i)
-      p.y = pBall.y + (pBall.vy * pBall.rayon * i)
-      p.rayon = 1
+      p.x = pBall.x + (pBall.vx * i)
+      p.y = pBall.y + (pBall.vy * i)
+      p.rayon = pBall.rayon
     end
   end
   return points
