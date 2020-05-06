@@ -7,6 +7,7 @@ if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then  require("lldebugger").sta
 
 local release = false
 debug = false
+version = "V.0.5 du 06/05/2020 à 11h00"
 
 -- Set Screen Mode
 if release then
@@ -27,8 +28,11 @@ SceneManager = require("modules/SceneManager") -- lua file
 BouttonManager = require ("modules/BouttonManager") -- lua file
 SaveManager = require("modules/SaveManager") -- lua file
 AudioManager = require("modules/AudioManager") -- lua file
-QuadManager = require("modules/QuadManager") -- lua file
 ImgManager = require("modules/ImgManager") -- lua file
+QuadManager = require("modules/QuadManager") -- lua file
+AnimManager = require("modules/AnimManager") -- lua file
+-- for Menu Main
+MenuAnimations = require("scenes/MenuAnimations")
 -- for Mahjong
 LevelsManager = require("scenes/MahJong/modules/LevelsManager") -- lua file
 GridManager = require("scenes/MahJong/modules/GridManager") -- lua file

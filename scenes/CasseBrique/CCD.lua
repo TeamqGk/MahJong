@@ -65,11 +65,10 @@ function CCD.getPoints(pBall, pLine, dt)
     if i == nbPoints then
       p.x = pLine.x2
       p.y = pLine.y2
---      p.rayon = 1
       p.rayon = pBall.rayon
     else
-      p.x = pBall.x + (pBall.vx * i)
-      p.y = pBall.y + (pBall.vy * i)
+      p.x = pBall.x + ( pBall.vx * (pBall.rayon* i))
+      p.y = pBall.y + ( pBall.vy * (pBall.rayon* i))
       p.rayon = pBall.rayon
     end
   end

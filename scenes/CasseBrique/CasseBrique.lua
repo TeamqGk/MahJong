@@ -606,13 +606,13 @@ function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
       if not pNumber then pNumber = 1 end
       for i = 1, pNumber do
         local MinMax = pad.ox * 0.5
-        local vx = love.math.random(-MinMax, MinMax)
+        local vx = math.cos(love.math.random(-MinMax, MinMax))
         local ball = Ball[1]
         local vy = ball.vy
         if ball.vy > 0 then
           vy = 0 - vy
         end
-        BallManager.newBall(ball.x, ball.y, ball.rayon, ball.speed, false, 0 - ball.vx , vy)
+        BallManager.newBall(ball.x, ball.y, ball.rayon, ball.speed, false, vx , vy)
       end
     end
     --
@@ -746,7 +746,7 @@ function BonusManager.draw()
 end
 --
 
-function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
+function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx, pVy)
   local b = {}
   b.x = pX
   b.y = pY
@@ -818,7 +818,7 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
     --TEST Collision Ball self witch Brick's :
     for i = #lst_briques, 1, - 1 do
       local case = lst_briques[i]
-      local collide = CCD.Ball_vs_Rect(self, case, dt) -- return (collision = true/false, x, y)
+      local collide = CCD.Ball_vs_Rect(self, case, dt) -- return (collision = true/false, x, y, oldX, oldY)
       if collide.collision then
         --
         if collide.oldY >= case.y and collide.oldY <= case.y + case.h then -- DROITE OU GAUCHE
@@ -831,6 +831,7 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
           end
         else -- BAS OU HAUT
           self.x = collide.x
+          self.vx = self.vx or math.cos(love.math.random(-1, 1))
         end
         --
         --
@@ -894,7 +895,7 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
 --
 
   function b:collidePad(dt) -- REBOND PAD
-    local collide = CCD.Ball_vs_Rect(self, pad, dt) -- return (collision = true/false, x, y)
+    local collide = CCD.Ball_vs_Rect(self, pad, dt) -- return (collision = true/false, x, y, oldX, oldY)
     if collide.collision then
       self.x = collide.x
       self.y = collide.y - ( 1 + self.rayon ) 
@@ -928,7 +929,8 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx,pVy)
     if self.colle then 
       self.x = pad.x + pad.ox  
     elseif not self.colle then
-
+      -- vx bug ?
+      self.vx = self.vx or math.cos(love.math.random(-1, 1))
       -- Move
       self.old.x = self.x
       self.old.y = self.y

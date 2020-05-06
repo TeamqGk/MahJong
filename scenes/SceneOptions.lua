@@ -4,8 +4,6 @@ local BM = BouttonManager.newBM()
 local BM2 = BouttonManager.newBM()
 local Boutton = {}
 local Boutton2 = {}
-local BackGround = ImgManager.new("img/bg_logo.jpg")-- pFile
-BackGround:scaleToScreen()
 
 local delete = false
 SceneOptions.showMessage = false
@@ -95,7 +93,7 @@ end
 function SceneOptions.draw()-- love.draw()-- love.draw()
   love.graphics.setBackgroundColor(0,0,0,1)
   --
-  BackGround:draw()
+  MenuAnimations.draw()
   --
   BM:draw()
   BM2:draw()

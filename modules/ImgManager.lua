@@ -8,12 +8,18 @@ function ImgManager.new(pFile)
   new.w, new.h = new.w_def, new.h_def
   new.x = 0
   new.y = 0
+  new.angle = 0
   new.sx = 1
   new.sy = 1
   new.color = {1,1,1,1}
   --
   function new:setColor(r,g,b,a)
-    self.color = {r,g,b,a}
+    if type(r) == "table" then
+      self.color = r
+    else
+      if not a then a = 1 end
+      self.color = {r,g,b,a}
+    end
   end
   --
   function new:setSizes(w, h)
@@ -61,8 +67,7 @@ function ImgManager.new(pFile)
   function new:draw()
     love.graphics.setColor(self.color)
     --
-    love.graphics.draw(self.img,self.x,self.y,0,self.sx,self.sy)
-    love.graphics.setColor(0,1,0,1)
+    love.graphics.draw(self.img,self.x,self.y,self.angle,self.sx,self.sy)
     --
     love.graphics.setColor(1,1,1,1)
   end
