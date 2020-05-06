@@ -7,14 +7,12 @@ local ButterFlySpritSheet = ImgManager.new("img/Blue_Butterfly_Animation/SpriteS
 local ButterFlyQuad = QuadManager.new(ButterFlySpritSheet, 1, 15)
 local ButterFly = {}
 love.math.setRandomSeed(love.timer.getTime())
-print(screen.w,screen.h)
 for i = 1, 5 do
   ButterFly[i]  = AnimManager.new(ButterFlySpritSheet, ButterFlyQuad, 25)
   local fly = ButterFly[i]
   --
   local x = love.math.random(100 , screen.w - 100 )
   local y = love.math.random( 100 , screen.h - 100 )
-  print(i, x, y)
   fly:setPos( x, y) -- setPos(x,y)
   --
   local scale = love.math.random(0.5,1)
