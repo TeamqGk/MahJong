@@ -7,7 +7,7 @@ if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then  require("lldebugger").sta
 
 local release = false
 debug = false
-version = "V.0.5 du 06/05/2020 à 11h00"
+version = "V.0.5.1 du 06/05/2020 à 15h20"
 
 -- Set Screen Mode
 if release then
