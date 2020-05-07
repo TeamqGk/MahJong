@@ -68,58 +68,62 @@ function GridManager.setGrid(pLevel, pReset)
 
 
   -- Settings of Scales
-  local espaceW = screen.w * 0.4 -- Min
-  local espaceH = screen.h * 0.4 -- Min
-  local GridW = screen.w - espaceW -- MAX
-  local GridH = screen.h - espaceH -- MAX
+  local marge = 0.22
+  local espaceW = screen.w * (marge*2) -- offsetX
+  local espaceH = screen.h * (marge*2) -- offsetY
+  local GridW = screen.w - espaceW -- MAX Size
+  local GridH = screen.h - espaceH -- MAX Size
   --
-  local sy = (GridH * 0.1) / Img.MahJong.quad.h
-  local sx = sy
-  --
-  local CaseW = (Img.MahJong.quad.w * sx) -- Initial
-  local CaseH = (Img.MahJong.quad.h * sy) -- Inital
-  --  
+  local scale = 1.25
+  local loop = true
+  while loop do
+    local width =  ((Img.MahJong2.quad.h - MahJong.espaceMahjong) * scale) * Grid.lignes
+    local height = ((Img.MahJong2.quad.w - MahJong.espaceColonne) * scale) * Grid.colonnes
+    if width <= GridW and height <= GridH then
+      loop = false
+    else
+      scale = scale - 0.1
+    end
+  end
+  local sx, sy = scale, scale
+  Grid.sx = sx
+  Grid.sy = sy
+--
+  local CaseW = ((Img.MahJong2.quad.w - MahJong.espaceColonne) * sx) -- Initial
+  local CaseH = ((Img.MahJong2.quad.h - MahJong.espaceMahjong) * sy) -- Inital
+--  
   GridW = CaseW * Grid.colonnes
   GridH = CaseH * Grid.lignes
-  --
-  if GridW > screen.w - espaceH then
-    local maxH = screen.w - espaceH
-    sy = (maxH / Grid.lignes) / Img.MahJong.quad.h
-    sx = sy
-    --
-    CaseW = (Img.MahJong.quad.w * sx) -- Initial
-    CaseH = (Img.MahJong.quad.h * sy) -- Inital
-    --  
-    GridW = CaseW * Grid.colonnes
-    GridH = CaseH * Grid.lignes
-  end
-  --
+--
   local StartX = (screen.w - GridW) * 0.5
   local StartY = (screen.h - GridH) * 0.5
-  --
+--
 
 
-  -- Settings of Sizes
+-- Settings of Sizes
   Grid.w = GridW
   Grid.h = GridH
 
 
-  -- apply settings
+-- apply settings
   Grid.x = StartX
   Grid.y = StartY
   Grid.caseW = CaseW
   Grid.caseH = CaseH
   Grid.caseOx = Grid.caseW * 0.5
   Grid.caseOy = Grid.caseH * 0.5
-  --
+--
   local x = StartX
   local y = StartY
-  --
+--
 
-  --
+--
   Grid.mahjongTotal = 0
-  --
+  local totalParEtage = 0
+  local textTotalParEtage = "Grid.Level : "..pLevel.."\n"
+--
   for etages = 1, Grid.etages do-- etage
+    totalParEtage = 0
     for lignes = 1,  Grid.lignes do-- lignes
       for colonnes = 1, Grid.colonnes do-- colonnes
         local case = Grid[etages][lignes][colonnes]
@@ -130,6 +134,7 @@ function GridManager.setGrid(pLevel, pReset)
           if  type(case) == "number"  then
             add = true
             Grid.mahjongTotal = Grid.mahjongTotal + 1
+            totalParEtage = totalParEtage + 1
           end
           --
           Grid[etages][lignes][colonnes] = {}
@@ -148,6 +153,7 @@ function GridManager.setGrid(pLevel, pReset)
           case.select = false
         end
         case.x = x
+        case.xDraw = x - (MahJong.espaceColonne * sx)
         case.y = y
         case.w = Grid.caseW
         case.h = Grid.caseH
@@ -162,27 +168,31 @@ function GridManager.setGrid(pLevel, pReset)
 
         -- incrementation de x + la largeur d'une case (w)
         x = x + CaseW
-      end
+      end -- colonne
       --
-      x = StartX
+      x = StartX + (MahJong.espaceColonne * sx) * (etages - 1)
       y = y + CaseH
       --
-    end
+    end -- ligne
     --
-    x = StartX
-    y = StartY
+    textTotalParEtage = textTotalParEtage.."Total de l'etage ["..etages.."] : "..totalParEtage.."\n"
+    x = StartX + (MahJong.espaceColonne * sx)  * (etages)
+    y = StartY -  (MahJong.espaceMahjong * sy) * (etages)
     --
-  end
-  print ("\n".."Nouvelle Grid of "..#Grid.." etages, "..#Grid[1].." lines and "..#Grid[1][1].." cols, avec "..Grid.mahjongTotal.." mahjongs !".."\n")
+  end -- etage
+  --
+  print("\n".."Nouvelle Grid of "..#Grid.." etages, "..#Grid[1].." lines and "..#Grid[1][1].." cols, avec "..Grid.mahjongTotal.." mahjongs !".."\n")
 
-  -- randomise mahjong in grid
+-- randomise mahjong in grid
   if not Grid.load or pReset  then
     if not GridManager.setRandMahjong(pLevel) then
       GridManager.resetLevel(pLevel)
+      return false
     end
     --
     Grid.load = true
     timer.run = true
+    if debug then print(textTotalParEtage) end
   end
 end
 --
@@ -238,10 +248,6 @@ function GridManager.setRandMahjong(pLevel)
     end
     num = num + 1
   end
---  if debug then print("#tableMahjong : "..#tableMahjong.."/"..Grid.mahjongTotal) end -- ok
---  for k , v in ipairs(tableMahjong) do
---    print ("tableMahjong["..k.."] : "..v)
---  end
 
   -- on scan les grilles :
   while #tableMahjong > 0  do
@@ -590,34 +596,24 @@ function GridManager.draw()
   end
   love.graphics.setColor(1,1,1,1) -- reset color
   --
-  local indexTotal = Grid.etages * (Grid.lignes * Grid.colonnes)
+--  local indexTotal = Grid.etages * (Grid.lignes * Grid.colonnes)
   --
   for etages = 1, #Grid do-- etages
     for lignes = 1,  #Grid[1] do-- lignes
-      for colonnes = 1, #Grid[1][1] do-- colonnes
+      for colonnes = #Grid[1][1], 1 , -1 do-- colonnes
         --
         local case = Grid[etages][lignes][colonnes] -- table
         love.graphics.setColor(1,1,1,1) -- reset color
 
-        if case.isActive then -- draw Mahjong
-          love.graphics.setColor(0,0,0,1)
-          love.graphics.rectangle("fill", case.x+2, case.y+2, case.w-4, case.h-4)
-          if case.isMove then
-            love.graphics.setColor(1,1,1,1)
-          else
-            love.graphics.setColor(1,1,1,0.25)
-          end
-          love.graphics.draw(Img.MahJong.img, Img.MahJong.quad[case.mahjong], case.x, case.y, 0, case.sx, case.sy)
-          if case.etage > 1 and case.isMove then
-            love.graphics.setColor(0,0,1,0.075)
-            love.graphics.rectangle("fill", case.x+2, case.y+2, case.w-4, case.h-4)
-          end
-          love.graphics.setColor(1,1,1,1) -- reset color
-        end
         --
-        if case.select and case.isActive then
-          love.graphics.setColor(1,1,0,1) -- reset color
-          love.graphics.rectangle("line", case.x, case.y, case.w, case.h)
+        if case.isActive then
+          if case.select then
+            love.graphics.setColor(0,1,0,1) -- Green
+          elseif case.isActive then -- draw Mahjong
+            love.graphics.setColor(1,1,1,1) -- normal
+          end
+--          love.graphics.draw(Img.MahJong2.img, Img.MahJong2.quad[case.mahjong], case.x, case.y, 0, case.sx, case.sy)
+          love.graphics.draw(Img.MahJong2.img, Img.MahJong2.quad[case.mahjong], case.xDraw, case.y, 0, case.sx, case.sy)
           love.graphics.setColor(1,1,1,1) -- reset color
         end
         --
@@ -647,7 +643,6 @@ function GridManager.draw()
       love.graphics.setColor(1,1,1,1)
     end
     --
-
   end
 
 --reset color

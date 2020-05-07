@@ -16,6 +16,7 @@ map = { image = "level_15.jpg", load = false,-- pics, sound, soundClear
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
+{    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
 {   "", "", "",  1,  1,  1,  1,  1, "", "", "" },-- Ligne 3 - 12 colonnes
 {   "", "", "",  1,  1,  1,  1,  1, "", "", "" },-- Ligne 9 - 12 colonnes
 {   "", "", "",  1,  1,  1,  1,  1, "", "", "" } -- Ligne 9 - 12 colonnes
@@ -28,6 +29,7 @@ map = { image = "level_15.jpg", load = false,-- pics, sound, soundClear
 {   "", "", "", "",  1,  1,  1, "", "", "", "" },-- Ligne 3 - 12 colonnes
 {   "", "", "", "",  1,  1,  1, "", "", "", "" },-- Ligne 3 - 12 colonnes
 {   "", "", "", "",  1,  1,  1, "", "", "", "" },-- Ligne 3 - 12 colonnes
+{   "",  1,  1,  1,  1,  1,  1,  1,  1,  1, "" },-- Ligne 3 - 12 colonnes
 {   "",  1,  1,  1,  1,  1,  1,  1,  1,  1, "" },-- Ligne 3 - 12 colonnes
 {   "",  1,  1,  1,  1,  1,  1,  1,  1,  1, "" },-- Ligne 3 - 12 colonnes
 {   "",  1,  1,  1,  1,  1,  1,  1,  1,  1, "" },-- Ligne 3 - 12 colonnes
@@ -47,6 +49,7 @@ map = { image = "level_15.jpg", load = false,-- pics, sound, soundClear
 {   "", "", "", "", "",  1, "", "", "", "", "" },-- Ligne 3 - 12 colonnes
 {   "", "", "", "", "",  1, "", "", "", "", "" },-- Ligne 3 - 12 colonnes
 {   "", "",  1,  1,  1,  1,  1,  1,  1, "", "" },-- Ligne 3 - 12 colonnes
+{   "", "",  1,  1,  1,  1,  1,  1,  1, "", "" },-- Ligne 3 - 12 colonnes
 {   "", "", "", "", "",  1, "", "", "", "", "" },-- Ligne 3 - 12 colonnes
 {   "", "", "", "", "",  1, "", "", "", "", "" },-- Ligne 3 - 12 colonnes
 {   "", "", "", "", "",  1, "", "", "", "", "" },-- Ligne 3 - 12 colonnes
@@ -63,6 +66,7 @@ map = { image = "level_15.jpg", load = false,-- pics, sound, soundClear
 {   "", "", "", "", "", "", "", "", "", "", "" },-- Ligne 3 - 12 colonnes
 {   "", "", "", "", "", "", "", "", "", "", "" },-- Ligne 3 - 12 colonnes
 {   "", "", "", "", "",  1, "", "", "", "", "" },-- Ligne 3 - 12 colonnes
+{   "", "", "", "",  1,  1,  1, "", "", "", "" },-- Ligne 3 - 12 colonnes
 {   "", "", "", "",  1,  1,  1, "", "", "", "" },-- Ligne 3 - 12 colonnes
 {   "", "", "", "", "",  1, "", "", "", "", "" },-- Ligne 3 - 12 colonnes
 {   "", "", "", "", "", "", "", "", "", "", "" },-- Ligne 3 - 12 colonnes

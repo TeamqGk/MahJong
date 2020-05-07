@@ -101,37 +101,21 @@ Img.MahJong.quad = QuadManager.new(Img.MahJong,3,16)--ImageTable, Plig, pCol
 -- quad 1 to 37 Mahjong
 -- and quads 38 & 39 Effects styles...
 -- sets parametres of MahJong (look image of quads for help)
-MahJong.total = 37
-MahJong.vide = 38
-MahJong.videmini = 39
+--MahJong.total = 37
+--MahJong.vide = 38
+--MahJong.videmini = 39
+
+Img.MahJong2 = ImgManager.new("scenes/MahJong/img/SpriteSheet_21Lx2C.png")-- pFile
+Img.MahJong2.quad = QuadManager.new(Img.MahJong2, 21, 2)--ImageTable, Plig, pCol
+MahJong.total = 41
+MahJong.espaceMahjong = 8
+MahJong.espaceEtage = 8
+MahJong.espaceColonne = 6
 
 
-function SceneMahJong.mouseDraw()
-  if debug then
-    if mouse.onGrid then -- mouse.onGrid == true
-      love.graphics.setColor(0,0,0,1)
-      text = "L : "..mouse.l.."\n".."C : "..mouse.c
-      love.graphics.print(text,mouse.x + 20,mouse.y - 20)
-      love.graphics.setColor(1,1,1,1)
-    end
-  end
-end
-
---
-
-function SceneMahJong.mouseUpdate(dt)
-  if mouse.x > Grid.x + 1 and mouse.x < Grid.x + Grid.w - 1 and mouse.y > Grid.y + 1 and mouse.y <= Grid.y + Grid.h - 1 then
-    local col = math.floor((mouse.x - Grid.x) / Grid.caseW ) + 1
-    local lig = math.floor((mouse.y - Grid.y) / Grid.caseH ) + 1
-    mouse.c = col
-    mouse.l = lig
+function SceneMahJong.mouseUpdate(dt) -- TODO: prendre en chage les scales par etages
+  if mouse.x > Grid.x + 1 and mouse.x < Grid.x + Grid.w - 1 and mouse.y > Grid.y + 1 and mouse.y <= Grid.y + Grid.h - 1 then 
     mouse.onGrid = true
-    -- Grid.x = offsetX
-    -- Grid.y = offsetY
-    -- Grid.w = Grid.colonnes * Img.MahJong.quad.w
-    -- Grid.h = Grid.lignes * Img.MahJong.quad.h
-    -- Grid.caseW = Grid.w / Grid.colonnes
-    -- Grid.caseH = Grid.h / Grid.lignes
   else
     mouse.onGrid = false
   end
@@ -142,148 +126,147 @@ end
 function mouse.selectInit()
   mouse.select = {}
   for i = 1, 2 do
-    mouse.select[i] = {l=0, c=0, e=0, select = false, mahjong = 0}
+    mouse.select[i] = {l=1, c=1, e=1, select = false, mahjong = 0}
   end
 end
 --
 
-function mouse.selectMahjong()
-  local l = mouse.l
-  local c = mouse.c
-  local e = 0
-  local s = mouse.select
-
-  if l >= 1 and l <= Grid.lignes and c >=1 and c <= Grid.colonnes then
-
-    -- annulation si col et lig sont identiques
+function mouse.selectMahjong(x, y)
+  local function mouseSelectMahjong()
+    local e, l ,c
+    --          end -- colonne
+    --      x = StartX + (MahJong.espaceColonne * sx) * (etages - 1)
+    --      y = y + CaseH
+    --    end -- ligne
+    --    x = StartX + (MahJong.espaceColonne * sx)  * (etages)
+    --    y = StartY -  (MahJong.espaceMahjong * sy) * (etages)
+    --  end -- etage
+    for eta = Grid.etages, 1, -1 do
+      local col = math.floor( (x - (Grid.x + ( (MahJong.espaceColonne * Grid.sx) * (eta - 1) ) ) ) / Grid.caseW ) + 1
+      local lig = math.floor( (y - (Grid.y - ( (MahJong.espaceMahjong * Grid.sy) * (eta - 1) ) ) ) / Grid.caseH ) + 1
+      local case = Grid[eta][lig][col]
+      if case.isActive and case.isMove then
+        e = eta
+        l = lig
+        c = col
+        print("mouse e["..e.."] l["..l.."] c["..c.."]")
+        return true, e, l, c 
+      end
+    end
+    return false
+  end
+  --
+  local function mouseSelectCancel(e, l, c, s)
+    print("- - - - - - - - -")
     for i=1, 2 do
-      if s[i].l == l and s[i].c == c then
-        local cancel = s[i]
-        Grid[cancel.e][cancel.l][cancel.c].select = false
+      if s[i].e == e and s[i].l == l and s[i].c == c then
         --
+        Grid[e][l][c].select = false
+        --
+        local cancel = s[i]
         cancel.select = false
         cancel.l = 0
         cancel.c = 0
         cancel.e = 0
         cancel.mahjong = 0
-        return false -- on arrete la function si on viens d'enlever une selection
+        --
+        print("cancel selection")
+        return true -- on arrete la function si on viens d'enlever une selection
+        --
       end
     end
-    --
-
-    -- on test la case :
-    for i = Grid.etages, 1, -1 do
-      if e == 0 then
-        local case = Grid[i][l][c]
-        if case.isActive and case.isMove then
-          e = i
-        end
-      end
-    end
-    if e == 0 then return end  -- pas de mahjong ici !
-    --
-
-
-    -- on a l'etage , la ligne et la colonne, il nous faut mémoriser cette selection :
-    local add = false
+    return false
+  end
+  --
+  local function mouseSelectAddMahjong(e, l, c, s)
     for i = 1, 2 do
-      if add == false then
-        local addMe = s[i]
-        if addMe.select == false then
-          local case = Grid[e][l][c]
-          --
-          addMe.select = true
-          addMe.l = l
-          addMe.c = c
-          addMe.e = e
-          addMe.mahjong = case.mahjong
-          --
-          case.select = true
-          --
-          add = true
-          if debug then print("ajout de la selection ".."[e:"..e.."]".."[l:"..l.."]".."[c:"..c.."]".." dans mouse.select["..i.."]") end
-        end
+      local addMe = s[i]
+      if addMe.select == false then
+        print(e,l,c)
+        local case = Grid[e][l][c]
+        --
+        addMe.select = true
+        addMe.l = l
+        addMe.c = c
+        addMe.e = e
+        addMe.mahjong = case.mahjong
+        --
+        case.select = true
+        --
+        print("ajout de la selection ".."[e:"..e.."]".."[l:"..l.."]".."[c:"..c.."]".." dans mouse.select["..i.."]")
+        --
+        return true
       end
     end
+    return false
+  end
+  --
+  local function mouseSelectCompare(e, l, c, s)
+    if s[1].mahjong >= 1 and s[2].mahjong >= 1 then
+      if s[1].mahjong == s[2].mahjong then -- Great ! Double MahJong is Find !
+        local case_1 = Grid[s[1].e][s[1].l][s[1].c]
+        local case_2 = Grid[s[2].e][s[2].l][s[2].c]
+        --
+        case_1.isActive = false
+        case_1.select = false
+        --
+        case_2.isActive = false
+        case_2.select = false
+        --
+        local cancel_1 = s[1]
+        local cancel_2 = s[2]
+        --
+        cancel_1.l = 0
+        cancel_1.c = 0
+        cancel_1.e = 0
+        cancel_1.mahjong = 0
+        cancel_1.select = false
+        --
+        cancel_2.l = 0
+        cancel_2.c = 0
+        cancel_2.e = 0
+        cancel_2.mahjong = 0
+        cancel_2.select = false
+        --
+        Grid.mahjongTotal = Grid.mahjongTotal - 2
+        --
+        sound_mahjongFind:stop()
+        sound_mahjongFind:play()
+        --
+        if debug then print("un Double de Mahjong a été trouvé, il reste "..Grid.mahjongTotal.." mahjong(s) en jeu") end
+        --
+        GridManager.testMoveMahjong()
+        --
+        return true
+      end
+      return false
+    end
+  end
+
+
+  -- on repere le mahjong selectionné :
+  local s, selectMahjong, e ,l ,c = mouse.select, mouseSelectMahjong() -- return false or e,l,c ;)
+  --
+  if selectMahjong then-- on a l'etage , la ligne et la colonne, il nous faut mémoriser cette selection :
     --
+    if mouseSelectCancel(e,l,c,s) then return false end-- annuler selection si col et lig sont identiques
+    --
+    if not mouseSelectAddMahjong(e,l,c,s) then print("error mouseSelectAddMahjong(e,l,c,s) ?!") end
 
     -- nous avons deux selections on test donc si ils sont identiques :
     if s[1].select and s[2].select then
-      if s[1].mahjong >= 1 and s[2].mahjong >= 1 then
-        if s[1].mahjong == s[2].mahjong then -- Youhou !
-          local case_1 = Grid[s[1].e][s[1].l][s[1].c]
-          local case_2 = Grid[s[2].e][s[2].l][s[2].c]
-          --
-          case_1.isActive = false
-          case_1.select = false
-          --
-          case_2.isActive = false
-          case_2.select = false
-          --
-          local cancel_1 = s[1]
-          local cancel_2 = s[2]
-          --
-          cancel_1.l = 0
-          cancel_1.c = 0
-          cancel_1.e = 0
-          cancel_1.mahjong = 0
-          cancel_1.select = false
-          --
-          cancel_2.l = 0
-          cancel_2.c = 0
-          cancel_2.e = 0
-          cancel_2.mahjong = 0
-          cancel_2.select = false
-          --
-          Grid.mahjongTotal = Grid.mahjongTotal - 2
-          --
-          sound_mahjongFind:stop()
-          sound_mahjongFind:play()
-          --
-          if debug then print("un Double de Mahjong a été trouvé, il reste "..Grid.mahjongTotal.." mahjong(s) en jeu") end
-          --
-          GridManager.testMoveMahjong()
-          --
-          return true
-        end
+      if mouseSelectCompare(e, l, c, s) then 
+        return true
+      else
+        return false
       end
+    else
+      return false
     end
-
-    -- si on arrive ici c'est que la selection est fausse :
-    if s[1].select and s[2].select then
-      -- dans tous les cas si on a deux selections on les déselectionne
-      local case_1 = Grid[s[1].e][s[1].l][s[1].c]
-      local case_2 = Grid[s[2].e][s[2].l][s[2].c]
-      --
-      case_1.isActive = true
-      case_1.select = false
-      --
-      case_2.isActive = true
-      case_2.select = false
-      --
-      local cancel_1 = s[1]
-      local cancel_2 = s[2]
-      --
-      cancel_1.l = 0
-      cancel_1.c = 0
-      cancel_1.e = 0
-      cancel_1.mahjong = 0
-      cancel_1.select = false
-      --
-      cancel_2.l = 0
-      cancel_2.c = 0
-      cancel_2.e = 0
-      cancel_2.mahjong = 0
-      cancel_2.select = false
-      --
-      sound_mahjongNotFind:stop()
-      sound_mahjongNotFind:play()
-      --
-    end
-    return false
   else
-    mouse.selectInit()
+    return false
   end
+  --
 end
 --
 
@@ -320,7 +303,7 @@ function SceneMahJong.testVictory(dt)
     GridManager.setGrid(SaveMahJong.currentLevel) -- load next Grid
     --
   end
-  if Grid.Move == 0 then -- TODO: Loose =(
+  if Grid.Move == 0 then
     --
     SceneMahJong.showRestart(SaveMahJong.currentLevel)
     --
@@ -444,7 +427,6 @@ end
 function SceneMahJong.draw()-- love.draw()
   if not SceneMahJong.resetWait and not SceneMahJong.pause then
     GridManager.draw()
-    SceneMahJong.mouseDraw()
   elseif SceneMahJong.resetWait then
     SceneMahJong.backgroundWaitDraw() -- reduce light screen...
     resetMahjongs:draw() -- img background
@@ -511,28 +493,33 @@ end
 --
 
 function SceneMahJong.mousepressed(x, y, button, isTouch)
+  if ChangeLevel.show or RecapLevel.show then
+    if ChangeLevel.show then
+      ChangeLevel.mousepressed(x, y, button, isTouch)
+    elseif RecapLevel.show then
+      RecapLevel.mousepressed(x, y, button, isTouch)
+    end
+    return false
+  end
   --
-  if not mouse.onGrid then
+  if not mouse.onGrid then -- Menu
     if button == 1 then -- left clic
       if BM.current.ready then
         BM.current.action()-- example if bouton is Play then action is : SceneManager:setScene("MahJong")
+        return false
       end
     end
   end
   --
-  if mouse.onGrid then
+  if mouse.onGrid then -- In Game
     if button == 1 then -- left clic
-      if mouse.selectMahjong() then
+      if mouse.selectMahjong(x,y) then
         SceneMahJong.testVictory()
       end
+      return false
     end
   end
   --
-  if ChangeLevel.show then
-    ChangeLevel.mousepressed(x, y, button, isTouch)
-  elseif RecapLevel.show then
-    RecapLevel.mousepressed(x, y, button, isTouch)
-  end
 end
 --
 

@@ -1,6 +1,6 @@
 local map = {}
 
-map = { image = "level_20.jpg", load = false,-- pics, sound, soundClear
+map = { image = "level_23.jpg", load = false,-- pics, sound, soundClear
 
 
 
@@ -12,13 +12,14 @@ map = { image = "level_20.jpg", load = false,-- pics, sound, soundClear
 {   "", "", "", "",  1,  1,  1, "", "", "", "" },-- Ligne 3 - 12 colonnes
 {   "", "", "", "",  1,  1,  1, "", "", "", "" },-- Ligne 3 - 12 colonnes
 {   "", "", "", "", "",  1, "", "", "", "", "" },-- Ligne 3 - 12 colonnes
+{   "", "", "", "", "",  1, "", "", "", "", "" },-- Ligne 3 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
 {   "", "",  1,  1,  1,  1,  1,  1,  1, "", "" },-- Ligne 3 - 12 colonnes
 {   "",  1,  1,  1,  1,  1,  1,  1,  1,  1, "" },-- Ligne 3 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
-{    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 }-- Ligne 3 - 12 colonnes
+{    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 } -- Ligne 3 - 12 colonnes
 }
 
 
@@ -29,13 +30,14 @@ map = { image = "level_20.jpg", load = false,-- pics, sound, soundClear
 {   "", "", "", "",  1,  1,  1, "", "", "", "" },-- Ligne 3 - 12 colonnes
 {   "", "", "", "",  1,  1,  1, "", "", "", "" },-- Ligne 3 - 12 colonnes
 {   "", "", "", "", "",  1, "", "", "", "", "" },-- Ligne 3 - 12 colonnes
+{   "", "", "", "", "",  1, "", "", "", "", "" },-- Ligne 3 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
 {   "", "",  1,  1,  1,  1,  1,  1,  1, "", "" },-- Ligne 3 - 12 colonnes
 {   "",  1,  1,  1,  1,  1,  1,  1,  1,  1, "" },-- Ligne 3 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
-{    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 }-- Ligne 3 - 12 colonnes
+{    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 } -- Ligne 3 - 12 colonnes
 }
 
 ,
@@ -46,13 +48,14 @@ map = { image = "level_20.jpg", load = false,-- pics, sound, soundClear
 {   "", "", "", "",  1,  1,  1, "", "", "", "" },-- Ligne 3 - 12 colonnes
 {   "", "", "", "",  1,  1,  1, "", "", "", "" },-- Ligne 3 - 12 colonnes
 {   "", "", "", "", "",  1, "", "", "", "", "" },-- Ligne 3 - 12 colonnes
+{   "", "", "", "", "",  1, "", "", "", "", "" },-- Ligne 3 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
 {   "", "",  1,  1,  1,  1,  1,  1,  1, "", "" },-- Ligne 3 - 12 colonnes
 {   "",  1,  1,  1,  1,  1,  1,  1,  1,  1, "" },-- Ligne 3 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
-{    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 }-- Ligne 3 - 12 colonnes
+{    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 } -- Ligne 3 - 12 colonnes
 }
 
 ,
@@ -63,13 +66,14 @@ map = { image = "level_20.jpg", load = false,-- pics, sound, soundClear
 {   "", "", "", "",  1,  1,  1, "", "", "", "" },-- Ligne 3 - 12 colonnes
 {   "", "", "", "",  1,  1,  1, "", "", "", "" },-- Ligne 3 - 12 colonnes
 {   "", "", "", "", "",  1, "", "", "", "", "" },-- Ligne 3 - 12 colonnes
+{   "", "", "", "", "",  1, "", "", "", "", "" },-- Ligne 3 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
 {   "", "",  1,  1,  1,  1,  1,  1,  1, "", "" },-- Ligne 3 - 12 colonnes
 {   "",  1,  1,  1,  1,  1,  1,  1,  1,  1, "" },-- Ligne 3 - 12 colonnes
 {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
-{    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 }-- Ligne 3 - 12 colonnes
+{    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 } -- Ligne 3 - 12 colonnes
 }
 
 }

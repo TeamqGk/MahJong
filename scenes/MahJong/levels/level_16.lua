@@ -16,6 +16,7 @@ map = { image = "level_16.jpg", load = false,-- pics, sound, soundClear
     {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
     {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
     {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
+    {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
     {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1, "" },-- Ligne 3 - 12 colonnes
     {    1,  1,  1,  1,  1,  1,  1,  1,  1, "", "" },-- Ligne 9 - 12 colonnes
     {    1,  1,  1,  1,  1,  1,  1,  1, "", "", "" } -- Ligne 9 - 12 colonnes
@@ -28,6 +29,7 @@ map = { image = "level_16.jpg", load = false,-- pics, sound, soundClear
     {   "", "", "",  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
     {   "", "",  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
     {   "",  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
+    {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
     {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
     {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
     {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
@@ -49,6 +51,7 @@ map = { image = "level_16.jpg", load = false,-- pics, sound, soundClear
     {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
     {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
     {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
+    {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
     {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1, "" },-- Ligne 3 - 12 colonnes
     {    1,  1,  1,  1,  1,  1,  1,  1,  1, "", "" },-- Ligne 9 - 12 colonnes
     {    1,  1,  1,  1,  1,  1,  1,  1, "", "", "" } -- Ligne 9 - 12 colonnes
@@ -62,6 +65,7 @@ map = { image = "level_16.jpg", load = false,-- pics, sound, soundClear
     {   "", "", "",  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
     {   "", "",  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
     {   "",  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
+    {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
     {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
     {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes
     {    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },-- Ligne 3 - 12 colonnes

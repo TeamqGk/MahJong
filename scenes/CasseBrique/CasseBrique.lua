@@ -469,7 +469,7 @@ function BonusManager:timerPadXL(dt)
 end
 --
 
-function BonusManager.init() -- TODO: Bonus init a finir
+function BonusManager.init()
   BonusManager.timerPad = {}
   BonusManager.timerPad.run = false
   BonusManager.timerPad.start = 0
@@ -507,7 +507,7 @@ function BonusManager.init() -- TODO: Bonus init a finir
 end
 --
 
-function BonusManager.newBonus(pX,pY,pCase) -- TODO: Bonus newBonus a finir
+function BonusManager.newBonus(pX,pY,pCase)
   local lucky = (pCase.type * 10) - 100
   local rand = love.math.random(1, 100)
   --
@@ -775,7 +775,7 @@ function BallManager.newBall(pX, pY, pRayon, pSpeed, pColle, pVx, pVy)
     self.rayon = (pCaseH * 0.5) * 0.5
   end
 --
-  function b:addTimer(pType, pID) -- TODO: Parcourir les balles et mettre le timer dans les balles : Pas dans le bonux qui s'efface apres l'avoir pris !!!!
+  function b:addTimer(pType, pID)
     local t = {}
     t.type= pType
     --
