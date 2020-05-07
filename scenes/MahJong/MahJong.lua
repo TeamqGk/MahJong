@@ -89,7 +89,7 @@ end
 --
 
 -- Images
-Img.MahJong = ImgManager.new("scenes/MahJong/img/mahjong_pieces_modif_1.png")-- pFile
+Img.MahJong = ImgManager.new("scenes/MahJong/img/SpriteSheet_21Lx2C.png")-- pFile
 --[[ return :
 img.img
 img.w
@@ -97,16 +97,8 @@ img.h
 ]]--
 
 -- Quads Images
-Img.MahJong.quad = QuadManager.new(Img.MahJong,3,16)--ImageTable, Plig, pCol
--- quad 1 to 37 Mahjong
--- and quads 38 & 39 Effects styles...
--- sets parametres of MahJong (look image of quads for help)
---MahJong.total = 37
---MahJong.vide = 38
---MahJong.videmini = 39
-
-Img.MahJong2 = ImgManager.new("scenes/MahJong/img/SpriteSheet_21Lx2C.png")-- pFile
-Img.MahJong2.quad = QuadManager.new(Img.MahJong2, 21, 2)--ImageTable, Plig, pCol
+Img.MahJong.quad = QuadManager.new(Img.MahJong, 21, 2)--ImageTable, Plig, pCol
+-- quad 1 to 41 Mahjong
 MahJong.total = 41
 MahJong.espaceMahjong = 8
 MahJong.espaceEtage = 8

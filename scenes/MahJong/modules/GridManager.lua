@@ -77,8 +77,8 @@ function GridManager.setGrid(pLevel, pReset)
   local scale = 1.25
   local loop = true
   while loop do
-    local width =  ((Img.MahJong2.quad.h - MahJong.espaceMahjong) * scale) * Grid.lignes
-    local height = ((Img.MahJong2.quad.w - MahJong.espaceColonne) * scale) * Grid.colonnes
+    local width =  ((Img.MahJong.quad.h - MahJong.espaceMahjong) * scale) * Grid.lignes
+    local height = ((Img.MahJong.quad.w - MahJong.espaceColonne) * scale) * Grid.colonnes
     if width <= GridW and height <= GridH then
       loop = false
     else
@@ -89,8 +89,8 @@ function GridManager.setGrid(pLevel, pReset)
   Grid.sx = sx
   Grid.sy = sy
 --
-  local CaseW = ((Img.MahJong2.quad.w - MahJong.espaceColonne) * sx) -- Initial
-  local CaseH = ((Img.MahJong2.quad.h - MahJong.espaceMahjong) * sy) -- Inital
+  local CaseW = ((Img.MahJong.quad.w - MahJong.espaceColonne) * sx) -- Initial
+  local CaseH = ((Img.MahJong.quad.h - MahJong.espaceMahjong) * sy) -- Inital
 --  
   GridW = CaseW * Grid.colonnes
   GridH = CaseH * Grid.lignes
@@ -612,8 +612,8 @@ function GridManager.draw()
           elseif case.isActive then -- draw Mahjong
             love.graphics.setColor(1,1,1,1) -- normal
           end
---          love.graphics.draw(Img.MahJong2.img, Img.MahJong2.quad[case.mahjong], case.x, case.y, 0, case.sx, case.sy)
-          love.graphics.draw(Img.MahJong2.img, Img.MahJong2.quad[case.mahjong], case.xDraw, case.y, 0, case.sx, case.sy)
+--          love.graphics.draw(Img.MahJong.img, Img.MahJong.quad[case.mahjong], case.x, case.y, 0, case.sx, case.sy)
+          love.graphics.draw(Img.MahJong.img, Img.MahJong.quad[case.mahjong], case.xDraw, case.y, 0, case.sx, case.sy)
           love.graphics.setColor(1,1,1,1) -- reset color
         end
         --
